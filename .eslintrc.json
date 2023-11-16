@@ -22,9 +22,13 @@
     },
     "plugins": [
         "react",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "tailwindcss"
     ],
     "rules": {
+        "tailwindcss/classnames-order": "warn",
+        "tailwindcss/no-custom-classname": "warn",
+        "tailwindcss/no-contradicting-classname": "error",
         "indent": [
             "error",
             2

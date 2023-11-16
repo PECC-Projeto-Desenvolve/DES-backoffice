@@ -4,11 +4,12 @@ import { Home } from '../pages/home/home';
 import { Button, Navbar, Typography } from '@material-tailwind/react';
 import { LogOut } from 'lucide-react';
 import { ExamForm } from '../pages/forms/examForm/examForm';
+import { Exam } from '../pages/exam/Exam';
 
 function AppRoutes(): JSX.Element {
   return (
-    <div className="relative h-screen w-screen bg-blue-gray-50 flex flex-col p-8 gap-10 lg:px-32 md:px-8 sm:px-2 px-2">
-      <Navbar fullWidth className='rounded-md flex h-fit items-center justify-between mx-auto p-4'>
+    <div className="relative flex h-screen w-screen flex-col gap-10 bg-blue-gray-50 p-8 px-2 sm:px-2 md:px-8 lg:px-32">
+      <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md p-4'>
         <Typography variant="h5" color="black">
           Desenvolve Backoffice
         </Typography>
@@ -19,7 +20,10 @@ function AppRoutes(): JSX.Element {
       </Navbar>
       <Routes>
         <Route path='/' element={<Home />}/>
+
         <Route path='/exam/form' element={<ExamForm />}/>
+
+        <Route path='/exam' element={<Exam />}/>
       </Routes>
     </div>
   );
