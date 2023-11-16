@@ -1,4 +1,4 @@
-import { Input, Typography } from '@material-tailwind/react';
+import { Checkbox, Input, Typography } from '@material-tailwind/react';
 import React from 'react';
 
 interface IAlternativeInputProps {
@@ -28,6 +28,8 @@ function AlternativeInput({ label, onChange }: IAlternativeInputProps): JSX.Elem
           }}
           onChange={onChange}
         />
+
+        <Checkbox />
       </div>
     </>
   );

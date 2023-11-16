@@ -4,12 +4,12 @@ import {
   Textarea,
   Select,
   Typography,
-  Button,
+  Button
 } from '@material-tailwind/react';
 import { AlternativeInput } from '../../../components/AlternativeInput';
 import { useNavigate } from 'react-router-dom';
 
-function ExamForm() {
+function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
   const navigate = useNavigate();
 
@@ -29,10 +29,10 @@ function ExamForm() {
 
   return (
     <div className='flex h-full w-full items-center justify-center'>
-      <div className='-mt-6 flex h-full w-full flex-col gap-4 rounded bg-white px-4 pt-6 sm:w-full md:w-full lg:w-[50%]'>
+      <div className='-mt-6 flex h-full w-full flex-col gap-4 rounded bg-white px-4 pt-6 sm:w-full md:w-full lg:w-[60%]'>
         <div className='flex  w-full flex-col gap-4'>
 
-          <Typography variant='h4'>Corpo da prova</Typography>
+          <Typography variant='h4'>Corpo da questão</Typography>
 
           <Input label="Título" size='lg'/>
 
@@ -49,13 +49,16 @@ function ExamForm() {
         <div className='flex w-full flex-col'>
           <Typography variant='h4' className='mb-4'>Alternativas</Typography>
 
-          <div className='flex flex-col gap-4'>
+
+          <div className=' flex flex-col gap-2'>
             {['A', 'B', 'C', 'D', 'E'].map((label, index) => (
-              <AlternativeInput
-                key={label}
-                label={label}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-              />
+              <>
+                <AlternativeInput
+                  key={label}
+                  label={label}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                />
+              </>
             ))}
           </div>
 
@@ -77,4 +80,4 @@ function ExamForm() {
   );
 }
 
-export { ExamForm };
+export { QuestionForm };
