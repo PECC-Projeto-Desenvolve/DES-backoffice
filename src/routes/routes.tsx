@@ -8,6 +8,7 @@ import { Exam } from '../pages/exam/Exam';
 
 import {useNavigate} from 'react-router-dom';
 import { QuestionForm } from '../pages/forms/questionForm/questionForm';
+import { ExamForm } from '../pages/forms/examForm/examForm';
 
 function AppRoutes(): JSX.Element {
 
@@ -18,8 +19,8 @@ function AppRoutes(): JSX.Element {
   };
 
   return (
-    <div className="relative flex h-screen w-screen flex-col gap-6 bg-blue-gray-50 p-4 px-2 sm:px-2 md:px-8 lg:px-32">
-      <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md p-4'>
+    <div className="relative flex h-screen w-screen flex-col gap-6 bg-blue-gray-50 p-4 px-2 transition-all sm:px-2 md:px-8 lg:px-32">
+      <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md p-4 '>
         <Typography variant="h5" color="black" onClick={handleNavigate} className='cursor-pointer transition-all hover:text-2xl'>
           Desenvolve Backoffice
         </Typography>
@@ -32,6 +33,7 @@ function AppRoutes(): JSX.Element {
         <Route path='/' element={<Home />}/>
 
         <Route path='/question/form' element={<QuestionForm />}/>
+        <Route path='/exam/form' element={<ExamForm />}/>
 
         <Route path='/exam' element={<Exam />}/>
       </Routes>

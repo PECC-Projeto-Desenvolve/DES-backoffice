@@ -29,7 +29,7 @@ function QuestionForm() {
 
   return (
     <div className='flex h-full w-full items-center justify-center'>
-      <div className='-mt-6 flex h-full w-full flex-col gap-4 rounded bg-white px-4 pt-6 sm:w-full md:w-full lg:w-[60%]'>
+      <div className='-mt-6 flex h-full w-full flex-col gap-4 rounded bg-white px-4 pt-6 transition-all sm:w-full md:w-full lg:w-[60%]'>
         <div className='flex  w-full flex-col gap-4'>
 
           <Typography variant='h4'>Corpo da questão</Typography>
