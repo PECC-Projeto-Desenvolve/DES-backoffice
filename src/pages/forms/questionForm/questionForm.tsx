@@ -4,10 +4,13 @@ import {
   Textarea,
   Select,
   Typography,
-  Button
+  Button,
+  IconButton,
+  Tooltip
 } from '@material-tailwind/react';
 import { AlternativeInput } from '../../../components/AlternativeInput';
 import { useNavigate } from 'react-router-dom';
+import { Trash2, UploadCloud } from 'lucide-react';
 
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
@@ -27,9 +30,39 @@ function QuestionForm() {
     navigate(-1);
   };
 
+  const [imageSrc, setImageSrc] = React.useState(null);
+  const fileInputRef = React.useRef(null);
+
+  const onDrop = React.useCallback((event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => setImageSrc(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  }, []);
+
+  const onFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => setImageSrc(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const onAreaClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const onDeleteImgSrc = () => {
+    setImageSrc(null);
+  };
+
   return (
-    <div className='flex h-full w-full items-center justify-center'>
-      <div className='-mt-6 flex h-full w-full flex-col gap-4 rounded bg-white px-4 pt-6 transition-all sm:w-full md:w-full lg:w-[60%]'>
+    <div className='flex h-full w-full flex-col items-center justify-center rounded bg-white'>
+      <div className='-mt-2 grid h-full w-full gap-6 px-6 pt-10 xl:grid-cols-2'>
         <div className='flex  w-full flex-col gap-4'>
 
           <Typography variant='h4'>Corpo da questão</Typography>
@@ -43,6 +76,42 @@ function QuestionForm() {
           </Select>
 
           <Textarea label='Enunciado' size='lg'/>
+
+          <>
+            {imageSrc ? (
+              <>
+                <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
+                  <img src={imageSrc} alt="Uploaded" className="max-h-[10rem] rounded" />
+
+                  <Tooltip content="Excluir imagem">
+                    <IconButton color="red" onClick={onDeleteImgSrc}>
+                      <Trash2 />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  className="cursor-pointer rounded border-2 border-dashed border-gray-300 p-4 text-center transition-all hover:border-gray-500"
+                  onClick={onAreaClick}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={onDrop}>
+                  <div className='flex items-center justify-center gap-3'>
+                    <UploadCloud />
+                    <Typography variant='paragraph'> Arraste e solte a imagem aqui ou clique para selecionar </Typography>
+                  </div>
+                  <input
+                    type="file"
+                    onChange={onFileChange}
+                    ref={fileInputRef}
+                    className="hidden"
+                  />
+                </div>
+              </>
+            )}
+
+          </>
 
         </div>
 
@@ -68,11 +137,13 @@ function QuestionForm() {
             </h1>
           </div>
 
-          <div className='flex w-full justify-end gap-4'>
-            <Button variant='outlined' onClick={handleCancel}>Cancelar</Button>
-            <Button>Salvar</Button>
-          </div>
-
+        </div>
+      </div>
+      <div className='flex h-fit w-full flex-col gap-4 p-4 '>
+        <hr className='w-full border-gray-300'/>
+        <div className='flex h-fit w-full justify-end gap-4'>
+          <Button variant='outlined' size="lg" onClick={handleCancel}>Cancelar</Button>
+          <Button>Salvar</Button>
         </div>
       </div>
     </div>
