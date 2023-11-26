@@ -4,9 +4,15 @@ import React from 'react';
 interface IAlternativeInputProps {
     label: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    value: string;
+    checkboxProps: {
+        checked: boolean;
+        onChange: () => void;
+        disabled: boolean;
+      };
 }
 
-function AlternativeInput({ label, onChange }: IAlternativeInputProps): JSX.Element {
+function AlternativeInput({ label, onChange, value, checkboxProps }: IAlternativeInputProps): JSX.Element {
   return (
     <>
       <div className="relative flex w-full">
@@ -27,9 +33,10 @@ function AlternativeInput({ label, onChange }: IAlternativeInputProps): JSX.Elem
             className: 'min-w-0',
           }}
           onChange={onChange}
+          value={value}
         />
 
-        <Checkbox />
+        <Checkbox {...checkboxProps} />
       </div>
     </>
   );

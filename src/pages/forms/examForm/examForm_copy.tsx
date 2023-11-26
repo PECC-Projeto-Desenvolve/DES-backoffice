@@ -85,88 +85,8 @@ function ExamForm(): JSX.Element {
       </Dialog>
 
 
-      <div className='flex h-[100%] w-full flex-col gap-4 rounded bg-white p-4'>
-        <div className='flex h-full w-full gap-4'>
-          <div className='relative flex h-full w-full flex-col gap-2 overflow-scroll rounded-md border px-2 py-6'>
-            <Typography variant='h4'>Corpo da prova</Typography>
-
-            <div
-              className='relative flex h-fit w-full flex-col gap-2 overflow-y-scroll rounded-md border p-2 transition-all'
-              onDrop={handleOnDrop}
-              onDragOver={handleDragOver}
-            >
-              {questionOrder.length > 0 ? (
-                <>
-
-                </>
-              ): (
-                <div className='flex h-full w-full select-none flex-col items-center gap-4 rounded-md bg-blue-gray-50/50 p-4'>
-                  <Typography variant='h5'>
-          clique na questão, arraste e solte aqui
-                  </Typography>
-                  <img src={DND} className='pointer-events-none select-none'/>
-                </div>
-              )}
-              {questionOrder.map((question, index) => (
-                <>
-                  <div
-                    key={index}
-                    className='flex animate-fade-in-down select-none items-center justify-between rounded-md border bg-gray-100 p-2'
-                  >
-                    {index}
-                    <Typography variant='h6'>
-                      {stringResizer(question, 50)}...
-                    </Typography>
-
-                    <IconButton onClick={() => handleRemoveQuestion(index)}>
-                      <MinusCircle size={20}/>
-                    </IconButton>
-                  </div>
-
-                </>
-              ))}
-              {questionOrder.length > 0 ? (
-                <>
-                  <Tooltip content="clique na questão, arraste e solte aqui">
-                    <div className='flex h-[4rem] w-full flex-col items-center justify-center rounded-sm bg-green-100'>
-                      <PlusCircleIcon size={24} />
-                    </div>
-                  </Tooltip>
-                </>
-              ): (
-                <>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div className='flex h-full w-full flex-col gap-2 rounded-md border px-2 py-6'>
-            <div className='flex h-full w-full flex-col gap-2 rounded-md border px-2 py-6'>
-              <Typography variant='h4' className='mb-2'>Selecione a questão</Typography>
-
-              <Input label={'Buscar'} icon={<Search size={20}/>} size='lg' />
-              <div className='relative z-30 mt-2 flex h-full max-h-full flex-col gap-3'>
-
-                {questions.map((question, index) => (
-                  <>
-                    <QuestionCard
-                      key={index}
-                      statement={question.statement}
-                      createdAt={question.createdAt}
-                      updatedAt={question.updatedAt}
-                      onDragStart={(e) => handleOnDrag(e, question.statement)}
-                    />
-                  </>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className='flex h-fit w-full items-end justify-end gap-4 rounded-md bg-red-300'>
-          <Button variant='outlined' onClick={handleOpen}>Cancelar</Button>
-          <Button>Salvar</Button>
-        </div>
-        {/* <div className='relative flex h-full w-full flex-col gap-2 overflow-scroll rounded-md border px-2 py-6'>
+      <div className='relative grid h-screen w-full grid-cols-2 flex-col gap-4 rounded bg-white p-4'>
+        <div className='relative flex h-full w-full flex-col gap-2 overflow-scroll rounded-md border px-2 py-6'>
           <Typography variant='h4'>Corpo da prova</Typography>
 
           <div
@@ -241,7 +161,7 @@ function ExamForm(): JSX.Element {
         <div className='col-span-2 -mb-16 flex h-[3rem] w-full items-end justify-end gap-4 rounded-md'>
           <Button variant='outlined' onClick={handleOpen}>Cancelar</Button>
           <Button>Salvar</Button>
-        </div> */}
+        </div>
       </div>
     </>
   );

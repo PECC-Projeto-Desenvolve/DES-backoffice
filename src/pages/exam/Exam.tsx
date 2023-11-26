@@ -17,27 +17,6 @@ function Exam(): JSX.Element {
 
   return (
     <>
-
-      {/* <Alert
-        variant="gradient"
-        open={true}
-        icon={<AlertCircleIcon />}
-        className='absolute w-screen'
-        action={
-          <Button
-            variant="text"
-            color="white"
-            size="sm"
-            className="!absolute right-3 top-3"
-            // onClick={() => setOpen(false)}
-          >
-            Close
-          </Button>
-        }
-      >
-        Sorry, something went wrong please try again.
-      </Alert> */}
-
       <div className='grid h-full grid-cols-2 gap-x-4 rounded-md border border-gray-200 bg-white p-4'>
         <div className='flex w-full flex-col gap-4 overflow-y-scroll rounded-md border border-gray-100 px-2 py-4'>
           <Typography variant="h4">Provas criadas</Typography>
