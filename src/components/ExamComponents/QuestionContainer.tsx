@@ -8,6 +8,13 @@ interface IQuestionContainerProps {
 }
 
 function QuestionContainer({ alternatives, title, statement, imageSrc }: IQuestionContainerProps): JSX.Element {
+  const [estadoMudou, setEstadoMudou] = React.useState(false);
+
+  React.useEffect(() => {
+    // Define 'estadoMudou' como true se 'imageSrc' não estiver vazio
+    setEstadoMudou(!!imageSrc);
+  }, [imageSrc]); // Dependência de 'imageSrc'
+
   return (
     <>
       <section className="w-full overflow-hidden rounded-lg border border-border bg-modal-bg shadow-lg">
@@ -21,10 +28,14 @@ function QuestionContainer({ alternatives, title, statement, imageSrc }: IQuesti
           </p>
         </div>
 
-
-        <div className='flex w-full items-center justify-center'>
-          <img src={imageSrc} alt="Uploaded" className="mb-6 max-h-[12rem] rounded"/>
-        </div>
+        {estadoMudou ? (
+          <div className='flex w-full items-center justify-center'>
+            <img src={imageSrc} alt="Uploaded" className="mb-6 max-h-[12rem] rounded" />
+          </div>
+        ) : (
+          <>
+          </>
+        )}
 
         <div className='mb-8 flex w-full flex-col gap-4 px-8'>
           {alternatives.map((label, index) => (

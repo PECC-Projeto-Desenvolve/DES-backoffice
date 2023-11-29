@@ -9,6 +9,7 @@ import {
 } from '@material-tailwind/react';
 import { Edit, EyeIcon, MoreVertical, Trash } from 'lucide-react';
 import { stringResizer } from '../utils/StringResizer';
+import { formatDate } from '../utils/DateFormater';
 
 interface IQuestionCardProps {
     statement: string;
@@ -30,14 +31,6 @@ function QuestionCard({createdAt, updatedAt, statement, onDragStart}: IQuestionC
       icon: <Edit size={20}/>
     },
   ];
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Janeiro é 0!
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
 
   return (
     <>
