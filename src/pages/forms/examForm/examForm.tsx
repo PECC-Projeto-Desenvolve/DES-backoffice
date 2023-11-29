@@ -1,18 +1,28 @@
 import React from 'react';
-import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Tooltip, Typography } from '@material-tailwind/react';
+import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup } from '@material-tailwind/react';
 import { QuestionCard } from '../../../components/QuestionCard';
-import { AlertTriangle, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
+import { Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 import { stringResizer } from '../../../utils/StringResizer';
 
 import DND from '../../../assets/dnd-placeholder.svg';
 import { useNavigate } from 'react-router-dom';
+import ExitConfirmationDialog from '../../../components/ExitConfirmationDialog';
+
 
 function ExamForm(): JSX.Element {
   const [questions, setQuestions] = React.useState([]);
   const [questionOrder, setQuestionOrder] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
+  const [openPreview, setOpenPreview] = React.useState(false);
+  const [search, setSearch] = React.useState<string>('');
+  const [questionToPreview, setQuestionToPreview] = React.useState([]);
 
   const navigate = useNavigate();
+
+  const handleOpenQuestionPreview = (index) => {
+    setOpenPreview(!openPreview);
+  };
+
 
   const handleOnDrag = (e: React.DragEvent, widgetType: string) => {
     e.dataTransfer.setData('widgetType', widgetType);
@@ -53,42 +63,40 @@ function ExamForm(): JSX.Element {
 
   return (
     <>
-      <Dialog open={open} handler={handleOpen}>
-        <DialogHeader className="flex flex-row gap-2">
-          <AlertTriangle color='red'/>
-          <Typography variant='h4' color='red'>
-            Você possui alterações não salvas
-          </Typography>
-        </DialogHeader>
-        <DialogBody>
-          <Typography variant='lead'>
-          Você possui alterações não salvas nesta página. Se você sair agora, todas as alterações feitas serão perdidas.
-          </Typography>
+      <ExitConfirmationDialog
+        handleBack={handleBack}
+        handleOpen={handleOpen}
+        open={open}
+      />
 
-          <Typography variant='lead' className='mt-4'>
-            Tem certeza de que deseja sair sem salvar?
-          </Typography>
-        </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleBack}
-            className="mr-4"
-          >
-            <span>sair sem salvar</span>
-          </Button>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
-            <span>Continuar editando</span>
-          </Button>
-        </DialogFooter>
+      <Dialog open={openPreview} handler={handleOpenQuestionPreview} size='xl'>
+        <div className='w-full'>
+          {questionToPreview}
+          {/* <QuestionPreviewContainer question={questions[1]} /> */}
+        </div>
       </Dialog>
 
+      <div className='flex h-screen w-screen flex-col gap-4 overflow-hidden rounded bg-white px-8 py-6 transition-all'>
+        <div className='grid h-full max-h-[93%] w-full grid-cols-2 gap-2 '>
+          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
+            <span className='flex w-full items-center justify-between p-3'>
+              <Typography variant='h4'>Corpo da prova</Typography>
 
-      <div className='flex h-screen w-screen flex-col gap-4 overflow-hidden rounded bg-white px-8 py-12 transition-all'>
-        <div className='grid h-full w-full grid-cols-2 gap-2'>
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-6'>
-            <Typography variant='h4'>Corpo da prova</Typography>
+              <ButtonGroup>
+                {/* <Button>One</Button> */}
+                {/* <Button>Two</Button> */}
+                <Button
+                  disabled={questionOrder.length > 0 ? false : true}
+                  className='flex items-center gap-2'
+                  onClick={() => {
+                    setQuestionOrder([]);
+                  }}
+                >
+                  <Eraser />
+                    Limpar
+                </Button>
+              </ButtonGroup>
+            </span>
             <ul
               className='grid w-full grid-cols-1 gap-4 overflow-y-scroll'
               onDrop={handleOnDrop}
@@ -103,32 +111,41 @@ function ExamForm(): JSX.Element {
                   <Typography variant='h5'>
                     clique na questão, arraste e solte aqui
                   </Typography>
-                  <img src={DND} className='pointer-events-none select-none'/>
+                  <img src={DND} className='pointer-events-none animate-fade-in-down select-none'/>
                 </li>
               )}
               {questionOrder.map((question, index) => (
-                <>
-                  <li
-                    key={index}
-                    className='flex animate-fade-in-down select-none items-center justify-between rounded-md border bg-gray-100 p-2'
-                  >
-                    {index + 1}
-                    <Typography variant='h6'>
-                      {stringResizer(question, 50)}...
-                    </Typography>
+                <li
+                  key={index}
+                  className='flex animate-fade-in-down cursor-grab select-none items-center justify-between rounded-md border bg-[#fafafa] px-1 py-2 active:cursor-grabbing'
+                >
+                  <div className='flex items-center gap-1'>
+                    <GripVertical />
+                    <p className='flex h-7 w-7 items-center justify-center rounded-full bg-black p-2 text-white'>{index + 1}</p>
+                  </div>
 
+                  <Typography variant='h6'>
+                    {stringResizer(question, 50)}...
+                  </Typography>
+
+                  <ButtonGroup>
+                    <IconButton onClick={() => handleOpenQuestionPreview(index)} disabled>
+                      <Eye size={20}/>
+                    </IconButton>
                     <IconButton onClick={() => handleRemoveQuestion(index)}>
                       <MinusCircle size={20}/>
                     </IconButton>
-                  </li>
+                  </ButtonGroup>
+                </li>
 
-                </>
+
               ))}
+
               {questionOrder.length > 0 ? (
                 <>
                   <Tooltip content="clique na questão, arraste e solte aqui">
-                    <div className='flex h-[4rem] w-full flex-col items-center justify-center rounded-sm bg-green-100'>
-                      <PlusCircleIcon size={24} />
+                    <div className='flex h-[4rem] w-full flex-col items-center justify-center rounded-sm bg-green-400'>
+                      <PlusCircleIcon size={24} color='white'/>
                     </div>
                   </Tooltip>
                 </>
@@ -140,32 +157,66 @@ function ExamForm(): JSX.Element {
             </ul>
           </div>
 
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-6'>
-            <Typography variant='h4' className='mb-2'>Selecione a questão</Typography>
+          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
+            <div className=' p-2'>
+              <Typography variant='h4' className='mb-1'>Selecione a questão</Typography>
 
-            <Input label={'Buscar'} icon={<Search size={20}/>} size='lg' />
-            <div className='relative z-30 mt-2 grid h-full max-h-full w-full grid-cols-1 flex-col gap-4 overflow-y-scroll'>
+              <div className='flex w-full gap-2'>
+                <Input
+                  label={'Buscar'}
+                  icon={<Search size={20}/>}
+                  size='lg'
+                  onChange={(event) => setSearch(event.target.value)}
+                />
+                <Select label="Buscar por categoria" size='lg'>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
 
-              {questions.map((question, index) => (
-                <>
-                  <QuestionCard
-                    key={index}
-                    statement={question.statement}
-                    createdAt={question.createdAt}
-                    updatedAt={question.updatedAt}
-                    onDragStart={(e) => handleOnDrag(e, question.statement)}
-                  />
-                </>
+                </Select>
+              </div>
+            </div>
+            <div className='relative z-30 mt-2 flex h-full max-h-full w-full flex-col items-start gap-2 overflow-y-scroll'>
+
+              {questions.filter((question) => {
+                const isQuestionInOrdered = questionOrder.some(
+                  orderedQuestion => orderedQuestion === question.statement
+                );
+
+                return !isQuestionInOrdered && (search.toLocaleLowerCase() === '' ? true : question.statement.toLocaleLowerCase().includes(search));
+              }).map((question, index) => (
+
+                <QuestionCard
+                  key={index}
+                  statement={question.statement}
+                  createdAt={question.createdAt}
+                  updatedAt={question.updatedAt}
+                  onDragStart={(e) => handleOnDrag(e, question.statement)}
+                />
+
               ))}
             </div>
           </div>
-
-          <div className='rounded-md0 col-span-2 flex h-fit w-full items-end justify-end gap-4 transition-all'>
-            <Button variant='outlined' onClick={handleOpen} size='lg'>Cancelar</Button>
-            <Button size='lg' >Salvar</Button>
-          </div>
         </div>
-
+        <div className='flex h-fit w-full items-end justify-end gap-4 rounded-md transition-all'>
+          <Button variant='outlined' onClick={handleOpen} size='lg'>Cancelar</Button>
+          <Button size='lg' >Próximo</Button>
+        </div>
       </div>
     </>
   );

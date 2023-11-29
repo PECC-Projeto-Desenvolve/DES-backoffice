@@ -11,7 +11,6 @@ import { QuestionForm } from '../pages/forms/questionForm/questionForm';
 import { ExamForm } from '../pages/forms/examForm/examForm';
 
 function AppRoutes(): JSX.Element {
-  const [isForm, setIsForm] = React.useState<boolean>(false);
   const location = useLocation();
   const paths = location.pathname;
 
@@ -28,6 +27,12 @@ function AppRoutes(): JSX.Element {
           <Routes>
             <Route path='/question/form' element={<QuestionForm />}/>
             <Route path='/exam/form' element={<ExamForm />}/>
+            {/* <Route path='/exam/form' element={
+              <StrictMode>
+                <DragDropList />
+              </StrictMode>
+            }/> */}
+
           </Routes>
         </>
       ) : (
