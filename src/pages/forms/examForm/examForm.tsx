@@ -8,14 +8,28 @@ import DND from '../../../assets/dnd-placeholder.svg';
 import { useNavigate } from 'react-router-dom';
 import ExitConfirmationDialog from '../../../components/ExitConfirmationDialog';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { populateQuestions } from '../../../store/slices/questionsSlice';
+
 
 function ExamForm(): JSX.Element {
-  const [questions, setQuestions] = React.useState([]);
+//   const [questions, setQuestions] = React.useState([]);
   const [questionOrder, setQuestionOrder] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
   const [search, setSearch] = React.useState<string>('');
   const [questionToPreview, setQuestionToPreview] = React.useState([]);
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const questions = useSelector((state) => state.question.questions);
+  const dispatch = useDispatch();
+
+
+
+  React.useEffect(() => {
+    console.log(questions);
+  }, [questions]);
 
   const navigate = useNavigate();
 
@@ -30,7 +44,6 @@ function ExamForm(): JSX.Element {
 
   const handleOnDrop = (e: React.DragEvent) => {
     const widgetType = e.dataTransfer.getData('widgetType') as string;
-    console.log('widgetType', widgetType);
     setQuestionOrder([...questionOrder, widgetType]);
   };
 
@@ -57,7 +70,9 @@ function ExamForm(): JSX.Element {
   React.useEffect(() => {
     fetch('http://localhost:3000/questions')
       .then(response => response.json())
-      .then(data => setQuestions(data))
+      .then(data => {
+        dispatch(populateQuestions(data));
+      })
       .catch(error => console.error('Erro ao buscar questões:', error));
   }, []);
 
@@ -124,12 +139,14 @@ function ExamForm(): JSX.Element {
                     <p className='flex h-7 w-7 items-center justify-center rounded-full bg-black p-2 text-white'>{index + 1}</p>
                   </div>
 
-                  <Typography variant='h6'>
-                    {stringResizer(question, 50)}...
-                  </Typography>
+                  <div className='mx-2 w-full'>
+                    <Typography variant='h6'>
+                      {stringResizer(question, 50)} ...
+                    </Typography>
+                  </div>
 
                   <ButtonGroup>
-                    <IconButton onClick={() => handleOpenQuestionPreview(index)} disabled>
+                    <IconButton onClick={() => handleOpenQuestionPreview(index)}>
                       <Eye size={20}/>
                     </IconButton>
                     <IconButton onClick={() => handleRemoveQuestion(index)}>

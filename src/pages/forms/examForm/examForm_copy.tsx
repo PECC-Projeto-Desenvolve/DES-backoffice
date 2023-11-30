@@ -20,7 +20,7 @@ function ExamForm(): JSX.Element {
 
   const handleOnDrop = (e: React.DragEvent) => {
     const widgetType = e.dataTransfer.getData('widgetType') as string;
-    console.log('widgetType', widgetType);
+
     setQuestionOrder([...questionOrder, widgetType]);
   };
 
