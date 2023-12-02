@@ -9,6 +9,7 @@ import { Exam } from '../pages/exam/Exam';
 import {useNavigate} from 'react-router-dom';
 import { QuestionForm } from '../pages/forms/questionForm/questionForm';
 import { ExamForm } from '../pages/forms/examForm/examForm';
+import { Categories } from '../pages/categories/Categories';
 
 function AppRoutes(): JSX.Element {
   const location = useLocation();
@@ -25,14 +26,7 @@ function AppRoutes(): JSX.Element {
       { paths.includes('exam/form') ? (
         <>
           <Routes>
-            <Route path='/question/form' element={<QuestionForm />}/>
             <Route path='/exam/form' element={<ExamForm />}/>
-            {/* <Route path='/exam/form' element={
-              <StrictMode>
-                <DragDropList />
-              </StrictMode>
-            }/> */}
-
           </Routes>
         </>
       ) : (
@@ -52,6 +46,7 @@ function AppRoutes(): JSX.Element {
             <Route path='/' element={<Home />}/>
 
             <Route path='/question/form' element={<QuestionForm />}/>
+            <Route path='/categories' element={<Categories />}/>
             {/* <Route path='/exam/form' element={<ExamForm />}/> */}
 
             <Route path='/exam' element={<Exam />}/>

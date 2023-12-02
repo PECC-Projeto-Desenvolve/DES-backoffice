@@ -7,6 +7,7 @@ import { QuestionCard } from './QuestionCard';
 import { Skeleton } from './Skeleton';
 import { QuestionContainer } from './ExamComponents/QuestionContainer';
 import { QuestionLabel } from './ExamComponents/QuestionLabel';
+import { Icon } from './ToggleArrow';
 
 export {
   Alert,
@@ -18,4 +19,5 @@ export {
   Skeleton,
   QuestionContainer,
   QuestionLabel,
+  Icon
 };

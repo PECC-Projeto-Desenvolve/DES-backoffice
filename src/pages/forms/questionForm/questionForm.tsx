@@ -26,6 +26,18 @@ function QuestionForm() {
   const [selectedCheckbox, setSelectedCheckbox] = React.useState(null);
   const [imageSrc, setImageSrc] = React.useState(null);
   const fileInputRef = React.useRef(null);
+  const [difficulty, setDifficulty] = React.useState('');
+
+  const [categories, setCategories] = React.useState([]);
+  const [searchCategories, setSearchCategories] = React.useState('');
+
+
+  React.useEffect(() => {
+    fetch('http://localhost:3000/categories')
+      .then(response => response.json())
+      .then(data => setCategories(data))
+      .catch(error => console.error('Erro ao buscar categorias:', error));
+  }, []);
 
   const [open, setOpen] = React.useState(false);
 
@@ -101,6 +113,7 @@ function QuestionForm() {
       statement,
       alternatives,
       rightAnswer: selectedCheckbox.toString(),
+      difficulty: Number(difficulty),
     };
 
     try {
@@ -161,23 +174,40 @@ function QuestionForm() {
             <Input label="Título" size='lg' onChange={event => handleTitleChange(event.target.value)} value={title}/>
 
 
-            <Select label="Área de conhecimendo" size='lg' disabled={false}>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
+            <Select label="Categoria" size='lg' disabled={false}>
+
+              <Input label='Buscar por categoria' value={searchCategories} onChange={(e) => setSearchCategories(e.target.value)} className='mb-2'/>
+
+              {categories.filter((category) => {
+                return searchCategories.toLocaleLowerCase() === '' ? category : category.title.toLocaleLowerCase().includes(searchCategories);
+              }).map((category, index) => (
+                <>
+                  <Option key={index} value="1" className='my-2'>
+                    <Chip value={category.title} className='w-fit text-black' style={{ backgroundColor: `#${category.color}`}}/>
+                  </Option>
+                </>
+              ))}
+
             </Select>
 
-            <Select label="Dificuldade" size='lg'>
-              <Option>
+            <Select
+              label="Dificuldade"
+              size='lg'
+              value={difficulty}
+              onChange={(value) => setDifficulty(value)}
+            >
+              <Option value="1" index={1}>
                 <Chip value="Fácil" className='w-fit' color='green'/>
               </Option>
-              <Option>
+              <Option value="2" index={2}>
                 <Chip value="Médio" className='w-fit' color='orange'/>
               </Option>
-              <Option>
+              <Option value="3" index={3}>
                 <Chip value="Difícil" className='w-fit' color='red'/>
               </Option>
             </Select>
+
+            {difficulty} {typeof difficulty}
 
             <Textarea label='Enunciado' size='lg' onChange={event => handleStatementChange(event.target.value)} value={statement}/>
 

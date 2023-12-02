@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react';
-import { BadgeHelp, Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
+import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter, Collapse, Card, CardBody, Accordion, AccordionHeader, AccordionBody } from '@material-tailwind/react';
+import { BadgeHelp, Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, PlusIcon, Search } from 'lucide-react';
 import { stringResizer } from '../../../utils/StringResizer';
 
 import DND from '../../../assets/dnd-placeholder.svg';
 import { useNavigate } from 'react-router-dom';
-import { ExitConfirmationDialog, QuestionCard, Skeleton } from '../../../components';
+import { ExitConfirmationDialog, QuestionCard, Skeleton, Icon } from '../../../components';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateQuestions } from '../../../store/slices/questionsSlice';
@@ -23,6 +23,8 @@ function ExamForm(): JSX.Element {
   const [search, setSearch] = React.useState<string>('');
   const [questionToPreview, setQuestionToPreview] = React.useState([]);
   const [openHelpDialog, setOpenHelpDialog] = React.useState(false);
+  const [difficulty, setDifficulty] = React.useState('');
+  const [filterDifficulty, setFilterDifficulty] = React.useState('');
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -68,6 +70,16 @@ function ExamForm(): JSX.Element {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
+
+  const [collapse, setCollapse] = React.useState(false);
+
+  const toggleCollapse = () => {
+    setCollapse(!collapse);
+  };
+
+  const [accordionOpen, setAccordionOpen] = React.useState(0);
+
+  const handleAccordionOpen = (value) => setAccordionOpen(accordionOpen === value ? 0 : value);
 
   React.useEffect(() => {
     if (firstStepCompleted == 1) {
@@ -247,40 +259,59 @@ function ExamForm(): JSX.Element {
             <div className=' p-2'>
               <Typography variant='h4' className='mb-1'>Selecione a questão</Typography>
 
-              <div className='flex w-full gap-2'>
+
+              <div className='flex items-center gap-2'>
                 <Input
                   label={'Buscar'}
                   icon={<Search size={20}/>}
                   size='lg'
                   onChange={(event) => setSearch(event.target.value)}
                 />
-                <Select label="Buscar por categoria" size='lg'>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
 
+                <Select label="Categoria" size='lg' >
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
+                  <Option>
+                    <Chip value="categoria" className='w-fit'/>
+                  </Option>
                 </Select>
+                <div>
+                  <Select
+                    label="Dificuldade"
+                    size='lg'
+                    value={difficulty}
+                    onChange={(value) => setDifficulty(value)}
+                  >
+                    <Option value="1" index={1}>
+                      <Chip value="Fácil" className='w-fit' color='green'/>
+                    </Option>
+                    <Option value="2" index={2}>
+                      <Chip value="Médio" className='w-fit' color='orange'/>
+                    </Option>
+                    <Option value="3" index={3}>
+                      <Chip value="Difícil" className='w-fit' color='red'/>
+                    </Option>
+                  </Select>
+                </div>
+
               </div>
             </div>
             <div className='relative z-30 mt-2 flex h-full max-h-full w-full flex-col items-start gap-2 overflow-y-scroll'>
               {firstStepCompleted == 0 ? (
                 <Skeleton />
-
               ):(
                 <>
                   {questions.filter((question) => {
@@ -288,11 +319,18 @@ function ExamForm(): JSX.Element {
                       orderedQuestion => orderedQuestion === question.statement
                     );
 
-                    return !isQuestionInOrdered && (search.toLocaleLowerCase() === '' ? true : question.statement.toLocaleLowerCase().includes(search));
+                    const matchesDifficulty = Number(difficulty) === 0 || question.difficulty === Number(difficulty);
+
+                    const matchesSearch = !isQuestionInOrdered &&
+                (search.toLocaleLowerCase() === '' || question.statement.toLocaleLowerCase().includes(search));
+
+                    // Retorna true se ambas as condições forem verdadeiras
+                    return matchesDifficulty && matchesSearch;
                   }).map((question, index) => (
                     <QuestionCard
                       key={index}
                       id={question.id}
+                      difficulty={question.difficulty}
                       rightAnswer={question.rightAnswer}
                       statement={question.statement}
                       createdAt={question.createdAt}
