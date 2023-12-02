@@ -40,4 +40,4 @@ function QuestionLabel({ question, handleRemove, index }: IQuestionLabel) {
   );
 }
 
-export default QuestionLabel;
+export { QuestionLabel };

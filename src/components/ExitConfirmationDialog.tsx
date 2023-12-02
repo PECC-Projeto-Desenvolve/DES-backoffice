@@ -45,4 +45,4 @@ function ExitConfirmationDialog({ open, handleOpen, handleBack }: IExitConfirmat
   );
 }
 
-export default ExitConfirmationDialog;
+export { ExitConfirmationDialog };

@@ -5,7 +5,7 @@ import {
 import { FilePlus2, TextSelect } from 'lucide-react';
 
 import React from 'react';
-import { ExamCard } from '../../components/ExamCard';
+import { ExamCard } from '../../components';
 import { useNavigate } from 'react-router-dom';
 
 function Exam(): JSX.Element {

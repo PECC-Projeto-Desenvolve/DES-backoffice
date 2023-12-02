@@ -11,11 +11,10 @@ import {
   Option,
   Chip,
 } from '@material-tailwind/react';
-import { AlternativeInput } from '../../../components/AlternativeInput';
 import { useNavigate } from 'react-router-dom';
 import { EyeIcon, Trash2, UploadCloud } from 'lucide-react';
-import { QuestionContainer } from '../../../components/ExamComponents/QuestionContainer';
-import { CustomAlert } from '../../../components/Alert';
+
+import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
 
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
@@ -250,7 +249,7 @@ function QuestionForm() {
           </div>
         </div>
         <div className='flex h-fit w-full flex-col gap-4 p-4 '>
-          <CustomAlert
+          <Alert
             open={openAlert || openErrorAlert}
             success={openAlert}
             onClose={() => {

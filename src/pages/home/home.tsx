@@ -1,5 +1,5 @@
 import React from 'react';
-import { Banner } from '../../components/Banner';
+import { Banner } from '../../components';
 import { File, SearchCheck, MapPin, Users2 } from 'lucide-react';
 
 import { useSelector, useDispatch } from 'react-redux';

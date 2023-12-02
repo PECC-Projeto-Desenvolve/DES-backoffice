@@ -1,16 +1,14 @@
 import React from 'react';
 import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react';
-import { QuestionCard } from '../../../components/QuestionCard';
 import { BadgeHelp, Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 import { stringResizer } from '../../../utils/StringResizer';
 
 import DND from '../../../assets/dnd-placeholder.svg';
 import { useNavigate } from 'react-router-dom';
-import ExitConfirmationDialog from '../../../components/ExitConfirmationDialog';
+import { ExitConfirmationDialog, QuestionCard, Skeleton } from '../../../components';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateQuestions } from '../../../store/slices/questionsSlice';
-import { Skeleton } from '../../../components/Skeleton';
 
 import DNDHelper from '../../../assets/gifs/drag-n-drop-helper.gif';
 
