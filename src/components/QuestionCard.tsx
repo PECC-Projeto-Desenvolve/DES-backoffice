@@ -10,15 +10,18 @@ import {
 import { Edit, EyeIcon, MoreVertical, Trash } from 'lucide-react';
 import { stringResizer } from '../utils/StringResizer';
 import { formatDate } from '../utils/DateFormater';
+import { decryptRightAnswer } from '../utils/cryptoUtils';
 
 interface IQuestionCardProps {
+    id: string | number;
     statement: string;
+    rightAnswer: string;
     createdAt: string;
     updatedAt: string;
     onDragStart: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
-function QuestionCard({createdAt, updatedAt, statement, onDragStart}: IQuestionCardProps): JSX.Element {
+function QuestionCard({createdAt, updatedAt, statement, rightAnswer, id, onDragStart}: IQuestionCardProps): JSX.Element {
   const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5 hover:bg-[#eee] ';
 
   const menuItems = [
@@ -44,6 +47,8 @@ function QuestionCard({createdAt, updatedAt, statement, onDragStart}: IQuestionC
           <div className='h-5 w-full max-w-xl overflow-hidden overflow-ellipsis whitespace-nowrap'>
             <Typography variant='h6'>{stringResizer(statement, 50)}...</Typography>
           </div>
+          <Typography variant='small' className='mt-2 flex items-center gap-2'>Alternativa: <Typography variant='h6'>{decryptRightAnswer(rightAnswer)}</Typography> </Typography>
+
           <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
           <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography>
         </div>

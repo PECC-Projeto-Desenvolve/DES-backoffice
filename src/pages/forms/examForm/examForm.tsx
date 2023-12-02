@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup } from '@material-tailwind/react';
+import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter } from '@material-tailwind/react';
 import { QuestionCard } from '../../../components/QuestionCard';
-import { Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
+import { BadgeHelp, Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 import { stringResizer } from '../../../utils/StringResizer';
 
 import DND from '../../../assets/dnd-placeholder.svg';
@@ -10,6 +10,9 @@ import ExitConfirmationDialog from '../../../components/ExitConfirmationDialog';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateQuestions } from '../../../store/slices/questionsSlice';
+import { Skeleton } from '../../../components/Skeleton';
+
+import DNDHelper from '../../../assets/gifs/drag-n-drop-helper.gif';
 
 
 function ExamForm(): JSX.Element {
@@ -17,26 +20,23 @@ function ExamForm(): JSX.Element {
   const [questionOrder, setQuestionOrder] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
+  const [openFirstStep, setOpenFirstStep] = React.useState(false);
+  const [firstStepCompleted, setFirstStepCompleted] = React.useState(0);
   const [search, setSearch] = React.useState<string>('');
   const [questionToPreview, setQuestionToPreview] = React.useState([]);
+  const [openHelpDialog, setOpenHelpDialog] = React.useState(false);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const questions = useSelector((state) => state.question.questions);
   const dispatch = useDispatch();
 
-
-
-  React.useEffect(() => {
-    console.log(questions);
-  }, [questions]);
-
   const navigate = useNavigate();
 
   const handleOpenQuestionPreview = (index) => {
+    setQuestionToPreview(index);
     setOpenPreview(!openPreview);
   };
-
 
   const handleOnDrag = (e: React.DragEvent, widgetType: string) => {
     e.dataTransfer.setData('widgetType', widgetType);
@@ -63,18 +63,24 @@ function ExamForm(): JSX.Element {
     }
   };
 
+  const handleOpenHelpDialog = () => {
+    setOpenHelpDialog(!openHelpDialog);
+  };
+
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
 
   React.useEffect(() => {
-    fetch('http://localhost:3000/questions')
-      .then(response => response.json())
-      .then(data => {
-        dispatch(populateQuestions(data));
-      })
-      .catch(error => console.error('Erro ao buscar questões:', error));
-  }, []);
+    if (firstStepCompleted == 1) {
+      fetch('http://localhost:3000/questions')
+        .then(response => response.json())
+        .then(data => {
+          dispatch(populateQuestions(data));
+        })
+        .catch(error => console.error('Erro ao buscar questões:', error));
+    }
+  }, [firstStepCompleted]);
 
   return (
     <>
@@ -85,10 +91,75 @@ function ExamForm(): JSX.Element {
       />
 
       <Dialog open={openPreview} handler={handleOpenQuestionPreview} size='xl'>
+        <DialogHeader>Preview</DialogHeader>
         <div className='w-full'>
           {questionToPreview}
-          {/* <QuestionPreviewContainer question={questions[1]} /> */}
         </div>
+        {/* <QuestionPreviewContainer question={questions[1]} /> */}
+
+      </Dialog>
+
+      <Dialog open={openHelpDialog} handler={handleOpenHelpDialog} size='lg'>
+        <DialogHeader>Tutorial</DialogHeader>
+
+        <div className='flex w-full items-center justify-center py-6'>
+          <img src={DNDHelper} className='rounded-lg border'/>
+        </div>
+
+        <DialogFooter>
+          <Button variant="gradient" color="green" onClick={handleOpenHelpDialog}>
+            <span>OK</span>
+          </Button>
+        </DialogFooter>
+        {/* <QuestionPreviewContainer question={questions[1]} /> */}
+      </Dialog>
+
+      <Dialog open={firstStepCompleted == 0} handler={handleOpenQuestionPreview} size='md'>
+        <DialogHeader className='-mb-4'>Criação de prova</DialogHeader>
+        <DialogBody>
+          <Typography className='mb-4'>
+            Seja bem vindo(a) à criação
+          </Typography>
+
+          <div className='flex flex-col gap-2'>
+            <Input
+              label={'Título'}
+              icon={<Search size={20}/>}
+              size='lg'
+            />
+            <Select label="Nível da prova" size='lg'>
+              <Option>
+                <Chip value="Fácil" className='w-fit' color='green'/>
+              </Option>
+              <Option>
+                <Chip value="Médio" className='w-fit' color='orange'/>
+              </Option>
+              <Option>
+                <Chip value="Difícil" className='w-fit' color='red'/>
+              </Option>
+            </Select>
+            <Input
+              label={'Título'}
+              icon={<Search size={20}/>}
+              size='lg'
+            />
+          </div>
+        </DialogBody>
+
+        <DialogFooter>
+          <Button
+            variant="text"
+            color="red"
+            onClick={() => navigate(-1)}
+            className="mr-3"
+          >
+            <span>Cancelar</span>
+          </Button>
+          <Button variant="gradient" color="green" onClick={() => setFirstStepCompleted(1)}>
+            <span>Avançar</span>
+          </Button>
+        </DialogFooter>
+        {/* <QuestionPreviewContainer question={questions[1]} /> */}
       </Dialog>
 
       <div className='flex h-screen w-screen flex-col gap-4 overflow-hidden rounded bg-white px-8 py-6 transition-all'>
@@ -146,7 +217,7 @@ function ExamForm(): JSX.Element {
                   </div>
 
                   <ButtonGroup>
-                    <IconButton onClick={() => handleOpenQuestionPreview(index)}>
+                    <IconButton onClick={() => handleOpenQuestionPreview(questionOrder[index])}>
                       <Eye size={20}/>
                     </IconButton>
                     <IconButton onClick={() => handleRemoveQuestion(index)}>
@@ -209,30 +280,46 @@ function ExamForm(): JSX.Element {
               </div>
             </div>
             <div className='relative z-30 mt-2 flex h-full max-h-full w-full flex-col items-start gap-2 overflow-y-scroll'>
+              {firstStepCompleted == 0 ? (
+                <Skeleton />
 
-              {questions.filter((question) => {
-                const isQuestionInOrdered = questionOrder.some(
-                  orderedQuestion => orderedQuestion === question.statement
-                );
+              ):(
+                <>
+                  {questions.filter((question) => {
+                    const isQuestionInOrdered = questionOrder.some(
+                      orderedQuestion => orderedQuestion === question.statement
+                    );
 
-                return !isQuestionInOrdered && (search.toLocaleLowerCase() === '' ? true : question.statement.toLocaleLowerCase().includes(search));
-              }).map((question, index) => (
+                    return !isQuestionInOrdered && (search.toLocaleLowerCase() === '' ? true : question.statement.toLocaleLowerCase().includes(search));
+                  }).map((question, index) => (
+                    <QuestionCard
+                      key={index}
+                      id={question.id}
+                      rightAnswer={question.rightAnswer}
+                      statement={question.statement}
+                      createdAt={question.createdAt}
+                      updatedAt={question.updatedAt}
+                      onDragStart={(e) => handleOnDrag(e, question.statement)}
+                    />
 
-                <QuestionCard
-                  key={index}
-                  statement={question.statement}
-                  createdAt={question.createdAt}
-                  updatedAt={question.updatedAt}
-                  onDragStart={(e) => handleOnDrag(e, question.statement)}
-                />
+                  ))}
+                </>
+              )}
 
-              ))}
             </div>
           </div>
         </div>
-        <div className='flex h-fit w-full items-end justify-end gap-4 rounded-md transition-all'>
-          <Button variant='outlined' onClick={handleOpen} size='lg'>Cancelar</Button>
-          <Button size='lg' >Próximo</Button>
+        <div className='flex h-fit w-full items-end justify-between rounded-md'>
+          <div>
+            <Button variant='outlined' onClick={handleOpenHelpDialog} className='flex items-center gap-2'>
+            Ajuda
+              <BadgeHelp size={20}/>
+            </Button>
+          </div>
+          <div className='flex gap-4'>
+            <Button variant='outlined' onClick={handleOpen}>Cancelar</Button>
+            <Button>Próximo</Button>
+          </div>
         </div>
       </div>
     </>

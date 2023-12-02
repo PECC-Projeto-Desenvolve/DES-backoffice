@@ -8,6 +8,8 @@ import {
   IconButton,
   Tooltip,
   Dialog,
+  Option,
+  Chip,
 } from '@material-tailwind/react';
 import { AlternativeInput } from '../../../components/AlternativeInput';
 import { useNavigate } from 'react-router-dom';
@@ -99,7 +101,7 @@ function QuestionForm() {
       title,
       statement,
       alternatives,
-      rightAnswer: selectedCheckbox,
+      rightAnswer: selectedCheckbox.toString(),
     };
 
     try {
@@ -127,7 +129,8 @@ function QuestionForm() {
           setAlternatives(Array(5).fill(''));
           setTitle('');
           setStatement('');
-        }, 3000);
+          setSelectedCheckbox(null);
+        }, 1000);
       }
 
     } catch (error) {
@@ -165,10 +168,16 @@ function QuestionForm() {
               <option value="3">Option 3</option>
             </Select>
 
-            <Select label="Dificuldade" size='lg' disabled={false}>
-              <option value="1">Option 1</option>
-              <option value="2">Option 2</option>
-              <option value="3">Option 3</option>
+            <Select label="Dificuldade" size='lg'>
+              <Option>
+                <Chip value="Fácil" className='w-fit' color='green'/>
+              </Option>
+              <Option>
+                <Chip value="Médio" className='w-fit' color='orange'/>
+              </Option>
+              <Option>
+                <Chip value="Difícil" className='w-fit' color='red'/>
+              </Option>
             </Select>
 
             <Textarea label='Enunciado' size='lg' onChange={event => handleStatementChange(event.target.value)} value={statement}/>
@@ -232,6 +241,8 @@ function QuestionForm() {
                 </>
               ))}
             </div>
+
+            {selectedCheckbox}
 
             <div>
             </div>
