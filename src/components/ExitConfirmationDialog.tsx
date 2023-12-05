@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogBody, DialogFooter, DialogHeader, Typography } from '@material-tailwind/react';
 import { AlertTriangle } from 'lucide-react';
-import React from 'react';
 
 interface IExitConfirmationDialogProps {
     open: boolean;
@@ -8,6 +7,15 @@ interface IExitConfirmationDialogProps {
     handleBack: () => void;
 }
 
+/**
+ * Renders a confirmation dialog for exiting a page with unsaved changes.
+ *
+ * @param {object} props - Component props.
+ * @param {boolean} props.open - Determines if the dialog is open or not.
+ * @param {() => void} props.handleOpen - Function to toggle the dialog's open state.
+ * @param {() => void} props.handleBack - Function to execute when choosing to exit without saving.
+ * @returns {JSX.Element} A dialog component warning the user about unsaved changes with options to leave or stay on the page.
+ */
 function ExitConfirmationDialog({ open, handleOpen, handleBack }: IExitConfirmationDialogProps) {
   return (
     <>

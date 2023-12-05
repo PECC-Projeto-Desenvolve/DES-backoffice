@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Typography,
   Menu,
@@ -16,7 +15,15 @@ interface IExamCardProps {
     updatedAt: string;
 }
 
-
+/**
+ * Renders an exam card component with title, creation, and update dates, and a menu for actions.
+ *
+ * @param {object} props - Component props.
+ * @param {string} props.title - The title of the exam.
+ * @param {string} props.createdAt - The creation date of the exam.
+ * @param {string} props.updatedAt - The last update date of the exam.
+ * @returns {JSX.Element} A list item representing an exam card with interactive elements.
+ */
 function ExamCard({ title, createdAt, updatedAt }: IExamCardProps): JSX.Element {
   const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5 hover:bg-[#eee]';
 

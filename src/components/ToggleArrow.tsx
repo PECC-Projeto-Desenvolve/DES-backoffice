@@ -1,10 +1,16 @@
-import React from 'react';
-
 interface IIconProps {
     id: number;
     open: number;
 }
 
+/**
+ * Renders an SVG icon that changes orientation based on the provided `id` and `open` props.
+ *
+ * @param {object} props - Component props.
+ * @param {number} props.id - Unique identifier for the icon.
+ * @param {number} props.open - Identifier to determine the icon's orientation.
+ * @returns {JSX.Element} An SVG icon which rotates when the `id` matches the `open` value.
+ */
 function Icon({ id, open }: IIconProps) {
   return (
     <svg

@@ -7,13 +7,22 @@ interface IQuestionContainerProps {
     imageSrc: string;
 }
 
+/**
+ * Renders a container for displaying a question, its alternatives, and an optional image.
+ *
+ * @param {object} props - Component props.
+ * @param {Array<string>} props.alternatives - List of alternative answers for the question.
+ * @param {string} [props.title] - Optional title for the question.
+ * @param {string} props.statement - The statement of the question.
+ * @param {string} props.imageSrc - Source URL of the optional image associated with the question.
+ * @returns {JSX.Element} A section containing the question title, statement, image (if present), and alternatives.
+ */
 function QuestionContainer({ alternatives, title, statement, imageSrc }: IQuestionContainerProps): JSX.Element {
   const [estadoMudou, setEstadoMudou] = React.useState(false);
 
   React.useEffect(() => {
-    // Define 'estadoMudou' como true se 'imageSrc' não estiver vazio
     setEstadoMudou(!!imageSrc);
-  }, [imageSrc]); // Dependência de 'imageSrc'
+  }, [imageSrc]);
 
   return (
     <>

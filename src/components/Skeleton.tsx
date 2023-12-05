@@ -1,5 +1,8 @@
-import React from 'react';
-
+/**
+ * Renders a skeleton screen component for loading states.
+ *
+ * @returns {JSX.Element} A skeleton screen with animated placeholders to indicate loading content.
+ */
 function Skeleton(): JSX.Element {
   return (
     <div className="mx-auto w-full rounded-md border border-gray-400 bg-gray-400 p-4 shadow">

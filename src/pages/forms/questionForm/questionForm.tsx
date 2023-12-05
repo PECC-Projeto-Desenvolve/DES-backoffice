@@ -324,7 +324,7 @@ function QuestionForm() {
           <hr className='w-full border-gray-300'/>
           <div className='flex h-fit w-full justify-between gap-4'>
             <Button className='flex items-center gap-4' onClick={handleOpen}>
-              <EyeIcon /> Pré vizualizar
+              <EyeIcon size={20} /> Pré vizualizar
             </Button>
             <div className='flex h-full gap-4'>
               <Button variant='outlined' onClick={handleBack}>Cancelar</Button>

@@ -2,30 +2,13 @@ import { Button, Chip, Menu, IconButton, Input, MenuHandler, MenuItem, MenuList,
 import { Edit, MoreVertical, Trash } from 'lucide-react';
 import { Alert } from '../../components';
 import React from 'react';
+import {
+  deleteCategory,
+  updateCategory,
+  submitCategory,
+} from '../../api/category/_index';
 
-const colors = [
-  {name: 'Preto', hex:'#000000'},
-  {name: 'Azul Royal', hex:'#4169E1'},
-  {name: 'Vermelho Escarlate', hex:'#FF2400'},
-  {name: 'Verde Floresta', hex:'#228B22'},
-  {name: 'Amarelo Ouro', hex:'#FFD700'},
-  {name: 'Roxo', hex:'#800080'},
-  {name: 'Laranja', hex:'#FFA500'},
-  {name: 'Rosa Choque', hex:'#FF69B4'},
-  {name: 'Azul Turquesa', hex:'#30D5C8'},
-  {name: 'Vinho', hex:'#722F37'},
-  {name: 'Verde Limão', hex:'#32CD32'},
-  {name: 'Magenta', hex:'#FF00FF'},
-  {name: 'Ciano', hex:'#00FFFF'},
-  {name: 'Marrom', hex:'#A52A2A'},
-  {name: 'Azul Marinho', hex:'#000080'},
-  {name: 'Coral', hex:'#FF7F50'},
-  {name: 'Verde Oliva', hex:'#808000'},
-  {name: 'Roxo Berinjela', hex:'#4B0082'},
-  {name: 'Teal', hex:'#008080'},
-  {name: 'Bordô', hex:'#800000'},
-
-];
+import { colors } from '../../data/categoryColors';
 
 
 const menuItems = [
@@ -37,46 +20,6 @@ const menuItems = [
 
 function Categories() {
   const [categories, setCategories] = React.useState([]);
-
-  const fetchCategories = () => {
-    fetch('http://localhost:3000/categories')
-      .then(response => response.json())
-      .then(data => setCategories(data))
-      .catch(error => console.error('Erro ao buscar categorias:', error));
-  };
-
-
-
-  const deleteCategory = async (id: string): Promise<void> => {
-    try {
-      const response = await fetch(`http://localhost:3000/categories/${id}`, {
-        method: 'DELETE',
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao deletar a categoria');
-      }
-
-      if (response.ok) {
-        setCustomSuccesMessage('Categoria deletada com sucesso!');
-        setOpenAlert(true);
-        setTimeout(() => {
-          setOpenAlert(false);
-        }, 3000);
-      }
-
-      fetchCategories();
-
-      console.log('Categoria deletada com sucesso');
-    } catch (error) {
-      console.error('Erro ao deletar a categoria:', error);
-    }
-  };
-
-
-  React.useEffect(() => {
-    fetchCategories();
-  }, []);
 
   const [title, setTitle] = React.useState('');
   const [color, setColor] = React.useState('');
@@ -94,92 +37,69 @@ function Categories() {
   const [openErrorAlert, setOpenErrorAlert] = React.useState<boolean>(false);
   const [customAlertMessage, setCustomAlertMessage] = React.useState<string>('');
 
-  const [customSuccesDeleteMessage, setCustomSuccesDeleteMessage] = React.useState('');
-
   const [customSuccesMessage, setCustomSuccesMessage] = React.useState('');
+
+
+  React.useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = () => {
+    fetch('http://localhost:3000/categories')
+      .then(response => response.json())
+      .then(data => setCategories(data))
+      .catch(error => console.error('Erro ao buscar categorias:', error));
+  };
 
   const handleOpenNewCategoryName = () => {
     setOpenNewNameDialog(!openNewNameDialog);
   };
 
-  const updateCategory = async (id: string, newName: string): Promise<void> => {
-    try {
-      const response = await fetch(`http://localhost:3000/categories/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newName })
-      });
+  const handleDeleteCompleted = () => {
+    setCustomSuccesMessage('Categoria deletada com sucesso!');
+    setOpenAlert(true);
+    setTimeout(() => {
+      setOpenAlert(false);
+    }, 3000);
 
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      if (response.ok) {
-        setCustomSuccesMessage('Categoria atualizada com sucesso!');
-        setOpenAlert(true);
-        handleOpenNewCategoryName();
-        fetchCategories();
-        setTimeout(() => {
-          setOpenAlert(false);
-        }, 3000);
-      }
-
-      const data = await response.json();
-      console.log('Category updated successfully:', data);
-    } catch (error) {
-      console.error('Error updating category:', error);
-    }
+    fetchCategories();
   };
 
+  const handleUpdateCompleted = () => {
+    setCustomSuccesMessage('Categoria atualizada com sucesso!');
+    setOpenAlert(true);
+    handleOpenNewCategoryName();
+    fetchCategories();
+    setTimeout(() => {
+      setOpenAlert(false);
+    }, 3000);
+  };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmitNotCompleted = () => {
+    setOpenErrorAlert(true);
 
-    try {
-      const response = await fetch('http://localhost:3000/categories', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, color }),
-      });
+    setTimeout(() => {
+      setOpenErrorAlert(false);
+    }, 3000);
+  };
 
-      if (!response.ok) {
-        setOpenErrorAlert(true);
+  const handleSubmitCompleted = () => {
+    setCustomSuccesMessage('Categoria criada com sucesso!');
+    setOpenAlert(true);
+    setTitle('');
+    setColor('');
+    fetchCategories();
+    setTimeout(() => {
+      setOpenAlert(false);
+    }, 3000);
+  };
 
-        setTimeout(() => {
-          setOpenErrorAlert(false);
-        }, 3000);
-
-        throw new Error(`Erro HTTP: ${response.status}`);
-      }
-
-      if (response.ok) {
-        setCustomSuccesMessage('Categoria criada com sucesso!');
-        setOpenAlert(true);
-        setTitle('');
-        setColor('');
-
-        setTimeout(() => {
-          setOpenAlert(false);
-        }, 3000);
-      }
-
-      const responseData = await response.json();
-      console.log('Resposta do servidor:', responseData);
-
-      fetchCategories();
-
-    } catch (error) {
-      setOpenErrorAlert(true);
-      setCustomAlertMessage('Atualize a página e tente novamente');
-      setTimeout(() => {
-        setOpenErrorAlert(false);
-      }, 3000);
-      console.error('Falha ao enviar os dados:', error);
-    }
+  const handleSubmitError = () => {
+    setOpenErrorAlert(true);
+    setCustomAlertMessage('Atualize a página e tente novamente');
+    setTimeout(() => {
+      setOpenErrorAlert(false);
+    }, 3000);
   };
 
   return (
@@ -214,7 +134,14 @@ function Categories() {
                 Cancelar
             </Button>
 
-            <Button onClick={() => updateCategory(categoryIdToEdit, newCategoryName)} fullWidth color='green'>
+            <Button
+              onClick={
+                () =>
+                  updateCategory({
+                    id: categoryIdToEdit,
+                    newName: newCategoryName,
+                    responseCompleted: handleUpdateCompleted,
+                  })} fullWidth color='green'>
                 Confirmar
             </Button>
 
@@ -282,7 +209,7 @@ function Categories() {
                             <hr className="my-3" />
                             <MenuItem
                               className='flex items-center justify-center gap-2 text-red-300'
-                              onClick={() => deleteCategory(category.id)}
+                              onClick={() => deleteCategory({ id: category.id, responseCompleted: handleDeleteCompleted })}
                             >
                               <Trash size={20}/>
                                 Excluir
@@ -338,7 +265,13 @@ function Categories() {
               disabled={ title == '' || color == '' ? true : false}
               size='lg'
               className='mt-10'
-              onClick={handleSubmit}
+              onClick={() => submitCategory({
+                title: title,
+                color: color,
+                responseCompleted: handleSubmitCompleted,
+                responseNotCompleted: handleSubmitNotCompleted,
+                responseError: handleSubmitError
+              })}
             >
                 Salvar categoria
             </Button>

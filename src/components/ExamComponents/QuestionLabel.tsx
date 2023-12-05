@@ -1,7 +1,6 @@
 import { ButtonGroup, IconButton, Typography } from '@material-tailwind/react';
 import { Eye, GripVertical, MinusCircle } from 'lucide-react';
-import React from 'react';
-import { stringResizer } from '../../utils/StringResizer';
+import { stringResizer } from '../../utils';
 
 interface IQuestionLabel {
     question: string;
@@ -10,6 +9,16 @@ interface IQuestionLabel {
     index: number;
 }
 
+/**
+ * Renders a label for a question with action buttons for preview and removal.
+ *
+ * @param {object} props - Component props.
+ * @param {string} props.question - The question text.
+ * @param {() => void} [props.handlePreview] - Optional handler function for previewing the question.
+ * @param {() => void} props.handleRemove - Handler function for removing the question.
+ * @param {number} props.index - Index of the question in a list.
+ * @returns {JSX.Element} A list item representing a question with buttons for preview and removal.
+ */
 function QuestionLabel({ question, handleRemove, index }: IQuestionLabel) {
   return (
     <>

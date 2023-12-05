@@ -1,4 +1,3 @@
-import React from 'react';
 import { Alert, Button } from '@material-tailwind/react';
 import { Check, AlertTriangle } from 'lucide-react';
 
@@ -11,6 +10,18 @@ interface ICustomAlertProps {
     onClose: () => void;
   }
 
+/**
+ * Renders a custom alert component using Material Tailwind and Lucide-React.
+ *
+ * @param {object} props - Component props.
+ * @param {boolean} props.open - Determines if the alert is open or not.
+ * @param {boolean} props.success - Determines the type of the alert (success or error).
+ * @param {string} [props.customMessage] - Optional additional message for the alert.
+ * @param {string} props.successMessage - Message displayed when the alert is of type 'success'.
+ * @param {string} props.errorMessage - Message displayed when the alert is of type 'error'.
+ * @param {() => void} props.onClose - Function to call when the alert is closed.
+ * @returns {React.ReactElement} A styled alert element with an icon, message, and close button.
+ */
 function CustomAlert({ open, success, onClose, customMessage, successMessage, errorMessage }: ICustomAlertProps) {
   return (
     <Alert

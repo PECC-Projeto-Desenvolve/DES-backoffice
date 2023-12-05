@@ -10,13 +10,23 @@ interface IBannerProps {
     path: string;
 }
 
+
+/**
+ * Renders a clickable banner component using Material Tailwind, with navigation capabilities using React Router.
+ *
+ * @param {object} props - Component props.
+ * @param {string} props.title - Title text of the banner.
+ * @param {string} props.description - Description text of the banner.
+ * @param {React.ReactNode} props.icon - React node for the icon displayed in the banner.
+ * @param {string} props.path - The navigation path to redirect to when the banner is clicked.
+ * @returns {JSX.Element} A card component that navigates to a specified path on click.
+ */
 function Banner({ title, description, icon, path }: IBannerProps): JSX.Element {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(path);
   };
-
 
   return (
 
