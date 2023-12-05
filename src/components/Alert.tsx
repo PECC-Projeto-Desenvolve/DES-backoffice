@@ -6,10 +6,12 @@ interface ICustomAlertProps {
     open: boolean;
     success: boolean;
     customMessage?: string;
+    successMessage: string;
+    errorMessage: string;
     onClose: () => void;
   }
 
-function CustomAlert({ open, success, onClose, customMessage }: ICustomAlertProps) {
+function CustomAlert({ open, success, onClose, customMessage, successMessage, errorMessage }: ICustomAlertProps) {
   return (
     <Alert
       open={open}
@@ -29,7 +31,7 @@ function CustomAlert({ open, success, onClose, customMessage }: ICustomAlertProp
         </Button>
       }
     >
-      {success ? 'Questão salva com sucesso!' : 'Erro ao salvar a questão'}
+      {success ? successMessage : errorMessage}
       {customMessage ? (
         <>
           <ul className="ml-2 mt-2 list-inside list-disc">

@@ -6,6 +6,7 @@ import {
   MenuList,
   MenuItem,
   IconButton,
+  Chip,
 } from '@material-tailwind/react';
 import { Edit, EyeIcon, MoreVertical, Trash } from 'lucide-react';
 import { stringResizer } from '../utils/StringResizer';
@@ -21,6 +22,21 @@ interface IQuestionCardProps {
     difficulty: string | number;
     onDragStart: (event: React.DragEvent<HTMLDivElement>) => void;
 }
+
+const categories = [
+  {
+    title: 'categoria 1',
+    color: '#FADADD',
+  },
+  {
+    title: 'categoria 2',
+    color: '#CB99C9',
+  },
+  {
+    title: 'categoria 3',
+    color: '#FF6961',
+  },
+];
 
 function QuestionCard({createdAt, updatedAt, statement, rightAnswer, id, difficulty, onDragStart}: IQuestionCardProps): JSX.Element {
 
@@ -78,10 +94,18 @@ function QuestionCard({createdAt, updatedAt, statement, rightAnswer, id, difficu
           <Typography variant='small' className='-mb-1'>Enunciado:</Typography>
           <Typography variant='h6'>{stringResizer(statement, 50)}...</Typography>
 
-          <div className='mt-2 flex gap-3'>
+          <div className='flex h-fit w-full gap-1'>
+            {categories.map((category, index) => (
+              <>
+                <Chip value={category.title} className='w-fit' size="sm" style={{ backgroundColor: `${category.color}`}}/>
+              </>
+            ))}
+          </div>
+
+          <div className='flex gap-3'>
             <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
             <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography>
-          </div>
+          di</div>
         </div>
 
 

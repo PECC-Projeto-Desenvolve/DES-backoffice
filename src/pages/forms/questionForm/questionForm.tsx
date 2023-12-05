@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { EyeIcon, Trash2, UploadCloud } from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
+import SelectWithFilter from '../../../components/Select';
 
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
@@ -29,6 +30,7 @@ function QuestionForm() {
   const [difficulty, setDifficulty] = React.useState('');
 
   const [categories, setCategories] = React.useState([]);
+  const [selectedCategory, setSelectedCategory] = React.useState('');
   const [searchCategories, setSearchCategories] = React.useState('');
 
 
@@ -38,6 +40,13 @@ function QuestionForm() {
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
   }, []);
+
+  //   React.useEffect(() => {
+  //     fetch('http://localhost:3000/categories')
+  //       .then(response => response.json())
+  //       .then(data => setCategories(data.map(item => item.title))) // Supondo que cada categoria tenha uma propriedade 'name'
+  //       .catch(error => console.error('Erro ao buscar categorias:', error));
+  //   }, []);
 
   const [open, setOpen] = React.useState(false);
 
@@ -96,6 +105,10 @@ function QuestionForm() {
 
   const handleStatementChange = (event) => {
     setStatement(event);
+  };
+
+  const handleSelectCategory = (category) => {
+    setSelectedCategory(category);
   };
 
   const handleSubmit = async () => {
@@ -174,7 +187,13 @@ function QuestionForm() {
             <Input label="Título" size='lg' onChange={event => handleTitleChange(event.target.value)} value={title}/>
 
 
-            <Select label="Categoria" size='lg' disabled={false}>
+            {/* <Select
+              label="Categoria"
+              size='lg'
+              disabled={false}
+              value={category}
+              onChange={(value) => setCategory(value)}
+            >
 
               <Input label='Buscar por categoria' value={searchCategories} onChange={(e) => setSearchCategories(e.target.value)} className='mb-2'/>
 
@@ -182,13 +201,29 @@ function QuestionForm() {
                 return searchCategories.toLocaleLowerCase() === '' ? category : category.title.toLocaleLowerCase().includes(searchCategories);
               }).map((category, index) => (
                 <>
-                  <Option key={index} value="1" className='my-2'>
+                  <Option key={category.id} value={category.title} index={index} className='my-2 bg-white'>
                     <Chip value={category.title} className='w-fit text-black' style={{ backgroundColor: `#${category.color}`}}/>
                   </Option>
                 </>
               ))}
 
+            </Select> */}
+
+
+            <Select
+              label="Categoria"
+              onChange={(event) => setSelectedCategory(event)}
+              size='lg'
+            >
+              {categories.map((category, index) => (
+                <Option key={index} value={category.title}>
+                  <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
+                </Option>
+              ))}
             </Select>
+
+            {/* <SelectWithFilter options={categories} /> */}
+
 
             <Select
               label="Dificuldade"
@@ -206,8 +241,6 @@ function QuestionForm() {
                 <Chip value="Difícil" className='w-fit' color='red'/>
               </Option>
             </Select>
-
-            {difficulty} {typeof difficulty}
 
             <Textarea label='Enunciado' size='lg' onChange={event => handleStatementChange(event.target.value)} value={statement}/>
 
@@ -271,8 +304,6 @@ function QuestionForm() {
               ))}
             </div>
 
-            {selectedCheckbox}
-
             <div>
             </div>
 
@@ -287,6 +318,8 @@ function QuestionForm() {
               setOpenErrorAlert(false);
             }}
             customMessage={customAlertMessage}
+            successMessage='Questão criada com sucesso!'
+            errorMessage='Erro ao criar questão'
           />
           <hr className='w-full border-gray-300'/>
           <div className='flex h-fit w-full justify-between gap-4'>

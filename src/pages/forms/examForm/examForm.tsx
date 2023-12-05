@@ -1,11 +1,11 @@
 import React from 'react';
 import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter, Collapse, Card, CardBody, Accordion, AccordionHeader, AccordionBody } from '@material-tailwind/react';
-import { BadgeHelp, Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, PlusIcon, Search } from 'lucide-react';
+import { BadgeHelp, Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 import { stringResizer } from '../../../utils/StringResizer';
 
 import DND from '../../../assets/dnd-placeholder.svg';
 import { useNavigate } from 'react-router-dom';
-import { ExitConfirmationDialog, QuestionCard, Skeleton, Icon } from '../../../components';
+import { ExitConfirmationDialog, QuestionCard, Skeleton } from '../../../components';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateQuestions } from '../../../store/slices/questionsSlice';
@@ -18,13 +18,16 @@ function ExamForm(): JSX.Element {
   const [questionOrder, setQuestionOrder] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
-  const [openFirstStep, setOpenFirstStep] = React.useState(false);
+
   const [firstStepCompleted, setFirstStepCompleted] = React.useState(0);
   const [search, setSearch] = React.useState<string>('');
   const [questionToPreview, setQuestionToPreview] = React.useState([]);
   const [openHelpDialog, setOpenHelpDialog] = React.useState(false);
   const [difficulty, setDifficulty] = React.useState('');
-  const [filterDifficulty, setFilterDifficulty] = React.useState('');
+
+  const [categories, setCategories] = React.useState([]);
+  const [searchCategories, setSearchCategories] = React.useState('');
+
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -40,6 +43,8 @@ function ExamForm(): JSX.Element {
 
   const handleOnDrag = (e: React.DragEvent, widgetType: string) => {
     e.dataTransfer.setData('widgetType', widgetType);
+    setSearch('');
+    setDifficulty('');
   };
 
   const handleOnDrop = (e: React.DragEvent) => {
@@ -71,16 +76,6 @@ function ExamForm(): JSX.Element {
     e.preventDefault();
   };
 
-  const [collapse, setCollapse] = React.useState(false);
-
-  const toggleCollapse = () => {
-    setCollapse(!collapse);
-  };
-
-  const [accordionOpen, setAccordionOpen] = React.useState(0);
-
-  const handleAccordionOpen = (value) => setAccordionOpen(accordionOpen === value ? 0 : value);
-
   React.useEffect(() => {
     if (firstStepCompleted == 1) {
       fetch('http://localhost:3000/questions')
@@ -91,6 +86,13 @@ function ExamForm(): JSX.Element {
         .catch(error => console.error('Erro ao buscar questões:', error));
     }
   }, [firstStepCompleted]);
+
+  React.useEffect(() => {
+    fetch('http://localhost:3000/categories')
+      .then(response => response.json())
+      .then(data => setCategories(data))
+      .catch(error => console.error('Erro ao buscar categorias:', error));
+  }, []);
 
   return (
     <>
@@ -148,11 +150,6 @@ function ExamForm(): JSX.Element {
                 <Chip value="Difícil" className='w-fit' color='red'/>
               </Option>
             </Select>
-            <Input
-              label={'Título'}
-              icon={<Search size={20}/>}
-              size='lg'
-            />
           </div>
         </DialogBody>
 
@@ -176,22 +173,23 @@ function ExamForm(): JSX.Element {
         <div className='grid h-full max-h-[93%] w-full grid-cols-2 gap-2 '>
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             <span className='flex w-full items-center justify-between p-3'>
-              <Typography variant='h4'>Corpo da prova</Typography>
+              <div className='flex items-baseline gap-4'>
+                <Typography variant='h4'>Corpo da prova</Typography>
 
-              <ButtonGroup>
-                {/* <Button>One</Button> */}
-                {/* <Button>Two</Button> */}
-                <Button
-                  disabled={questionOrder.length > 0 ? false : true}
-                  className='flex items-center gap-2'
-                  onClick={() => {
-                    setQuestionOrder([]);
-                  }}
-                >
-                  <Eraser />
-                    Limpar
-                </Button>
-              </ButtonGroup>
+                <Typography variant='paragraph'>{questionOrder.length} / <strong>45</strong></Typography>
+              </div>
+
+              <Button
+                disabled={questionOrder.length > 0 ? false : true}
+                size='sm'
+                variant='text'
+                onClick={() => {
+                  setQuestionOrder([]);
+                }}
+              >
+                    Limpar questões
+              </Button>
+
             </span>
             <ul
               className='grid w-full grid-cols-1 gap-4 overflow-y-scroll'
@@ -257,7 +255,12 @@ function ExamForm(): JSX.Element {
 
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             <div className=' p-2'>
-              <Typography variant='h4' className='mb-1'>Selecione a questão</Typography>
+              <div className='mb-2 flex w-full items-center justify-between'>
+                <Typography variant='h4' className='mb-1'>Selecione a questão</Typography>
+
+                <Button size='sm' variant='text' onClick={() => setDifficulty(null)}>
+                    Limpar filtros</Button>
+              </div>
 
 
               <div className='flex items-center gap-2'>
@@ -265,29 +268,23 @@ function ExamForm(): JSX.Element {
                   label={'Buscar'}
                   icon={<Search size={20}/>}
                   size='lg'
+                  value={search}
                   onChange={(event) => setSearch(event.target.value)}
                 />
 
-                <Select label="Categoria" size='lg' >
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
-                  <Option>
-                    <Chip value="categoria" className='w-fit'/>
-                  </Option>
+                <Select label="Categoria" size='lg'>
+
+                  {categories.filter((category) => {
+                    return searchCategories.toLocaleLowerCase() === '' ? category : category.title.toLocaleLowerCase().includes(searchCategories);
+                  }).map((category) => (
+                    <>
+                      <Option key={category.id} value="1" className=' bg-white'>
+                        <Chip value={category.title} className='w-fit text-black' style={{ backgroundColor: `#${category.color}`}}/>
+                      </Option>
+                    </>
+                  ))}
                 </Select>
+
                 <div>
                   <Select
                     label="Dificuldade"
@@ -324,7 +321,6 @@ function ExamForm(): JSX.Element {
                     const matchesSearch = !isQuestionInOrdered &&
                 (search.toLocaleLowerCase() === '' || question.statement.toLocaleLowerCase().includes(search));
 
-                    // Retorna true se ambas as condições forem verdadeiras
                     return matchesDifficulty && matchesSearch;
                   }).map((question, index) => (
                     <QuestionCard
