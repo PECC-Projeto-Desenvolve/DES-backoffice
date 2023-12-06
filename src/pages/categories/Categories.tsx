@@ -1,6 +1,6 @@
-import { Button, Chip, Menu, IconButton, Input, MenuHandler, MenuItem, MenuList, Typography, CardFooter, Card, Dialog, CardBody } from '@material-tailwind/react';
+import { Button, Chip, Menu, IconButton, Input, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react';
 import { Edit, MoreVertical, Trash } from 'lucide-react';
-import { Alert } from '../../components';
+import { Alert, CategoryDialog } from '../../components';
 import React from 'react';
 import {
   deleteCategory,
@@ -104,50 +104,22 @@ function Categories() {
 
   return (
     <>
-      <Dialog
-        size="xs"
+      <CategoryDialog
         open={openNewNameDialog}
-        handler={handleOpenNewCategoryName}
-        className="bg-transparent shadow-none"
-      >
-        <Card className="mx-auto w-full max-w-[24rem]">
-          <CardBody className="flex flex-col gap-4">
-            <Typography variant="h4" color="blue-gray">
-              Novo nome para a categoria
-            </Typography>
-
-            <div className='w-full rounded-md border p-2'>
-
-              <div className='w-full rounded-md p-2' style={{ backgroundColor: `${categoryColorToEdit}`}}>
-                <Typography variant='h6' className='text-white'>{categoryNameToEdit.toUpperCase()}</Typography>
-              </div>
-
-              <Typography variant='small' className='mt-1'>id: <strong>{categoryIdToEdit}</strong></Typography>
-            </div>
-
-
-            <Input label="Nome da categoria" size="lg" onChange={(e) => setNewCategoryName(e.target.value)} value={newCategoryName}/>
-
-          </CardBody>
-          <CardFooter  className="flex gap-2 pt-0">
-            <Button variant="outlined" onClick={handleOpenNewCategoryName} fullWidth>
-                Cancelar
-            </Button>
-
-            <Button
-              onClick={
-                () =>
-                  updateCategory({
-                    id: categoryIdToEdit,
-                    newName: newCategoryName,
-                    responseCompleted: handleUpdateCompleted,
-                  })} fullWidth color='green'>
-                Confirmar
-            </Button>
-
-          </CardFooter>
-        </Card>
-      </Dialog>
+        handleOpen={handleOpenNewCategoryName}
+        color={categoryColorToEdit}
+        categoryName={categoryNameToEdit}
+        categoryId={categoryIdToEdit}
+        onChange={(e) => setNewCategoryName(e.target.value)}
+        value={newCategoryName}
+        onConfirm={() =>
+          updateCategory({
+            id: categoryIdToEdit,
+            newName: newCategoryName,
+            responseCompleted: handleUpdateCompleted,
+          })
+        }
+      />
 
 
       <div className='flex h-full w-full flex-col gap-4 overflow-hidden rounded bg-white px-4 py-6 transition-all'>

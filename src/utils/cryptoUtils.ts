@@ -12,11 +12,6 @@ const ENCRYPTION_KEY: { [key in RightAnswerKey]: string } = {
   '2': '6EEF636AC7C723C6F5BC3E5388172',
   '3': 'EDC4C367364D3C6BD9D38D1CCDCB1',
   '4': '6D328FE86E9C49A42F311D47E4B79',
-//   '0': 'ABCDEFGHIJ',
-//   '1': 'JKLMNOPQRS',
-//   '2': 'TUVWXYZABC',
-//   '3': 'DEFGHIJKLM',
-//   '4': 'NOPQRSTUVW',
 };
 
 /**

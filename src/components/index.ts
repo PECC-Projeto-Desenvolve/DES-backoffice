@@ -8,6 +8,7 @@ import { Skeleton } from './Skeleton';
 import { QuestionContainer } from './ExamComponents/QuestionContainer';
 import { QuestionLabel } from './ExamComponents/QuestionLabel';
 import { Icon } from './ToggleArrow';
+import { CategoryDialog } from './CategoryDialog';
 
 export {
   Alert,
@@ -19,5 +20,6 @@ export {
   Skeleton,
   QuestionContainer,
   QuestionLabel,
-  Icon
+  Icon,
+  CategoryDialog
 };
