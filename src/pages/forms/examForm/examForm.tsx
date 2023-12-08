@@ -1,9 +1,7 @@
 import React from 'react';
-import { Button, Dialog, Option, IconButton, Input, Select, Tooltip, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter, Collapse, Card, CardBody, Accordion, AccordionHeader, AccordionBody } from '@material-tailwind/react';
-import { BadgeHelp, Eraser, Eye, GripVertical, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
-import { stringResizer } from '../../../utils/StringResizer';
+import { Button, Dialog, Option, IconButton, Input, Select, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter, Tooltip } from '@material-tailwind/react';
+import { BadgeHelp, Eye, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 
-import DND from '../../../assets/dnd-placeholder.svg';
 import { useNavigate } from 'react-router-dom';
 import { ExitConfirmationDialog, QuestionCard, Skeleton } from '../../../components';
 
@@ -11,6 +9,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { populateQuestions } from '../../../store/slices/questionsSlice';
 
 import DNDHelper from '../../../assets/gifs/drag-n-drop-helper.gif';
+
+import { ExamQuestionLabel } from '../../../components/ExamQuestionLabel';
+
+import { DndContext, useSensor, useSensors, PointerSensor, KeyboardSensor, closestCenter } from '@dnd-kit/core';
+import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
+
+import DND from '../../../assets/dnd-placeholder.svg';
 
 
 function ExamForm(): JSX.Element {
@@ -26,7 +31,9 @@ function ExamForm(): JSX.Element {
   const [difficulty, setDifficulty] = React.useState('');
 
   const [categories, setCategories] = React.useState([]);
-  const [searchCategories, setSearchCategories] = React.useState('');
+  //   const [searchCategories, setSearchCategories] = React.useState('');
+
+  //   const [items, setItems] = React.useState(questionOrder);
 
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -43,17 +50,30 @@ function ExamForm(): JSX.Element {
 
   const handleOnDrag = (e: React.DragEvent, widgetType: string) => {
     e.dataTransfer.setData('widgetType', widgetType);
-    setSearch('');
-    setDifficulty('');
+
   };
 
   const handleOnDrop = (e: React.DragEvent) => {
+    setSearch('');
+    setDifficulty('');
+
     const widgetType = e.dataTransfer.getData('widgetType') as string;
     setQuestionOrder([...questionOrder, widgetType]);
   };
 
   const handleRemoveQuestion = (indexToRemove) => {
     setQuestionOrder(questionOrder.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleDragEnd = (event: any) => {
+    const { active, over } = event;
+    if (active.id !== over.id) {
+      setQuestionOrder((prev) => {
+        const oldIndex = prev.findIndex(item => item === active.id);
+        const newIndex = prev.findIndex(item => item === over.id);
+        return arrayMove(prev, oldIndex, newIndex);
+      });
+    }
   };
 
   const handleBack = () => {
@@ -75,6 +95,11 @@ function ExamForm(): JSX.Element {
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor)
+  );
 
   React.useEffect(() => {
     if (firstStepCompleted == 1) {
@@ -107,7 +132,6 @@ function ExamForm(): JSX.Element {
         <div className='w-full'>
           {questionToPreview}
         </div>
-        {/* <QuestionPreviewContainer question={questions[1]} /> */}
 
       </Dialog>
 
@@ -123,7 +147,6 @@ function ExamForm(): JSX.Element {
             <span>OK</span>
           </Button>
         </DialogFooter>
-        {/* <QuestionPreviewContainer question={questions[1]} /> */}
       </Dialog>
 
       <Dialog open={firstStepCompleted == 0} handler={handleOpenQuestionPreview} size='md'>
@@ -191,66 +214,63 @@ function ExamForm(): JSX.Element {
               </Button>
 
             </span>
-            <ul
-              className='grid w-full grid-cols-1 gap-4 overflow-y-scroll'
+
+            <ul className='relative h-full w-full overflow-y-scroll'
               onDrop={handleOnDrop}
               onDragOver={handleDragOver}
             >
-              {questionOrder.length > 0 ? (
-                <>
+              {/* <SortableListComponent /> */}
+              <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={questionOrder} strategy={verticalListSortingStrategy}>
+                  {questionOrder.length > 0 ? (
+                    <>
 
-                </>
-              ): (
-                <li className='flex h-full w-full select-none flex-col items-center gap-4 rounded-md bg-blue-gray-50/50 p-4'>
-                  <Typography variant='h5'>
+                    </>
+                  ): (
+                    <li className='flex h-full w-full select-none flex-col items-center gap-4 rounded-md bg-blue-gray-50/50 p-4'>
+                      <Typography variant='h5'>
                     clique na questão, arraste e solte aqui
-                  </Typography>
-                  <img src={DND} className='pointer-events-none animate-fade-in-down select-none'/>
-                </li>
-              )}
-              {questionOrder.map((question, index) => (
-                <li
-                  key={index}
-                  className='flex animate-fade-in-down cursor-grab select-none items-center justify-between rounded-md border bg-[#fafafa] px-1 py-2 active:cursor-grabbing'
-                >
-                  <div className='flex items-center gap-1'>
-                    <GripVertical />
-                    <p className='flex h-7 w-7 items-center justify-center rounded-full bg-black p-2 text-white'>{index + 1}</p>
-                  </div>
+                      </Typography>
+                      <img src={DND} className='pointer-events-none animate-fade-in-down select-none'/>
+                    </li>
+                  )}
 
-                  <div className='mx-2 w-full'>
-                    <Typography variant='h6'>
-                      {stringResizer(question, 50)} ...
-                    </Typography>
-                  </div>
+                  {questionOrder.map((question, index) => (
+                    <ExamQuestionLabel
+                      id={question}
+                      index={question}
+                      counter={index}
+                      key={index}
+                      question={question}
+                      buttonPlacement={
+                        <ButtonGroup>
+                          <IconButton onClick={() => handleOpenQuestionPreview(questionOrder[index])}>
+                            <Eye size={20}/>
+                          </IconButton>
+                          <IconButton onClick={() => handleRemoveQuestion(index)}>
+                            <MinusCircle size={20}/>
+                          </IconButton>
+                        </ButtonGroup>
+                      }
+                    />
+                  ))}
 
-                  <ButtonGroup>
-                    <IconButton onClick={() => handleOpenQuestionPreview(questionOrder[index])}>
-                      <Eye size={20}/>
-                    </IconButton>
-                    <IconButton onClick={() => handleRemoveQuestion(index)}>
-                      <MinusCircle size={20}/>
-                    </IconButton>
-                  </ButtonGroup>
-                </li>
-
-
-              ))}
-
-              {questionOrder.length > 0 ? (
-                <>
-                  <Tooltip content="clique na questão, arraste e solte aqui">
-                    <div className='flex h-[4rem] w-full flex-col items-center justify-center rounded-sm bg-green-400'>
-                      <PlusCircleIcon size={24} color='white'/>
-                    </div>
-                  </Tooltip>
-                </>
-              ): (
-                <>
-                </>
-              )}
-
+                  {questionOrder.length > 0 ? (
+                    <>
+                      <Tooltip content="clique na questão, arraste e solte aqui">
+                        <div className='flex h-[4rem] w-full flex-col items-center justify-center rounded-sm bg-green-400'>
+                          <PlusCircleIcon size={24} color='white'/>
+                        </div>
+                      </Tooltip>
+                    </>
+                  ): (
+                    <>
+                    </>
+                  )}
+                </SortableContext>
+              </DndContext>
             </ul>
+
           </div>
 
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
@@ -274,9 +294,7 @@ function ExamForm(): JSX.Element {
 
                 <Select label="Categoria" size='lg'>
 
-                  {categories.filter((category) => {
-                    return searchCategories.toLocaleLowerCase() === '' ? category : category.title.toLocaleLowerCase().includes(searchCategories);
-                  }).map((category) => (
+                  {categories.filter((category) => (
                     <>
                       <Option key={category.id} value="1" className=' bg-white'>
                         <Chip value={category.title} className='w-fit text-black' style={{ backgroundColor: `#${category.color}`}}/>
@@ -322,19 +340,21 @@ function ExamForm(): JSX.Element {
                 (search.toLocaleLowerCase() === '' || question.statement.toLocaleLowerCase().includes(search));
 
                     return matchesDifficulty && matchesSearch;
-                  }).map((question, index) => (
-                    <QuestionCard
-                      key={index}
-                      id={question.id}
-                      difficulty={question.difficulty}
-                      rightAnswer={question.rightAnswer}
-                      statement={question.statement}
-                      createdAt={question.createdAt}
-                      updatedAt={question.updatedAt}
-                      onDragStart={(e) => handleOnDrag(e, question.statement)}
-                    />
+                  })
+                    .sort((a, b) => a.difficulty - b.difficulty)
+                    .map((question, index) => (
+                      <QuestionCard
+                        key={index}
+                        id={question.id}
+                        difficulty={question.difficulty}
+                        rightAnswer={question.rightAnswer}
+                        statement={question.statement}
+                        createdAt={question.createdAt}
+                        updatedAt={question.updatedAt}
+                        onDragStart={(e) => handleOnDrag(e, question.statement)}
+                      />
 
-                  ))}
+                    ))}
                 </>
               )}
 

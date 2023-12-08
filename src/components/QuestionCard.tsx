@@ -15,7 +15,7 @@ import {
 } from '../utils';
 
 interface IQuestionCardProps {
-    id: string | number;
+    id?: string | number;
     statement: string;
     rightAnswer: string;
     createdAt: string;
@@ -39,7 +39,7 @@ interface IQuestionCardProps {
 //   },
 // ];
 
-function QuestionCard({createdAt, updatedAt, statement, rightAnswer, id, difficulty, onDragStart}: IQuestionCardProps): JSX.Element {
+function QuestionCard({createdAt, updatedAt, statement, rightAnswer, difficulty, onDragStart}: IQuestionCardProps): JSX.Element {
 
   const [color, setColor] = React.useState('');
 
@@ -83,7 +83,7 @@ function QuestionCard({createdAt, updatedAt, statement, rightAnswer, id, difficu
   return (
     <>
       <div
-        className={`z-50 flex h-fit w-full cursor-grab items-center justify-between rounded-md border bg-[#fff] active:cursor-grabbing ${hoverAnimation}`}
+        className={`z-50 flex h-fit w-full cursor-grab items-center justify-between rounded-md border bg-[#fff] active:cursor-grabbing ${hoverAnimation} animate-fade-in-down`}
         onDragStart={onDragStart}
         draggable
       >
@@ -106,7 +106,7 @@ function QuestionCard({createdAt, updatedAt, statement, rightAnswer, id, difficu
           <div className='flex gap-3'>
             <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
             <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography>
-          di</div>
+          </div>
         </div>
 
 

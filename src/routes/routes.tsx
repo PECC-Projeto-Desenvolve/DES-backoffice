@@ -27,6 +27,7 @@ function AppRoutes(): JSX.Element {
         <>
           <Routes>
             <Route path='/exam/form' element={<ExamForm />}/>
+            {/* <Route path='/exam/form' element={<SortableListComponent />}/> */}
           </Routes>
         </>
       ) : (
