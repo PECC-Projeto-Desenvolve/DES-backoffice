@@ -13,7 +13,7 @@ function Exam(): JSX.Element {
     fetch('http://localhost:3000/exams')
       .then(response => response.json())
       .then(data => setExams(data))
-      .catch(error => console.error('Erro ao buscar questões:', error));
+      .catch(error => console.error('Erro ao buscar provas:', error));
   };
 
   React.useEffect(() => {

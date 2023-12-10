@@ -367,6 +367,7 @@ function ExamForm(): JSX.Element {
                   variant='text'
                   onClick={() => {
                     setDifficulty(null);
+                    setSearch('');
                     fetchQuestions();
                   }}
                 >

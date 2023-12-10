@@ -10,6 +10,7 @@ import {
 import { Copy, Edit, MoreVertical, Trash } from 'lucide-react';
 import { formatDate } from '../utils/DateFormater';
 import { deleteExam } from '../api/exam/delete';
+import { useNavigate } from 'react-router-dom';
 
 interface IExamCardProps {
     title: string;
@@ -33,6 +34,8 @@ interface IExamCardProps {
 function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: IExamCardProps): JSX.Element {
   const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:shadow-blue-gray-900/5 hover:bg-[#eee]';
 
+  const navigate = useNavigate();
+
   const [difficultyColor, setDifficultyColor] = React.useState('');
   const menuItems = [
     {
@@ -44,6 +47,10 @@ function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: I
       icon: <Copy size={20}/>
     },
   ];
+
+  const handleClick = (itemLabel: string, itemId: string) => {
+    itemLabel == 'Editar' && navigate(`/exam/edit/${itemId}`);
+  };
 
   React.useEffect(() => {
     difficulty == 'Fácil' && setDifficultyColor('border-l-green-400');
@@ -74,7 +81,8 @@ function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: I
                 <MenuItem
                   className='flex items-center gap-4'
                   key={index}
-                  disabled
+                  onClick={() => handleClick(item.label, id)}
+                  disabled={item.label == 'Duplicar'}
                 >
                   {item.icon}
                   {item.label}
@@ -86,7 +94,7 @@ function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: I
               <hr className="my-3" />
               <MenuItem
                 className='flex items-center justify-center gap-2 text-red-300'
-                onClick={() => deleteExam({ id: id, responseCompleted: () => handleDeleteCompleted})}>
+                onClick={() => deleteExam({ id: id, responseCompleted: handleDeleteCompleted})}>
                 <Trash size={20}/>
                     Excluir
               </MenuItem>
