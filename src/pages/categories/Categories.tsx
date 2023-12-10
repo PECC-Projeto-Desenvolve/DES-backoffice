@@ -9,6 +9,7 @@ import {
 } from '../../api/category/_index';
 
 import { colors } from '../../data/categoryColors';
+import { BackButton } from '../../components/BackButton';
 
 const menuItems = [
   {
@@ -121,7 +122,8 @@ function Categories() {
       />
 
 
-      <div className='flex h-full w-full flex-col gap-4 overflow-hidden rounded bg-white px-4 py-6 transition-all'>
+      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-white p-4 transition-all'>
+        <BackButton />
         <div className='grid h-full w-full grid-cols-2 gap-2 '>
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border p-4'>
 
@@ -247,10 +249,6 @@ function Categories() {
                 Salvar categoria
             </Button>
           </div>
-        </div>
-
-        <div className='flex h-fit w-full items-end justify-end rounded-md'>
-          <Button>Voltar</Button>
         </div>
 
         <Alert

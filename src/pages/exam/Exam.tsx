@@ -6,6 +6,8 @@ import { FilePlus2, SearchCheck, Tags, TextSelect } from 'lucide-react';
 import React from 'react';
 import { Banner, ExamCard } from '../../components';
 
+import { BackButton } from '../../components/BackButton';
+
 function Exam(): JSX.Element {
   const [exams, setExams] = React.useState([]);
 
@@ -22,7 +24,10 @@ function Exam(): JSX.Element {
 
   return (
     <>
-      <div className='flex h-full w-full flex-col gap-4 overflow-hidden rounded bg-white px-4 py-6 transition-all'>
+      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-white p-4 transition-all'>
+
+        <BackButton />
+
         <div className='grid h-full w-full grid-cols-2 gap-2 '>
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             {exams.length == 0 ? (
@@ -36,7 +41,7 @@ function Exam(): JSX.Element {
                 <span className='w-full'>
                   <Typography variant="h4">Provas criadas</Typography>
                 </span>
-                <ul className='relative flex h-full w-full flex-col items-start gap-2 overflow-y-scroll'>
+                <ul className='relative flex h-full w-full animate-fade-in-down flex-col items-start gap-2 overflow-y-scroll'>
                   {
                     exams.map((exam, index) => (
                       <>
@@ -61,6 +66,7 @@ function Exam(): JSX.Element {
           <div className='relative w-full rounded-md border px-2 py-4'>
             <div className='grid grid-cols-2 gap-4'>
               <Banner
+                rounded='rounded-sm'
                 icon={<TextSelect size={20}/>}
                 title="Criar Questões"
                 description={
@@ -69,6 +75,7 @@ function Exam(): JSX.Element {
                 path='/question/form'
               />
               <Banner
+                rounded='rounded-sm'
                 icon={<FilePlus2 size={20}/>}
                 title="Criar Prova"
                 description={
@@ -77,6 +84,7 @@ function Exam(): JSX.Element {
                 path='/exam/form'
               />
               <Banner
+                rounded='rounded-sm'
                 icon={<Tags size={20} />}
                 title="Gerenciar Categorias"
                 description={
@@ -85,6 +93,7 @@ function Exam(): JSX.Element {
                 path='/categories'
               />
               <Banner
+                rounded='rounded-sm'
                 icon={<SearchCheck size={20} />}
                 title="Gerenciar Processos"
                 description={

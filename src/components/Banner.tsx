@@ -7,6 +7,7 @@ interface IBannerProps {
     description: string;
     icon: React.ReactNode;
     path: string;
+    rounded?: string;
 }
 
 /**
@@ -19,7 +20,7 @@ interface IBannerProps {
  * @param {string} props.path - The navigation path to redirect to when the banner is clicked.
  * @returns {JSX.Element} A card component that navigates to a specified path on click.
  */
-function Banner({ title, description, icon, path }: IBannerProps): JSX.Element {
+function Banner({ title, description, icon, path, rounded }: IBannerProps): JSX.Element {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -29,7 +30,7 @@ function Banner({ title, description, icon, path }: IBannerProps): JSX.Element {
   return (
     <Card
       shadow={false}
-      className="cursor-pointer rounded-sm border border-blue-gray-50 px-5 py-4 shadow-xl shadow-transparent transition-all hover:-translate-y-4 hover:border-blue-gray-100/60 hover:shadow-blue-gray-900/5"
+      className={`cursor-pointer border border-blue-gray-50 px-5 py-4 shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:border-blue-gray-100/60 hover:shadow-blue-gray-900/5 ${rounded}`}
       onClick={handleClick}
     >
       <Typography variant="h5" color="blue-gray" className="mb-3 flex items-center gap-3">
