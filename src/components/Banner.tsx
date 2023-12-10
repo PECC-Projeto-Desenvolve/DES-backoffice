@@ -2,14 +2,12 @@ import React from 'react';
 import { Typography, Card } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 
-
 interface IBannerProps {
     title: string;
     description: string;
     icon: React.ReactNode;
     path: string;
 }
-
 
 /**
  * Renders a clickable banner component using Material Tailwind, with navigation capabilities using React Router.
@@ -29,10 +27,9 @@ function Banner({ title, description, icon, path }: IBannerProps): JSX.Element {
   };
 
   return (
-
     <Card
       shadow={false}
-      className="cursor-pointer border border-blue-gray-50 px-5 py-4 shadow-xl shadow-transparent transition-all hover:-translate-y-4 hover:border-blue-gray-100/60 hover:shadow-blue-gray-900/5"
+      className="cursor-pointer rounded-sm border border-blue-gray-50 px-5 py-4 shadow-xl shadow-transparent transition-all hover:-translate-y-4 hover:border-blue-gray-100/60 hover:shadow-blue-gray-900/5"
       onClick={handleClick}
     >
       <Typography variant="h5" color="blue-gray" className="mb-3 flex items-center gap-3">

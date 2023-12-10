@@ -3,7 +3,7 @@ import { Button, Dialog, Option, IconButton, Input, Select, Typography, Chip, Bu
 import { BadgeHelp, Eye, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
-import { ExitConfirmationDialog, QuestionCard, Skeleton } from '../../../components';
+import { ExitConfirmationDialog, QuestionCard, Skeleton, QuestionContainer } from '../../../components';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateQuestions } from '../../../store/slices/questionsSlice';
@@ -41,7 +41,7 @@ function ExamForm(): JSX.Element {
   const [difficulty, setDifficulty] = React.useState('');
 
   const [categories, setCategories] = React.useState([]);
-  const [selectedCategory, setSelectedCategory] = React.useState('');
+  //   const [selectedCategory, setSelectedCategory] = React.useState('');
 
   const [examTitle, setExamTitle] = React.useState('');
 
@@ -163,21 +163,6 @@ function ExamForm(): JSX.Element {
         open={open}
       />
 
-      <Dialog open={openPreview} handler={handleOpenQuestionPreview} size='xl'>
-        <DialogHeader>Preview</DialogHeader>
-        <div className='w-full'>
-          {questionToPreview.title}
-          <br />
-          <br />
-          {questionToPreview.statement}
-          <br />
-          <br />
-          {questionToPreview.alternatives.map((alternative, index) => (
-            <p key={index}>{alternative.text}</p>
-          ))}
-        </div>
-      </Dialog>
-
       <Dialog open={openExamCompletedDialog} handler={handleExamSubmitCompleted}>
         <DialogHeader>Prova criada com sucesso! 🎉</DialogHeader>
         <DialogBody>
@@ -201,17 +186,25 @@ function ExamForm(): JSX.Element {
       </Dialog>
 
       <Dialog open={openPreview} handler={handleOpenQuestionPreview} size='xl'>
-        <DialogHeader>Preview</DialogHeader>
         <div className='w-full'>
-          {questionToPreview.title}
-          <br />
-          <br />
-          {questionToPreview.statement}
-          <br />
-          <br />
-          {questionToPreview.alternatives.map((alternative, index) => (
-            <p key={index}>{alternative.text}</p>
-          ))}
+          <QuestionContainer
+            title={questionToPreview.title}
+            statement={questionToPreview.statement}
+            alternativesWrapper={
+              <>
+                {questionToPreview.alternatives.map((alternative, index) => (
+                  <>
+                    <div className='flex w-full cursor-pointer items-center gap-3 rounded-md border-2 border-transparent bg-modal-heading px-2 py-3 text-white transition ease-in-out'>
+                      <div className='flex h-8 w-8 select-none items-center justify-center rounded-full bg-white text-black'>
+                        {String.fromCharCode(64 + (index + 1))}
+                      </div>
+                      <p key={index}>{alternative.text}</p>
+                    </div>
+                  </>
+                ))}
+              </>
+            }
+          />
         </div>
       </Dialog>
 
@@ -267,7 +260,12 @@ function ExamForm(): JSX.Element {
           >
             <span>Cancelar</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={() => setFirstStepCompleted(1)}>
+          <Button
+            variant="gradient"
+            color="green"
+            onClick={() => setFirstStepCompleted(1)}
+            disabled={examTitle == '' && true}
+          >
             <span>Avançar</span>
           </Button>
         </DialogFooter>
@@ -387,7 +385,7 @@ function ExamForm(): JSX.Element {
 
                 <Select
                   label="Categoria"
-                  onChange={(event) => setSelectedCategory(event)}
+                  //   onChange={(event) => setSelectedCategory(event)}
                   size='lg'
                   disabled
                 >
@@ -405,7 +403,7 @@ function ExamForm(): JSX.Element {
                     value={difficulty}
                     onChange={(value) => {
                       setDifficulty(value);
-                      setSelectedCategory(null);
+                      //   setSelectedCategory(null);
                       fetchQuestions('0', value);
                     }}
                   >

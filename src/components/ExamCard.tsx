@@ -9,12 +9,15 @@ import {
 } from '@material-tailwind/react';
 import { Copy, Edit, MoreVertical, Trash } from 'lucide-react';
 import { formatDate } from '../utils/DateFormater';
+import { deleteExam } from '../api/exam/delete';
 
 interface IExamCardProps {
     title: string;
     difficulty: string;
     createdAt: string;
     updatedAt?: string;
+    id: string;
+    handleDeleteCompleted: () => void;
 }
 
 /**
@@ -27,7 +30,7 @@ interface IExamCardProps {
  * @param {string} props.difficulty - The exam difficulty based on questions quantity.
  * @returns {JSX.Element} A list item representing an exam card with interactive elements.
  */
-function ExamCard({ title, createdAt, updatedAt, difficulty }: IExamCardProps): JSX.Element {
+function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: IExamCardProps): JSX.Element {
   const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:shadow-blue-gray-900/5 hover:bg-[#eee]';
 
   const [difficultyColor, setDifficultyColor] = React.useState('');
@@ -57,7 +60,6 @@ function ExamCard({ title, createdAt, updatedAt, difficulty }: IExamCardProps): 
             <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
           </div>
         </div>
-
         <div>
 
           <Menu>
@@ -80,8 +82,11 @@ function ExamCard({ title, createdAt, updatedAt, difficulty }: IExamCardProps): 
 
               )
               )}
+
               <hr className="my-3" />
-              <MenuItem className='flex items-center justify-center gap-2 text-red-300' disabled>
+              <MenuItem
+                className='flex items-center justify-center gap-2 text-red-300'
+                onClick={() => deleteExam({ id: id, responseCompleted: () => handleDeleteCompleted})}>
                 <Trash size={20}/>
                     Excluir
               </MenuItem>

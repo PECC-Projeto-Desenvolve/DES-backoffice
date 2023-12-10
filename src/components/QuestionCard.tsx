@@ -96,11 +96,11 @@ function QuestionCard({createdAt, updatedAt, statement, rightAnswer, difficulty,
 
         <div className='w-full py-1 pl-4'>
           <Typography variant='small' className='-mb-1'>Enunciado:</Typography>
-          <Typography variant='h6'>{stringResizer(statement, 50)}...</Typography>
+          <Typography variant='h6'>{statement.length > 49 ? (`${stringResizer(statement, 50)} ...`) : (statement)}</Typography>
 
           <div className='flex gap-2'>
             <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
-            <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography>
+            {/* <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography> */}
           </div>
         </div>
 

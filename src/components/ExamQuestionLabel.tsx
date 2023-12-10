@@ -48,7 +48,7 @@ function ExamQuestionLabel({ id, index, question, buttonPlacement, counter, diff
 
       <div className='mx-2 w-full'>
         <Typography variant='h6'>
-          {stringResizer(question, 50)} ...
+          {question.length > 49 ? (`${stringResizer(question, 50)} ...`) : (question)}
         </Typography>
       </div>
 

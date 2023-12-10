@@ -1,10 +1,11 @@
 import React from 'react';
 
 interface IQuestionContainerProps {
-    alternatives: Array<string>;
+    alternatives?: Array<string>;
     title?: string;
     statement: string;
-    imageSrc: string;
+    imageSrc?: string;
+    alternativesWrapper?: React.ReactNode;
 }
 
 /**
@@ -15,9 +16,10 @@ interface IQuestionContainerProps {
  * @param {string} [props.title] - Optional title for the question.
  * @param {string} props.statement - The statement of the question.
  * @param {string} props.imageSrc - Source URL of the optional image associated with the question.
+ * @param {React.ReactNode} props.alternativesWrapper - Custom alternatives
  * @returns {JSX.Element} A section containing the question title, statement, image (if present), and alternatives.
  */
-function QuestionContainer({ alternatives, title, statement, imageSrc }: IQuestionContainerProps): JSX.Element {
+function QuestionContainer({ alternatives, title, statement, imageSrc, alternativesWrapper }: IQuestionContainerProps): JSX.Element {
   const [estadoMudou, setEstadoMudou] = React.useState(false);
 
   React.useEffect(() => {
@@ -47,7 +49,7 @@ function QuestionContainer({ alternatives, title, statement, imageSrc }: IQuesti
         )}
 
         <div className='mb-8 flex w-full flex-col gap-4 px-8'>
-          {alternatives.map((label, index) => (
+          {alternatives && alternatives.map((label, index) => (
             <>
               <div className='flex w-full cursor-pointer items-center gap-3 rounded-md border-2 border-transparent bg-modal-heading px-2 py-3 text-white transition ease-in-out'>
                 <div className='flex h-8 w-8 select-none items-center justify-center rounded-full bg-white text-black'>
@@ -59,6 +61,7 @@ function QuestionContainer({ alternatives, title, statement, imageSrc }: IQuesti
               </div>
             </>
           ))}
+          {alternativesWrapper}
         </div>
       </section>
     </>

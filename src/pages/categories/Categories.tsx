@@ -10,7 +10,6 @@ import {
 
 import { colors } from '../../data/categoryColors';
 
-
 const menuItems = [
   {
     label: 'Editar',
@@ -248,6 +247,10 @@ function Categories() {
                 Salvar categoria
             </Button>
           </div>
+        </div>
+
+        <div className='flex h-fit w-full items-end justify-end rounded-md'>
+          <Button>Voltar</Button>
         </div>
 
         <Alert
