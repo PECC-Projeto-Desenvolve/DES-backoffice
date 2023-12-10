@@ -41,6 +41,7 @@ function Exam(): JSX.Element {
                       title={exam.title}
                       createdAt={exam.createdAt}
                       updatedAt={exam.updatedAt}
+                      difficulty={exam.difficulty}
                     />
                   </>
 

@@ -16,25 +16,34 @@ import { DndContext, useSensor, useSensors, PointerSensor, KeyboardSensor, close
 import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 import DND from '../../../assets/dnd-placeholder.svg';
+import { deleteQuestion } from '../../../api/question/delete';
+import { submitExam } from '../../../api/exam/submit';
 
 
 function ExamForm(): JSX.Element {
-//   const [questions, setQuestions] = React.useState([]);
-  const [questionOrder, setQuestionOrder] = React.useState<string[]>([]);
+  const [questionOrder, setQuestionOrder] = React.useState<any[]>([]);
   const [open, setOpen] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
+  const [openExamCompletedDialog, setOpenExamCompletedDialog] = React.useState(false);
 
   const [firstStepCompleted, setFirstStepCompleted] = React.useState(0);
   const [search, setSearch] = React.useState<string>('');
-  const [questionToPreview, setQuestionToPreview] = React.useState([]);
+
+  const [questionToPreview, setQuestionToPreview] = React.useState({
+    title: '',
+    statement: '',
+    difficulty: '',
+    alternatives: [],
+    rightAnswer: ''
+  });
+
   const [openHelpDialog, setOpenHelpDialog] = React.useState(false);
   const [difficulty, setDifficulty] = React.useState('');
 
   const [categories, setCategories] = React.useState([]);
-  //   const [searchCategories, setSearchCategories] = React.useState('');
+  const [selectedCategory, setSelectedCategory] = React.useState('');
 
-  //   const [items, setItems] = React.useState(questionOrder);
-
+  const [examTitle, setExamTitle] = React.useState('');
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -44,13 +53,21 @@ function ExamForm(): JSX.Element {
   const navigate = useNavigate();
 
   const handleOpenQuestionPreview = (index) => {
-    setQuestionToPreview(index);
+    if (index) {
+      setQuestionToPreview(index);
+    }
     setOpenPreview(!openPreview);
+  };
+  const handleExamSubmitCompleted = () => {
+    setOpenExamCompletedDialog(!openExamCompletedDialog);
+  };
+
+  const handleDeleteQuestion = (questionId: number) => {
+    deleteQuestion({ id: questionId, responseCompleted: () => fetchQuestions() });
   };
 
   const handleOnDrag = (e: React.DragEvent, widgetType: string) => {
-    e.dataTransfer.setData('widgetType', widgetType);
-
+    e.dataTransfer.setData('widgetType', JSON.stringify(widgetType));
   };
 
   const handleOnDrop = (e: React.DragEvent) => {
@@ -58,7 +75,8 @@ function ExamForm(): JSX.Element {
     setDifficulty('');
 
     const widgetType = e.dataTransfer.getData('widgetType') as string;
-    setQuestionOrder([...questionOrder, widgetType]);
+
+    setQuestionOrder([...questionOrder, JSON.parse(widgetType)]);
   };
 
   const handleRemoveQuestion = (indexToRemove) => {
@@ -67,10 +85,12 @@ function ExamForm(): JSX.Element {
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
+
     if (active.id !== over.id) {
       setQuestionOrder((prev) => {
-        const oldIndex = prev.findIndex(item => item === active.id);
-        const newIndex = prev.findIndex(item => item === over.id);
+        const oldIndex = prev.findIndex(item => item.id === active.id);
+        const newIndex = prev.findIndex(item => item.id === over.id);
+
         return arrayMove(prev, oldIndex, newIndex);
       });
     }
@@ -101,14 +121,25 @@ function ExamForm(): JSX.Element {
     useSensor(KeyboardSensor)
   );
 
+  const fetchQuestions = (page?: string, filter?: string) => {
+    const pageString = page ? `&page=${page}` : '';
+    const filterString = filter ? `&filter=${filter}` : '';
+
+    fetch(`http://localhost:3000/questions?${pageString}${filterString}`)
+      .then(response => response.json())
+      .then(data => {
+        dispatch(populateQuestions(data));
+      })
+      .catch(error => console.error('Erro ao buscar questões:', error));
+  };
+
+  const getQuestionIds = () => {
+    return questionOrder.map(question => question.id.toString());
+  };
+
   React.useEffect(() => {
     if (firstStepCompleted == 1) {
-      fetch('http://localhost:3000/questions')
-        .then(response => response.json())
-        .then(data => {
-          dispatch(populateQuestions(data));
-        })
-        .catch(error => console.error('Erro ao buscar questões:', error));
+      fetchQuestions();
     }
   }, [firstStepCompleted]);
 
@@ -118,6 +149,11 @@ function ExamForm(): JSX.Element {
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
   }, []);
+
+  React.useEffect(() => {
+  }, [questionOrder]);
+
+
 
   return (
     <>
@@ -130,9 +166,53 @@ function ExamForm(): JSX.Element {
       <Dialog open={openPreview} handler={handleOpenQuestionPreview} size='xl'>
         <DialogHeader>Preview</DialogHeader>
         <div className='w-full'>
-          {questionToPreview}
+          {questionToPreview.title}
+          <br />
+          <br />
+          {questionToPreview.statement}
+          <br />
+          <br />
+          {questionToPreview.alternatives.map((alternative, index) => (
+            <p key={index}>{alternative.text}</p>
+          ))}
         </div>
+      </Dialog>
 
+      <Dialog open={openExamCompletedDialog} handler={handleExamSubmitCompleted}>
+        <DialogHeader>Prova criada com sucesso! 🎉</DialogHeader>
+        <DialogBody>
+          <Typography variant='lead'>
+            Você deseja criar outra prova?
+          </Typography>
+        </DialogBody>
+
+        <DialogFooter className='flex gap-4'>
+          <Button variant="text" color="red" onClick={() => navigate(-1)}>
+            <span>Não</span>
+          </Button>
+          <Button variant="gradient" color="green" onClick={() => {
+            setQuestionOrder([]);
+            setExamTitle('');
+            setFirstStepCompleted(0);
+          }}>
+            <span>Sim</span>
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+      <Dialog open={openPreview} handler={handleOpenQuestionPreview} size='xl'>
+        <DialogHeader>Preview</DialogHeader>
+        <div className='w-full'>
+          {questionToPreview.title}
+          <br />
+          <br />
+          {questionToPreview.statement}
+          <br />
+          <br />
+          {questionToPreview.alternatives.map((alternative, index) => (
+            <p key={index}>{alternative.text}</p>
+          ))}
+        </div>
       </Dialog>
 
       <Dialog open={openHelpDialog} handler={handleOpenHelpDialog} size='lg'>
@@ -161,8 +241,10 @@ function ExamForm(): JSX.Element {
               label={'Título'}
               icon={<Search size={20}/>}
               size='lg'
+              value={examTitle}
+              onChange={(e) => setExamTitle(e.target.value)}
             />
-            <Select label="Nível da prova" size='lg'>
+            <Select label="Nível da prova" size='lg' disabled>
               <Option>
                 <Chip value="Fácil" className='w-fit' color='green'/>
               </Option>
@@ -189,11 +271,10 @@ function ExamForm(): JSX.Element {
             <span>Avançar</span>
           </Button>
         </DialogFooter>
-        {/* <QuestionPreviewContainer question={questions[1]} /> */}
       </Dialog>
 
       <div className='flex h-screen w-screen flex-col gap-4 overflow-hidden rounded bg-white px-8 py-6 transition-all'>
-        <div className='grid h-full max-h-[93%] w-full grid-cols-2 gap-2 '>
+        <div className='grid h-full max-h-[93%] w-full grid-cols-1 gap-2 lg:grid-cols-2 '>
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             <span className='flex w-full items-center justify-between p-3'>
               <div className='flex items-baseline gap-4'>
@@ -219,7 +300,6 @@ function ExamForm(): JSX.Element {
               onDrop={handleOnDrop}
               onDragOver={handleDragOver}
             >
-              {/* <SortableListComponent /> */}
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                 <SortableContext items={questionOrder} strategy={verticalListSortingStrategy}>
                   {questionOrder.length > 0 ? (
@@ -237,14 +317,17 @@ function ExamForm(): JSX.Element {
 
                   {questionOrder.map((question, index) => (
                     <ExamQuestionLabel
-                      id={question}
-                      index={question}
+                      id={question.id}
+                      index={question.id}
                       counter={index}
                       key={index}
-                      question={question}
+                      question={question.statement}
+                      difficulty={question.difficulty.toString()}
                       buttonPlacement={
                         <ButtonGroup>
-                          <IconButton onClick={() => handleOpenQuestionPreview(questionOrder[index])}>
+                          <IconButton onClick={() => {
+                            handleOpenQuestionPreview(questionOrder[index]);
+                          }}>
                             <Eye size={20}/>
                           </IconButton>
                           <IconButton onClick={() => handleRemoveQuestion(index)}>
@@ -258,7 +341,7 @@ function ExamForm(): JSX.Element {
                   {questionOrder.length > 0 ? (
                     <>
                       <Tooltip content="clique na questão, arraste e solte aqui">
-                        <div className='flex h-[4rem] w-full flex-col items-center justify-center rounded-sm bg-green-400'>
+                        <div className='mt-4 flex h-[3rem] w-full flex-col items-center justify-center rounded-sm bg-green-400'>
                           <PlusCircleIcon size={24} color='white'/>
                         </div>
                       </Tooltip>
@@ -270,15 +353,25 @@ function ExamForm(): JSX.Element {
                 </SortableContext>
               </DndContext>
             </ul>
-
           </div>
 
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             <div className=' p-2'>
               <div className='mb-2 flex w-full items-center justify-between'>
-                <Typography variant='h4' className='mb-1'>Selecione a questão</Typography>
+                <Typography variant='h4' className='mb-1'>Selecione a questão
+                  {/* <IconButton variant='text' className='ml-2' onClick={() => fetchQuestions()}>
+                    <RefreshCcw size={20}/>
+                  </IconButton> */}
+                </Typography>
 
-                <Button size='sm' variant='text' onClick={() => setDifficulty(null)}>
+                <Button
+                  size='sm'
+                  variant='text'
+                  onClick={() => {
+                    setDifficulty(null);
+                    fetchQuestions();
+                  }}
+                >
                     Limpar filtros</Button>
               </div>
 
@@ -292,14 +385,16 @@ function ExamForm(): JSX.Element {
                   onChange={(event) => setSearch(event.target.value)}
                 />
 
-                <Select label="Categoria" size='lg'>
-
-                  {categories.filter((category) => (
-                    <>
-                      <Option key={category.id} value="1" className=' bg-white'>
-                        <Chip value={category.title} className='w-fit text-black' style={{ backgroundColor: `#${category.color}`}}/>
-                      </Option>
-                    </>
+                <Select
+                  label="Categoria"
+                  onChange={(event) => setSelectedCategory(event)}
+                  size='lg'
+                  disabled
+                >
+                  {categories.map((category, index) => (
+                    <Option key={index} value={category.title} className=' bg-white'>
+                      <Chip value={category.title} className='w-fit text-white' style={{ backgroundColor: `${category.color}`}}/>
+                    </Option>
                   ))}
                 </Select>
 
@@ -308,7 +403,11 @@ function ExamForm(): JSX.Element {
                     label="Dificuldade"
                     size='lg'
                     value={difficulty}
-                    onChange={(value) => setDifficulty(value)}
+                    onChange={(value) => {
+                      setDifficulty(value);
+                      setSelectedCategory(null);
+                      fetchQuestions('0', value);
+                    }}
                   >
                     <Option value="1" index={1}>
                       <Chip value="Fácil" className='w-fit' color='green'/>
@@ -321,27 +420,23 @@ function ExamForm(): JSX.Element {
                     </Option>
                   </Select>
                 </div>
-
               </div>
             </div>
-            <div className='relative z-30 mt-2 flex h-full max-h-full w-full flex-col items-start gap-2 overflow-y-scroll'>
+            <div className='relative z-30 mt-2 flex h-full max-h-full w-full flex-col items-start gap-2 overflow-y-scroll transition-all'>
               {firstStepCompleted == 0 ? (
                 <Skeleton />
               ):(
                 <>
                   {questions.filter((question) => {
                     const isQuestionInOrdered = questionOrder.some(
-                      orderedQuestion => orderedQuestion === question.statement
+                      orderedQuestion => orderedQuestion.statement === question.statement
                     );
-
-                    const matchesDifficulty = Number(difficulty) === 0 || question.difficulty === Number(difficulty);
 
                     const matchesSearch = !isQuestionInOrdered &&
                 (search.toLocaleLowerCase() === '' || question.statement.toLocaleLowerCase().includes(search));
 
-                    return matchesDifficulty && matchesSearch;
+                    return matchesSearch;
                   })
-                    .sort((a, b) => a.difficulty - b.difficulty)
                     .map((question, index) => (
                       <QuestionCard
                         key={index}
@@ -351,16 +446,22 @@ function ExamForm(): JSX.Element {
                         statement={question.statement}
                         createdAt={question.createdAt}
                         updatedAt={question.updatedAt}
-                        onDragStart={(e) => handleOnDrag(e, question.statement)}
+                        handleDeleteQuestion={() => handleDeleteQuestion(question.id)}
+                        handleOpenView={() =>
+                          handleOpenQuestionPreview(question)
+                        }
+                        onDragStart={(e) => {
+                          handleOnDrag(e, question);
+                        }}
                       />
 
                     ))}
                 </>
               )}
-
             </div>
           </div>
         </div>
+
         <div className='flex h-fit w-full items-end justify-between rounded-md'>
           <div>
             <Button variant='outlined' onClick={handleOpenHelpDialog} className='flex items-center gap-2'>
@@ -370,7 +471,15 @@ function ExamForm(): JSX.Element {
           </div>
           <div className='flex gap-4'>
             <Button variant='outlined' onClick={handleOpen}>Cancelar</Button>
-            <Button>Próximo</Button>
+            <Button
+              onClick={
+                () =>
+                  submitExam({
+                    title: examTitle,
+                    questionIds: getQuestionIds(),
+                    responseCompleted() {
+                      handleExamSubmitCompleted();
+                    },})} disabled={questionOrder.length >= 5 ? false : true}>Salvar prova</Button>
           </div>
         </div>
       </div>

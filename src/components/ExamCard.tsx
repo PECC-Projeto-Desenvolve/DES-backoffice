@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Typography,
   Menu,
@@ -11,8 +12,9 @@ import { formatDate } from '../utils/DateFormater';
 
 interface IExamCardProps {
     title: string;
+    difficulty: string;
     createdAt: string;
-    updatedAt: string;
+    updatedAt?: string;
 }
 
 /**
@@ -22,11 +24,13 @@ interface IExamCardProps {
  * @param {string} props.title - The title of the exam.
  * @param {string} props.createdAt - The creation date of the exam.
  * @param {string} props.updatedAt - The last update date of the exam.
+ * @param {string} props.difficulty - The exam difficulty based on questions quantity.
  * @returns {JSX.Element} A list item representing an exam card with interactive elements.
  */
-function ExamCard({ title, createdAt, updatedAt }: IExamCardProps): JSX.Element {
-  const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5 hover:bg-[#eee]';
+function ExamCard({ title, createdAt, updatedAt, difficulty }: IExamCardProps): JSX.Element {
+  const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:shadow-blue-gray-900/5 hover:bg-[#eee]';
 
+  const [difficultyColor, setDifficultyColor] = React.useState('');
   const menuItems = [
     {
       label: 'Editar',
@@ -38,13 +42,20 @@ function ExamCard({ title, createdAt, updatedAt }: IExamCardProps): JSX.Element 
     },
   ];
 
+  React.useEffect(() => {
+    difficulty == 'Fácil' && setDifficultyColor('border-l-green-400');
+    difficulty == 'Difícil' && setDifficultyColor('border-l-red-400');
+    difficulty == 'Média' && setDifficultyColor('border-l-orange-400');
+  },[difficulty]);
+
   return (
     <>
-      <li className={`flex h-fit w-full cursor-pointer items-center justify-between rounded-sm border bg-[#fafafa] p-2 ${hoverAnimation}`}>
+      <li className={`flex h-fit w-full cursor-pointer items-center justify-between rounded-sm border bg-[#fafafa] p-2 ${hoverAnimation} border-l-8 ${difficultyColor}`}>
         <div>
           <Typography variant='lead'>{title}</Typography>
-          <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
-          <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography>
+          <div className='flex gap-2'>
+            <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
+          </div>
         </div>
 
         <div>

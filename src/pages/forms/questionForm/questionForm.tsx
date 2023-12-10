@@ -154,6 +154,8 @@ function QuestionForm() {
           setAlternatives(Array(5).fill(''));
           setTitle('');
           setStatement('');
+          setDifficulty('');
+          setSelectedCategory('');
           setSelectedCheckbox(null);
         }, 1000);
       }
