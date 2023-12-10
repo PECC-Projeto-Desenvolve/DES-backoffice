@@ -15,7 +15,6 @@ import { useNavigate } from 'react-router-dom';
 import { EyeIcon, Trash2, UploadCloud } from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
-import SelectWithFilter from '../../../components/Select';
 
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
@@ -30,8 +29,8 @@ function QuestionForm() {
   const [difficulty, setDifficulty] = React.useState('');
 
   const [categories, setCategories] = React.useState([]);
-  const [selectedCategory, setSelectedCategory] = React.useState('');
-  const [searchCategories, setSearchCategories] = React.useState('');
+  //   const [selectedCategory, setSelectedCategory] = React.useState('');
+  //   const [searchCategories, setSearchCategories] = React.useState('');
 
 
   React.useEffect(() => {
@@ -107,9 +106,9 @@ function QuestionForm() {
     setStatement(event);
   };
 
-  const handleSelectCategory = (category) => {
-    setSelectedCategory(category);
-  };
+  //   const handleSelectCategory = (category) => {
+  //     setSelectedCategory(category);
+  //   };
 
   const handleSubmit = async () => {
     if (!title.trim() || !statement.trim() || alternatives.some(alt => !alt.trim())) {
@@ -155,7 +154,7 @@ function QuestionForm() {
           setTitle('');
           setStatement('');
           setDifficulty('');
-          setSelectedCategory('');
+          //   setSelectedCategory('');
           setSelectedCheckbox(null);
         }, 1000);
       }
@@ -213,7 +212,7 @@ function QuestionForm() {
 
             <Select
               label="Categoria"
-              onChange={(event) => setSelectedCategory(event)}
+              //   onChange={(event) => setSelectedCategory(event)}
               size='lg'
             >
               {categories.map((category, index) => (
