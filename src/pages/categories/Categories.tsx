@@ -122,10 +122,10 @@ function Categories() {
       />
 
 
-      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-white p-4 transition-all'>
+      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded border-white bg-[#D2F1FF] p-4 transition-all'>
         <BackButton />
         <div className='grid h-full w-full grid-cols-2 gap-2 '>
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border p-4'>
+          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-[#c4c4c4]/60 p-4'>
 
             {categories.length > 0 ? (
               <>
@@ -198,7 +198,7 @@ function Categories() {
             </div>
           </div>
 
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border p-4'>
+          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-[#c4c4c4]/60 p-4'>
             <span className='w-full'>
               <Typography variant="h4">Nova categoria</Typography>
             </span>

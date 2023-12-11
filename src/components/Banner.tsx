@@ -30,7 +30,7 @@ function Banner({ title, description, icon, path, rounded }: IBannerProps): JSX.
   return (
     <Card
       shadow={false}
-      className={`cursor-pointer border border-blue-gray-50 px-5 py-4 shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:border-blue-gray-100/60 hover:shadow-blue-gray-900/5 ${rounded}`}
+      className={`cursor-pointer border border-blue-gray-50 bg-white px-5 py-4 shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:border-blue-gray-100/60 hover:shadow-blue-gray-900/5 ${rounded}`}
       onClick={handleClick}
     >
       <Typography variant="h5" color="blue-gray" className="mb-3 flex items-center gap-3">

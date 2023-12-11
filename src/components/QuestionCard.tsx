@@ -7,7 +7,7 @@ import {
   MenuItem,
   IconButton,
 } from '@material-tailwind/react';
-import { Edit, EyeIcon, MoreVertical, Trash } from 'lucide-react';
+import { EyeIcon, MoreVertical, Trash } from 'lucide-react';
 import {
   stringResizer,
   formatDate,
@@ -19,7 +19,7 @@ interface IQuestionCardProps {
     statement: string;
     rightAnswer: string;
     createdAt: string;
-    updatedAt: string;
+    updatedAt?: string;
     difficulty: string | number;
     onDragStart: (event: React.DragEvent<HTMLDivElement>) => void;
     handleOpenView: (question: any) => void;
@@ -42,7 +42,7 @@ interface IQuestionCardProps {
  * @param {Function} props.handleOpenView - Function to handle opening the question view.
  * @returns {JSX.Element} The QuestionCard component.
  */
-function QuestionCard({createdAt, updatedAt, statement, rightAnswer, difficulty, onDragStart, handleOpenView, handleDeleteQuestion}: IQuestionCardProps): JSX.Element {
+function QuestionCard({createdAt, statement, rightAnswer, difficulty, onDragStart, handleOpenView, handleDeleteQuestion}: IQuestionCardProps): JSX.Element {
 
   const [color, setColor] = React.useState('');
 
@@ -72,10 +72,6 @@ function QuestionCard({createdAt, updatedAt, statement, rightAnswer, difficulty,
     {
       label: 'Vizualizar',
       icon: <EyeIcon size={20}/>
-    },
-    {
-      label: 'Editar',
-      icon: <Edit size={20}/>
     },
   ];
 

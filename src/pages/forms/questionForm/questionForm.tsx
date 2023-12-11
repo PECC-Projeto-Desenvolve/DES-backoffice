@@ -178,13 +178,13 @@ function QuestionForm() {
         </div>
       </Dialog>
 
-      <div className='flex h-full w-full flex-col rounded bg-white'>
+      <div className='flex h-full w-full flex-col rounded bg-[#D2F1FF]'>
         <div className='-mt-2 grid h-full w-full gap-6 px-6 pt-8 xl:grid-cols-2'>
-          <div className='flex  w-full flex-col gap-4'>
+          <div className='flex w-full flex-col gap-4'>
 
             <Typography variant='h4'>Corpo da questão</Typography>
 
-            <Input label="Título" size='lg' onChange={event => handleTitleChange(event.target.value)} value={title}/>
+            <Input label="Título" size='lg' onChange={event => handleTitleChange(event.target.value)} value={title} color='black' className='bg-white/80'/>
 
 
             {/* <Select
@@ -214,6 +214,7 @@ function QuestionForm() {
               label="Categoria"
               //   onChange={(event) => setSelectedCategory(event)}
               size='lg'
+              className='bg-white/80'
             >
               {categories.map((category, index) => (
                 <Option key={index} value={category.title}>
@@ -230,6 +231,7 @@ function QuestionForm() {
               size='lg'
               value={difficulty}
               onChange={(value) => setDifficulty(value)}
+              className='bg-white/80'
             >
               <Option value="1" index={1}>
                 <Chip value="Fácil" className='w-fit' color='green'/>
@@ -242,7 +244,7 @@ function QuestionForm() {
               </Option>
             </Select>
 
-            <Textarea label='Enunciado' size='lg' onChange={event => handleStatementChange(event.target.value)} value={statement}/>
+            <Textarea label='Enunciado' size='lg' onChange={event => handleStatementChange(event.target.value)} value={statement} className='bg-white/80'/>
 
             <>
               {imageSrc ? (
@@ -260,7 +262,7 @@ function QuestionForm() {
               ) : (
                 <>
                   <div
-                    className="cursor-pointer rounded border-2 border-dashed border-gray-300 p-4 text-center transition-all hover:border-gray-500"
+                    className="cursor-pointer rounded border-2 border-dashed border-black p-4 text-center transition-all hover:border-gray-500"
                     onClick={onAreaClick}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={onDrop}>
@@ -321,7 +323,7 @@ function QuestionForm() {
             successMessage='Questão criada com sucesso!'
             errorMessage='Erro ao criar questão'
           />
-          <hr className='w-full border-gray-300'/>
+          <hr className='w-full border border-[#c4c4c4]/50'/>
           <div className='flex h-fit w-full justify-between gap-4'>
             <Button className='flex items-center gap-4' onClick={handleOpen}>
               <EyeIcon size={20} /> Pré vizualizar

@@ -32,7 +32,7 @@ interface IExamCardProps {
  * @returns {JSX.Element} A list item representing an exam card with interactive elements.
  */
 function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: IExamCardProps): JSX.Element {
-  const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:shadow-blue-gray-900/5 hover:bg-[#eee]';
+  const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:shadow-blue-gray-900/5 hover:bg-[#fafafa]';
 
   const navigate = useNavigate();
 
@@ -60,7 +60,7 @@ function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: I
 
   return (
     <>
-      <li className={`flex h-fit w-full cursor-pointer items-center justify-between rounded-sm border bg-[#fafafa] p-2 ${hoverAnimation} border-l-8 ${difficultyColor}`}>
+      <li className={`flex h-fit w-full cursor-pointer items-center justify-between rounded-lg border bg-white p-2 ${hoverAnimation} border-l-8 ${difficultyColor}`}>
         <div>
           <Typography variant='lead'>{title}</Typography>
           <div className='flex gap-2'>

@@ -1,7 +1,7 @@
 import {
   Typography,
 } from '@material-tailwind/react';
-import { FilePlus2, SearchCheck, Tags, TextSelect } from 'lucide-react';
+import { ClipboardSignature, FilePlus2, SearchCheck, Tags, TextSelect } from 'lucide-react';
 
 import React from 'react';
 import { Banner, ExamCard } from '../../components';
@@ -24,12 +24,12 @@ function Exam(): JSX.Element {
 
   return (
     <>
-      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-white p-4 transition-all'>
+      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-[#D2F1FF] p-4 transition-all'>
 
         <BackButton />
 
         <div className='grid h-full w-full grid-cols-2 gap-2 '>
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
+          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-[#c4c4c4]/40 px-2 py-4'>
             {exams.length == 0 ? (
               <>
                 <span className='w-full'>
@@ -63,10 +63,10 @@ function Exam(): JSX.Element {
             )}
 
           </div>
-          <div className='relative w-full rounded-md border px-2 py-4'>
+          <div className='relative w-full rounded-md border border-[#c4c4c4]/40 px-2 py-4'>
             <div className='grid grid-cols-2 gap-4'>
               <Banner
-                rounded='rounded-sm'
+                rounded='rounded-lg'
                 icon={<TextSelect size={20}/>}
                 title="Criar Questões"
                 description={
@@ -75,7 +75,7 @@ function Exam(): JSX.Element {
                 path='/question/form'
               />
               <Banner
-                rounded='rounded-sm'
+                rounded='rounded-lg'
                 icon={<FilePlus2 size={20}/>}
                 title="Criar Prova"
                 description={
@@ -84,7 +84,7 @@ function Exam(): JSX.Element {
                 path='/exam/form'
               />
               <Banner
-                rounded='rounded-sm'
+                rounded='rounded-lg'
                 icon={<Tags size={20} />}
                 title="Gerenciar Categorias"
                 description={
@@ -93,13 +93,22 @@ function Exam(): JSX.Element {
                 path='/categories'
               />
               <Banner
-                rounded='rounded-sm'
+                rounded='rounded-lg'
                 icon={<SearchCheck size={20} />}
                 title="Gerenciar Processos"
                 description={
                   'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
                 }
                 path='/process'
+              />
+              <Banner
+                rounded='rounded-lg'
+                icon={<ClipboardSignature size={20} />}
+                title="Gerenciar Questões"
+                description={
+                  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+                }
+                path='/questions'
               />
             </div>
           </div>

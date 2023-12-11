@@ -30,16 +30,17 @@ function AlternativeInput({ label, onChange, value, checkboxProps }: IAlternativ
   return (
     <>
       <div className="relative flex w-full">
-        <div className="flex items-center gap-2 rounded-l-md border border-r-0 border-blue-gray-200 bg-blue-gray-500/10 px-4 py-2">
-          <Typography>
+        <div className="flex items-center gap-2 rounded-l-md border border-r-0 border-blue-gray-200 bg-blue-gray-500/20  px-4 py-2">
+          <Typography className='font-bold text-blue-gray-800'>
             {label}
           </Typography>
         </div>
         <Input
           type="text"
           size='lg'
-          placeholder="Texto da alternativa"
-          className="rounded-l-none !border-t-blue-gray-200 focus:!border-t-gray-900"
+          color='black'
+          placeholder={`Texto da alternativa ${label}`}
+          className="rounded-l-none !border-t-blue-gray-200 bg-white/80 focus:!border-t-gray-900"
           labelProps={{
             className: 'before:content-none after:content-none',
           }}

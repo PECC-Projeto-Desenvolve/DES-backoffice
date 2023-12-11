@@ -1,14 +1,12 @@
 import React from 'react';
-import { Button, Dialog, Option, IconButton, Input, Select, Typography, Chip, ButtonGroup, DialogHeader, DialogBody, DialogFooter, Tooltip } from '@material-tailwind/react';
+import { Button, Option, IconButton, Input, Select, Typography, Chip, ButtonGroup, Tooltip } from '@material-tailwind/react';
 import { BadgeHelp, Eye, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
-import { ExitConfirmationDialog, QuestionCard, Skeleton, QuestionContainer } from '../../../components';
+import { ExitConfirmationDialog, QuestionCard, Skeleton, QuestionPreviewDialog, HelpDialog, ExamCreationDialog, ExamCompletionDialog } from '../../../components';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { populateQuestions } from '../../../store/slices/questionsSlice';
-
-import DNDHelper from '../../../assets/gifs/drag-n-drop-helper.gif';
 
 import { ExamQuestionLabel } from '../../../components/ExamQuestionLabel';
 
@@ -18,6 +16,7 @@ import { SortableContext, arrayMove, verticalListSortingStrategy } from '@dnd-ki
 import DND from '../../../assets/dnd-placeholder.svg';
 import { deleteQuestion } from '../../../api/question/delete';
 import { submitExam } from '../../../api/exam/submit';
+
 
 
 function ExamForm(): JSX.Element {
@@ -52,10 +51,7 @@ function ExamForm(): JSX.Element {
 
   const navigate = useNavigate();
 
-  const handleOpenQuestionPreview = (index) => {
-    if (index) {
-      setQuestionToPreview(index);
-    }
+  const handleOpenQuestionPreview = () => {
     setOpenPreview(!openPreview);
   };
   const handleExamSubmitCompleted = () => {
@@ -68,6 +64,13 @@ function ExamForm(): JSX.Element {
 
   const handleOnDrag = (e: React.DragEvent, widgetType: string) => {
     e.dataTransfer.setData('widgetType', JSON.stringify(widgetType));
+  };
+
+  const handlePressEnter = (e) => {
+    e.preventDefault();
+    if (examTitle !== '') {
+      setFirstStepCompleted(1);
+    }
   };
 
   const handleOnDrop = (e: React.DragEvent) => {
@@ -163,113 +166,34 @@ function ExamForm(): JSX.Element {
         open={open}
       />
 
-      <Dialog open={openExamCompletedDialog} handler={handleExamSubmitCompleted}>
-        <DialogHeader>Prova criada com sucesso! 🎉</DialogHeader>
-        <DialogBody>
-          <Typography variant='lead'>
-            Você deseja criar outra prova?
-          </Typography>
-        </DialogBody>
+      <ExamCompletionDialog
+        open={openExamCompletedDialog}
+        handler={handleExamSubmitCompleted}
+        resetExam={() => {
+          setQuestionOrder([]);
+          setExamTitle('');
+          setFirstStepCompleted(0);
+        }}
+      />
 
-        <DialogFooter className='flex gap-4'>
-          <Button variant="text" color="red" onClick={() => navigate(-1)}>
-            <span>Não</span>
-          </Button>
-          <Button variant="gradient" color="green" onClick={() => {
-            setQuestionOrder([]);
-            setExamTitle('');
-            setFirstStepCompleted(0);
-          }}>
-            <span>Sim</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
+      <QuestionPreviewDialog
+        open={openPreview}
+        handler={handleOpenQuestionPreview}
+        questionToPreview={questionToPreview}
+      />
 
-      <Dialog open={openPreview} handler={handleOpenQuestionPreview} size='xl'>
-        <div className='w-full'>
-          <QuestionContainer
-            title={questionToPreview.title}
-            statement={questionToPreview.statement}
-            alternativesWrapper={
-              <>
-                {questionToPreview.alternatives.map((alternative, index) => (
-                  <>
-                    <div className='flex w-full cursor-pointer items-center gap-3 rounded-md border-2 border-transparent bg-modal-heading px-2 py-3 text-white transition ease-in-out'>
-                      <div className='flex h-8 w-8 select-none items-center justify-center rounded-full bg-white text-black'>
-                        {String.fromCharCode(64 + (index + 1))}
-                      </div>
-                      <p key={index}>{alternative.text}</p>
-                    </div>
-                  </>
-                ))}
-              </>
-            }
-          />
-        </div>
-      </Dialog>
+      <HelpDialog
+        open={openHelpDialog}
+        handler={handleOpenHelpDialog}
+      />
 
-      <Dialog open={openHelpDialog} handler={handleOpenHelpDialog} size='lg'>
-        <DialogHeader>Tutorial</DialogHeader>
-
-        <div className='flex w-full items-center justify-center py-6'>
-          <img src={DNDHelper} className='rounded-lg border'/>
-        </div>
-
-        <DialogFooter>
-          <Button variant="gradient" color="green" onClick={handleOpenHelpDialog}>
-            <span>OK</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
-
-      <Dialog open={firstStepCompleted == 0} handler={handleOpenQuestionPreview} size='md'>
-        <DialogHeader className='-mb-4'>Criação de prova</DialogHeader>
-        <DialogBody>
-          <Typography className='mb-4'>
-            Seja bem vindo(a) à criação
-          </Typography>
-
-          <div className='flex flex-col gap-2'>
-            <Input
-              label={'Título'}
-              icon={<Search size={20}/>}
-              size='lg'
-              value={examTitle}
-              onChange={(e) => setExamTitle(e.target.value)}
-            />
-            <Select label="Nível da prova" size='lg' disabled>
-              <Option>
-                <Chip value="Fácil" className='w-fit' color='green'/>
-              </Option>
-              <Option>
-                <Chip value="Médio" className='w-fit' color='orange'/>
-              </Option>
-              <Option>
-                <Chip value="Difícil" className='w-fit' color='red'/>
-              </Option>
-            </Select>
-          </div>
-        </DialogBody>
-
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={() => navigate(-1)}
-            className="mr-3"
-          >
-            <span>Cancelar</span>
-          </Button>
-          <Button
-            variant="gradient"
-            color="green"
-            onClick={() => setFirstStepCompleted(1)}
-            disabled={examTitle == '' && true}
-          >
-            <span>Avançar</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
+      <ExamCreationDialog
+        open={firstStepCompleted === 0}
+        examTitle={examTitle}
+        setExamTitle={setExamTitle}
+        onSubmit={handlePressEnter}
+        handler={() => handleOpenQuestionPreview}
+      />
 
       <div className='flex h-screen w-screen flex-col gap-4 overflow-hidden rounded bg-white px-8 py-6 transition-all'>
         <div className='grid h-full max-h-[93%] w-full grid-cols-1 gap-2 lg:grid-cols-2 '>
@@ -324,7 +248,14 @@ function ExamForm(): JSX.Element {
                       buttonPlacement={
                         <ButtonGroup>
                           <IconButton onClick={() => {
-                            handleOpenQuestionPreview(questionOrder[index]);
+                            setQuestionToPreview({
+                              title: question.title,
+                              alternatives: question.alternatives,
+                              difficulty: question.difficulty,
+                              rightAnswer: question.rightAnswer,
+                              statement: question.statement,
+                            });
+                            handleOpenQuestionPreview();
                           }}>
                             <Eye size={20}/>
                           </IconButton>
@@ -446,8 +377,16 @@ function ExamForm(): JSX.Element {
                         createdAt={question.createdAt}
                         updatedAt={question.updatedAt}
                         handleDeleteQuestion={() => handleDeleteQuestion(question.id)}
-                        handleOpenView={() =>
-                          handleOpenQuestionPreview(question)
+                        handleOpenView={() =>{
+                          setQuestionToPreview({
+                            title: question.title,
+                            alternatives: question.alternatives,
+                            difficulty: question.difficulty,
+                            rightAnswer: question.rightAnswer,
+                            statement: question.statement,
+                          });
+                          handleOpenQuestionPreview();
+                        }
                         }
                         onDragStart={(e) => {
                           handleOnDrag(e, question);
