@@ -95,7 +95,7 @@ function QuestionList() {
         </div>
       </Dialog>
 
-      <div className='relative flex h-full w-full flex-col justify-between rounded border border-white bg-[#D2F1FF] p-4'>
+      <div className='relative flex h-full w-full flex-col justify-between rounded border border-white bg-[#D2F1FF]/20 p-4'>
         <BackButton />
         <div className='mb-3 h-[2rem] w-full bg-gray-300'>
 

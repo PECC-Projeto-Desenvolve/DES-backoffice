@@ -1,22 +1,7 @@
-import React from 'react';
 import { Banner } from '../../components';
 import { File, SearchCheck, MapPin, Users2 } from 'lucide-react';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { populateQuestions } from '../../store/slices/questionsSlice';
-
 function Home() {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const questions = useSelector((state) => state.question.questions);
-  const dispatch = useDispatch();
-
-
-
-  React.useEffect(() => {
-    console.log(questions);
-  }, [questions]);
-
 
   return (
     <>
@@ -56,16 +41,6 @@ function Home() {
           }
           path='exam'
         />
-      </div>
-
-      <div>
-        <button onClick={() => {
-          dispatch(populateQuestions([{
-            id: 2,
-            title: 'hue',
-            statement: 'ashushuasushaus'
-          }]));
-        }}>hue</button>
       </div>
     </>
   );

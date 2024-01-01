@@ -178,7 +178,7 @@ function QuestionForm() {
         </div>
       </Dialog>
 
-      <div className='flex h-full w-full flex-col rounded bg-[#D2F1FF]'>
+      <div className='flex h-full w-full flex-col rounded bg-[#D2F1FF]/20'>
         <div className='-mt-2 grid h-full w-full gap-6 px-6 pt-8 xl:grid-cols-2'>
           <div className='flex w-full flex-col gap-4'>
 

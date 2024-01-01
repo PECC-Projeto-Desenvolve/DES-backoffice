@@ -55,7 +55,7 @@ function CategoryDialog({ open, color, categoryName, categoryId, value, onChange
 
           </CardBody>
           <CardFooter  className="flex gap-2 pt-0">
-            <Button variant="outlined" onClick={() => console.log('fechar')} fullWidth>
+            <Button variant="outlined" onClick={handleOpen} fullWidth>
                 Cancelar
             </Button>
 

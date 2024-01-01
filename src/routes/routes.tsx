@@ -33,7 +33,7 @@ function AppRoutes(): JSX.Element {
           </Routes>
         </>
       ) : (
-        <div className="relative flex h-screen w-screen flex-col gap-4 bg-[#3FAEFF] p-4 px-2 transition-all sm:px-2 md:px-8 lg:px-32">
+        <div className="relative flex h-screen w-screen flex-col gap-4 bg-[#1c3445] p-4 px-2 transition-all sm:px-2 md:px-8 lg:px-32">
           <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md p-4'>
             <Typography variant="h5" color="black" onClick={handleNavigate} className='cursor-pointer transition-all hover:text-2xl'>
           Desenvolve Backoffice

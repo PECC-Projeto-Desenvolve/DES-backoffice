@@ -44,8 +44,7 @@ function ExamForm(): JSX.Element {
 
   const [examTitle, setExamTitle] = React.useState('');
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
+
   const questions = useSelector((state) => state.question.questions);
   const dispatch = useDispatch();
 

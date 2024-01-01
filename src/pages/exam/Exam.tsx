@@ -24,12 +24,12 @@ function Exam(): JSX.Element {
 
   return (
     <>
-      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-[#D2F1FF] p-4 transition-all'>
+      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-[#D2F1FF]/20 p-4 transition-all'>
 
         <BackButton />
 
         <div className='grid h-full w-full grid-cols-2 gap-2 '>
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-[#c4c4c4]/40 px-2 py-4'>
+          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 px-2 py-4'>
             {exams.length == 0 ? (
               <>
                 <span className='w-full'>
@@ -63,7 +63,7 @@ function Exam(): JSX.Element {
             )}
 
           </div>
-          <div className='relative w-full rounded-md border border-[#c4c4c4]/40 px-2 py-4'>
+          <div className='relative w-full rounded-md border border-white/40 bg-white/20 px-2 py-4'>
             <div className='grid grid-cols-2 gap-4'>
               <Banner
                 rounded='rounded-lg'
