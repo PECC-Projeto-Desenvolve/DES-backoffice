@@ -5,6 +5,7 @@ export default withMT({
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+
       colors: {
         primary: {
           200: '#FF88FF',
@@ -48,7 +49,7 @@ export default withMT({
 
         black: '#1b1b1b',
 
-        light: '#fafafa',
+        // light: '#fafafa',
 
         border: '#c4c4c460',
 
@@ -57,7 +58,16 @@ export default withMT({
         modal: {
           bg: '#2E2937',
           heading: '#4D4955',
-        }
+        },
+
+        dark: {
+          background: '#121212',
+          text: '#F7FAFC',
+        },
+        light: {
+          background: '#F4F6FA',
+          text: '#1A202C',
+        },
       },
       keyframes: {
         'fade-in-down': {

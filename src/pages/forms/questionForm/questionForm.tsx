@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { EyeIcon, Trash2, UploadCloud } from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
+import { BackButton } from '../../../components/BackButton';
 
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
@@ -32,6 +33,12 @@ function QuestionForm() {
   //   const [selectedCategory, setSelectedCategory] = React.useState('');
   //   const [searchCategories, setSearchCategories] = React.useState('');
 
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+  React.useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkTheme(darkMode);
+  }, []);
 
   React.useEffect(() => {
     fetch('http://localhost:3000/categories')
@@ -178,16 +185,24 @@ function QuestionForm() {
         </div>
       </Dialog>
 
-      <div className='flex h-full w-full flex-col rounded bg-[#D2F1FF]/20'>
-        <div className='-mt-2 grid h-full w-full gap-6 px-6 pt-8 xl:grid-cols-2'>
-          <div className='flex w-full flex-col gap-4'>
+      <BackButton />
 
-            <Typography variant='h4'>Corpo da questão</Typography>
+      <div className=' grid h-full w-full gap-6 px-2 pb-8 xl:grid-cols-2'>
+        <div className='flex w-full flex-col gap-4'>
 
-            <Input label="Título" size='lg' onChange={event => handleTitleChange(event.target.value)} value={title} color='black' className='bg-white/80'/>
+          <Typography variant='h4' className='text-black dark:text-white'>Corpo da questão</Typography>
 
+          <Input
+            label="Título"
+            size='lg'
+            onChange={event => handleTitleChange(event.target.value)}
+            labelProps={{ className: 'dark:text-white text-black' }}
+            value={title}
+            color={`${isDarkTheme ? 'white' : 'black'}`}
+            className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
+          />
 
-            {/* <Select
+          {/* <Select
               label="Categoria"
               size='lg'
               disabled={false}
@@ -210,128 +225,142 @@ function QuestionForm() {
             </Select> */}
 
 
-            <Select
-              label="Categoria"
-              //   onChange={(event) => setSelectedCategory(event)}
-              size='lg'
-              className='bg-white/80'
-            >
-              {categories.map((category, index) => (
-                <Option key={index} value={category.title}>
-                  <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
-                </Option>
-              ))}
-            </Select>
-
-            {/* <SelectWithFilter options={categories} /> */}
-
-
-            <Select
-              label="Dificuldade"
-              size='lg'
-              value={difficulty}
-              onChange={(value) => setDifficulty(value)}
-              className='bg-white/80'
-            >
-              <Option value="1" index={1}>
-                <Chip value="Fácil" className='w-fit' color='green'/>
+          <Select
+            label="Categoria"
+            // labelProps={{ className: 'text-black' }}
+            labelProps={{ className: 'dark:text-white text-black' }}
+            //   onChange={(event) => setSelectedCategory(event)}
+            // color={isDarkTheme && 'blue-gray'}
+            size='lg'
+            className='bg-white/80 dark:bg-blue-gray-200/20'
+          >
+            {categories.map((category, index) => (
+              <Option key={index} value={category.title}>
+                <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
               </Option>
-              <Option value="2" index={2}>
-                <Chip value="Médio" className='w-fit' color='orange'/>
-              </Option>
-              <Option value="3" index={3}>
-                <Chip value="Difícil" className='w-fit' color='red'/>
-              </Option>
-            </Select>
+            ))}
+          </Select>
 
-            <Textarea label='Enunciado' size='lg' onChange={event => handleStatementChange(event.target.value)} value={statement} className='bg-white/80'/>
-
-            <>
-              {imageSrc ? (
-                <>
-                  <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
-                    <img src={imageSrc} alt="Uploaded" className="max-h-[8rem] rounded" />
-
-                    <Tooltip content="Excluir imagem">
-                      <IconButton color="red" onClick={onDeleteImgSrc}>
-                        <Trash2 />
-                      </IconButton>
-                    </Tooltip>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div
-                    className="cursor-pointer rounded border-2 border-dashed border-black p-4 text-center transition-all hover:border-gray-500"
-                    onClick={onAreaClick}
-                    onDragOver={(event) => event.preventDefault()}
-                    onDrop={onDrop}>
-                    <div className='flex items-center justify-center gap-3'>
-                      <UploadCloud />
-                      <Typography variant='paragraph'> Arraste e solte a imagem aqui ou clique para selecionar </Typography>
-                    </div>
-                    <input
-                      type="file"
-                      onChange={onFileChange}
-                      ref={fileInputRef}
-                      className="hidden"
-                    />
-                  </div>
-                </>
-              )}
-
-            </>
-
-          </div>
-
-          <div className='flex w-full flex-col'>
-            <Typography variant='h4' className='mb-4'>Alternativas</Typography>
+          {/* <SelectWithFilter options={categories} /> */}
 
 
-            <div className=' flex flex-col gap-2'>
-              {['A', 'B', 'C', 'D', 'E'].map((label, index) => (
-                <>
-                  <AlternativeInput
-                    key={label}
-                    label={label}
-                    onChange={(e) => handleInputChange(index, e.target.value)}
-                    value={alternatives[index]}
-                    checkboxProps={{
-                      checked: selectedCheckbox === index,
-                      onChange: () => handleCheckboxChange(index),
-                      disabled: selectedCheckbox !== null && selectedCheckbox !== index
-                    }}
-                  />
-                </>
-              ))}
-            </div>
+          <Select
+            label="Dificuldade"
+            size='lg'
+            value={difficulty}
+            onChange={(value) => setDifficulty(value)}
+            labelProps={{ className: 'dark:text-white text-black' }}
+            className='bg-white/80 dark:bg-blue-gray-200/20'
+          >
+            <Option value="1" index={1}>
+              <Chip value="Fácil" className='w-fit' color='green'/>
+            </Option>
+            <Option value="2" index={2}>
+              <Chip value="Médio" className='w-fit' color='orange'/>
+            </Option>
+            <Option value="3" index={3}>
+              <Chip value="Difícil" className='w-fit' color='red'/>
+            </Option>
+          </Select>
 
-            <div>
-            </div>
-
-          </div>
-        </div>
-        <div className='flex h-fit w-full flex-col gap-4 p-4 '>
-          <Alert
-            open={openAlert || openErrorAlert}
-            success={openAlert}
-            onClose={() => {
-              setOpenAlert(false);
-              setOpenErrorAlert(false);
-            }}
-            customMessage={customAlertMessage}
-            successMessage='Questão criada com sucesso!'
-            errorMessage='Erro ao criar questão'
+          <Textarea
+            label='Enunciado'
+            size='lg'
+            resize={true}
+            onChange={event => handleStatementChange(event.target.value)}
+            value={statement}
+            className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
+            labelProps={{ className: 'dark:text-white text-black' }}
+            rows={4}
+            // color={`${isDarkTheme ? 'white' : 'black'}`}
           />
-          <hr className='w-full border border-[#c4c4c4]/50'/>
-          <div className='flex h-fit w-full justify-between gap-4'>
-            <Button className='flex items-center gap-4' onClick={handleOpen}>
-              <EyeIcon size={20} /> Pré vizualizar
-            </Button>
-            <div className='flex h-full gap-4'>
-              <Button variant='outlined' onClick={handleBack}>Cancelar</Button>
-              <Button onClick={handleSubmit}>Salvar</Button>
-            </div>
+
+          <>
+            {imageSrc ? (
+              <>
+                <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
+                  <img src={imageSrc} alt="Uploaded" className="max-h-[8rem] rounded" />
+
+                  <Tooltip content="Excluir imagem">
+                    <IconButton color="red" onClick={onDeleteImgSrc}>
+                      <Trash2 />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  className="cursor-pointer rounded border-2 border-dashed border-black p-4 text-center transition-all dark:border-white"
+                  onClick={onAreaClick}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={onDrop}>
+                  <div className='flex items-center justify-center gap-3'>
+                    <UploadCloud className='text-black dark:text-white'/>
+                    <Typography className='text-black dark:text-white' variant='paragraph'> Arraste e solte a imagem aqui ou clique para selecionar </Typography>
+                  </div>
+                  <input
+                    type="file"
+                    onChange={onFileChange}
+                    ref={fileInputRef}
+                    className="hidden"
+                  />
+                </div>
+              </>
+            )}
+
+          </>
+
+        </div>
+
+        <div className='flex w-full flex-col'>
+          <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
+
+
+          <div className='flex flex-col gap-4'>
+            {['A', 'B', 'C', 'D', 'E'].map((label, index) => (
+              <>
+                <AlternativeInput
+                  key={label}
+                  isDarkTheme={isDarkTheme}
+                  label={label}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  value={alternatives[index]}
+                  checkboxProps={{
+                    checked: selectedCheckbox === index,
+                    onChange: () => handleCheckboxChange(index),
+                    disabled: selectedCheckbox !== null && selectedCheckbox !== index
+                  }}
+                />
+              </>
+            ))}
+          </div>
+
+          <div>
+          </div>
+
+        </div>
+      </div>
+      <div className='flex h-fit w-full flex-col gap-4 p-4 '>
+        <Alert
+          open={openAlert || openErrorAlert}
+          success={openAlert}
+          onClose={() => {
+            setOpenAlert(false);
+            setOpenErrorAlert(false);
+          }}
+          customMessage={customAlertMessage}
+          successMessage='Questão criada com sucesso!'
+          errorMessage='Erro ao criar questão'
+        />
+        <hr className='w-full border border-[#c4c4c4]/50'/>
+        <div className='flex h-fit w-full justify-between gap-4'>
+          <Button className='flex items-center gap-4' onClick={handleOpen}>
+            <EyeIcon size={20} /> Pré vizualizar
+          </Button>
+          <div className='flex h-full gap-4'>
+            <Button variant='outlined' onClick={handleBack}>Cancelar</Button>
+            <Button onClick={handleSubmit}>Salvar</Button>
           </div>
         </div>
       </div>

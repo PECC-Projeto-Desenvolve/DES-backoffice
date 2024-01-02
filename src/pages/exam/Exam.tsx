@@ -24,96 +24,96 @@ function Exam(): JSX.Element {
 
   return (
     <>
-      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded bg-[#D2F1FF]/20 p-4 transition-all'>
 
-        <BackButton />
 
-        <div className='grid h-full w-full grid-cols-2 gap-2 '>
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 px-2 py-4'>
-            {exams.length == 0 ? (
-              <>
-                <span className='w-full'>
-                  <Typography variant="h4">Você ainda não possui provas criadas</Typography>
-                </span>
-              </>
-            ):(
-              <>
-                <span className='w-full'>
-                  <Typography variant="h4">Provas criadas</Typography>
-                </span>
-                <ul className='relative flex h-full w-full animate-fade-in-down flex-col items-start gap-2 overflow-y-scroll'>
-                  {
-                    exams.map((exam, index) => (
-                      <>
-                        <ExamCard
-                          key={index}
-                          title={exam.title}
-                          createdAt={exam.createdAt}
-                          updatedAt={exam.updatedAt}
-                          difficulty={exam.difficulty}
-                          id={exam.id}
-                          handleDeleteCompleted={() => fetchExams()}
-                        />
-                      </>
+      <BackButton />
 
-                    ))
-                  }
-                </ul>
-              </>
-            )}
+      <div className='grid h-full w-full grid-cols-2 gap-2 '>
+        <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 px-2 py-4'>
+          {exams.length == 0 ? (
+            <>
+              <span className='w-full'>
+                <Typography variant="h4">Você ainda não possui provas criadas</Typography>
+              </span>
+            </>
+          ):(
+            <>
+              <span className='w-full'>
+                <Typography variant="h4">Provas criadas</Typography>
+              </span>
+              <ul className='relative flex h-full w-full animate-fade-in-down flex-col items-start gap-2 overflow-y-scroll'>
+                {
+                  exams.map((exam, index) => (
+                    <>
+                      <ExamCard
+                        key={index}
+                        title={exam.title}
+                        createdAt={exam.createdAt}
+                        updatedAt={exam.updatedAt}
+                        difficulty={exam.difficulty}
+                        id={exam.id}
+                        handleDeleteCompleted={() => fetchExams()}
+                      />
+                    </>
 
-          </div>
-          <div className='relative w-full rounded-md border border-white/40 bg-white/20 px-2 py-4'>
-            <div className='grid grid-cols-2 gap-4'>
-              <Banner
-                rounded='rounded-lg'
-                icon={<TextSelect size={20}/>}
-                title="Criar Questões"
-                description={
-                  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+                  ))
                 }
-                path='/question/form'
-              />
-              <Banner
-                rounded='rounded-lg'
-                icon={<FilePlus2 size={20}/>}
-                title="Criar Prova"
-                description={
-                  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
-                }
-                path='/exam/form'
-              />
-              <Banner
-                rounded='rounded-lg'
-                icon={<Tags size={20} />}
-                title="Gerenciar Categorias"
-                description={
-                  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
-                }
-                path='/categories'
-              />
-              <Banner
-                rounded='rounded-lg'
-                icon={<SearchCheck size={20} />}
-                title="Gerenciar Processos"
-                description={
-                  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
-                }
-                path='/process'
-              />
-              <Banner
-                rounded='rounded-lg'
-                icon={<ClipboardSignature size={20} />}
-                title="Gerenciar Questões"
-                description={
-                  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
-                }
-                path='/questions'
-              />
-            </div>
+              </ul>
+            </>
+          )}
+
+        </div>
+        <div className='relative w-full rounded-md border border-white/40 bg-white/20 px-2 py-4'>
+          <div className='grid grid-cols-2 gap-4'>
+            <Banner
+              rounded='rounded-lg'
+              icon={<TextSelect size={20}/>}
+              title="Criar Questões"
+              description={
+                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+              }
+              path='/question/form'
+            />
+            <Banner
+              rounded='rounded-lg'
+              icon={<FilePlus2 size={20}/>}
+              title="Criar Prova"
+              description={
+                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+              }
+              path='/exam/form'
+            />
+            <Banner
+              rounded='rounded-lg'
+              icon={<Tags size={20} />}
+              title="Gerenciar Categorias"
+              description={
+                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+              }
+              path='/categories'
+            />
+            <Banner
+              rounded='rounded-lg'
+              icon={<SearchCheck size={20} />}
+              title="Gerenciar Processos"
+              description={
+                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+              }
+              path='/process'
+            />
+            <Banner
+              rounded='rounded-lg'
+              icon={<ClipboardSignature size={20} />}
+              title="Gerenciar Questões"
+              description={
+                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+              }
+              path='/questions'
+            />
           </div>
         </div>
       </div>
+
     </>
   );
 }

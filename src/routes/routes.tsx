@@ -12,6 +12,7 @@ import { ExamForm } from '../pages/forms/examForm/examForm';
 import { Categories } from '../pages/categories/Categories';
 import { ExamEdit } from '../pages/examEdit/examEdit';
 import {QuestionList } from '../pages/question/QuestionList';
+import { DarkModeToggle } from '../components';
 
 function AppRoutes(): JSX.Element {
   const location = useLocation();
@@ -23,6 +24,10 @@ function AppRoutes(): JSX.Element {
     navigate('/');
   };
 
+  React.useEffect(() => {
+    localStorage.getItem;
+  }, []);
+
   return (
     <>
       { paths.includes('exam/form') ? (
@@ -33,15 +38,19 @@ function AppRoutes(): JSX.Element {
           </Routes>
         </>
       ) : (
-        <div className="relative flex h-screen w-screen flex-col gap-4 bg-[#1c3445] p-4 px-2 transition-all sm:px-2 md:px-8 lg:px-32">
-          <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md p-4'>
+        <div className={'relative flex h-screen w-screen flex-col gap-4 bg-light-background p-4 px-2 transition-colors dark:bg-blue-gray-900 sm:px-2 md:px-8 lg:px-32'}>
+          {/* <div className={`bg- relative flex h-screen w-screen flex-col gap-4 p-4 px-2 transition-all sm:px-2 md:px-8 lg:px-32${darkMode ? 'dark' : 'light'}-background`}> */}
+          <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md bg-white p-4'>
             <Typography variant="h5" color="black" onClick={handleNavigate} className='cursor-pointer transition-all hover:text-2xl'>
           Desenvolve Backoffice
             </Typography>
 
-            <Button className="flex items-center gap-4">
-          Sair <LogOut size={20} />
-            </Button>
+            <span className='flex items-center gap-2'>
+              <DarkModeToggle />
+              <Button className="flex items-center gap-4">
+          Sair <LogOut size={18} />
+              </Button>
+            </span>
           </Navbar>
 
 

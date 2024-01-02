@@ -122,148 +122,148 @@ function Categories() {
       />
 
 
-      <div className='flex h-full w-full flex-col gap-2 overflow-hidden rounded border-white bg-[#D2F1FF]/20 p-4 transition-all'>
-        <BackButton />
-        <div className='grid h-full w-full grid-cols-2 gap-2 '>
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 p-4'>
 
-            {categories.length > 0 ? (
-              <>
-                <span className='w-full'>
-                  <Typography variant="h4" className='mb-2'>Categorias criadas</Typography>
-                </span>
+      <BackButton />
+      <div className='grid h-full w-full grid-cols-2 gap-2 '>
+        <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 p-4'>
 
-                <Input label='Buscar por categoria' size='lg' />
-              </>
-            ): (
-              <>
-                <span className='w-full'>
-                  <Typography variant="h4" className='mb-2'>Nenhuma categoria criada</Typography>
-                  <Typography variant="paragraph" className='mb-2'>Use o painel ao lado para criar suas categorias</Typography>
-                </span>
-              </>
-            )}
+          {categories.length > 0 ? (
+            <>
+              <span className='w-full'>
+                <Typography variant="h4" className='mb-2'>Categorias criadas</Typography>
+              </span>
 
-            <div className='flex flex-col gap-2 overflow-y-scroll'>
-              {categories.map((category, index) => {
-                return (
-                  <>
-                    <div
-                      className={'flex w-full animate-fade-in-down items-center justify-between rounded-md border px-4 py-1'} style={{ backgroundColor: `${category.color}`}}>
-                      <Typography variant='paragraph' key={index} className='font-bold uppercase text-white'>{category.title}</Typography>
-                      <div>
-                        <Menu>
-                          <MenuHandler>
-                            <IconButton variant="text">
-                              <MoreVertical color='white' size={20}/>
-                            </IconButton>
-                          </MenuHandler>
-                          <MenuList>
+              <Input label='Buscar por categoria' size='lg' />
+            </>
+          ): (
+            <>
+              <span className='w-full'>
+                <Typography variant="h4" className='mb-2'>Nenhuma categoria criada</Typography>
+                <Typography variant="paragraph" className='mb-2'>Use o painel ao lado para criar suas categorias</Typography>
+              </span>
+            </>
+          )}
 
-                            {menuItems.map((item, index) => (
+          <div className='flex flex-col gap-2 overflow-y-scroll'>
+            {categories.map((category, index) => {
+              return (
+                <>
+                  <div
+                    className={'flex w-full animate-fade-in-down items-center justify-between rounded-md border px-4 py-1'} style={{ backgroundColor: `${category.color}`}}>
+                    <Typography variant='paragraph' key={index} className='font-bold uppercase text-white'>{category.title}</Typography>
+                    <div>
+                      <Menu>
+                        <MenuHandler>
+                          <IconButton variant="text">
+                            <MoreVertical color='white' size={20}/>
+                          </IconButton>
+                        </MenuHandler>
+                        <MenuList>
 
-                              <MenuItem
-                                className='flex items-center gap-4'
-                                key={index}
-                                onClick={() => {
-                                  setCategoryIdToEdit(category.id);
-                                  setCategoryNameToEdit(category.title);
-                                  setCategoryColorToEdit(category.color);
-                                  handleOpenNewCategoryName();
-                                }}
-                              >
-                                {item.icon}
-                                {item.label}
-                              </MenuItem>
+                          {menuItems.map((item, index) => (
 
-                            )
-                            )}
-
-                            <hr className="my-3" />
                             <MenuItem
-                              className='flex items-center justify-center gap-2 text-red-300'
-                              onClick={() => deleteCategory({ id: category.id, responseCompleted: handleDeleteCompleted })}
+                              className='flex items-center gap-4'
+                              key={index}
+                              onClick={() => {
+                                setCategoryIdToEdit(category.id);
+                                setCategoryNameToEdit(category.title);
+                                setCategoryColorToEdit(category.color);
+                                handleOpenNewCategoryName();
+                              }}
                             >
-                              <Trash size={20}/>
-                                Excluir
+                              {item.icon}
+                              {item.label}
                             </MenuItem>
-                          </MenuList>
-                        </Menu>
-                      </div>
 
+                          )
+                          )}
+
+                          <hr className="my-3" />
+                          <MenuItem
+                            className='flex items-center justify-center gap-2 text-red-300'
+                            onClick={() => deleteCategory({ id: category.id, responseCompleted: handleDeleteCompleted })}
+                          >
+                            <Trash size={20}/>
+                                Excluir
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
                     </div>
-                  </>
-                );
-              })}
-            </div>
-          </div>
 
-          <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 p-4'>
-            <span className='w-full'>
-              <Typography variant="h4">Nova categoria</Typography>
-            </span>
-
-            <Input
-              size='lg'
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              label='Título da categoria'
-            />
-            <div className='mt-5 flex flex-col gap-2'>
-
-              <Typography variant="h5">Escolha uma cor</Typography>
-              <div className=' flex w-full flex-wrap gap-2 rounded-md border p-5'>
-
-                {colors.map((color, index) => (
-                  <>
-                    <div className='flex flex-grow' onClick={() => {
-                      setColor(color.hex),
-                      setColorName(color.name);
-                    }} key={index}>
-                      <Chip
-                        value={color.name}
-                        key={index}
-                        className={'w-fit cursor-pointer border text-white shadow-xl shadow-transparent transition-all hover:-translate-y-1 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5'}
-                        style={{ backgroundColor: `${color.hex}`}}
-                      />
-                    </div>
-                  </>
-                ))}
-
-              </div>
-              <Typography variant='paragraph' className='flex'>Selecionado: <strong className='ml-2'>{colorName}</strong> </Typography>
-            </div>
-
-            <Button
-              disabled={ title == '' || color == '' ? true : false}
-              size='lg'
-              className='mt-10'
-              onClick={() => submitCategory({
-                title: title,
-                color: color,
-                responseCompleted: handleSubmitCompleted,
-                responseNotCompleted: handleSubmitNotCompleted,
-                responseError: handleSubmitError
-              })}
-            >
-                Salvar categoria
-            </Button>
+                  </div>
+                </>
+              );
+            })}
           </div>
         </div>
 
-        <Alert
-          open={openAlert || openErrorAlert}
-          success={openAlert}
-          onClose={() => {
-            setOpenAlert(false);
-            setOpenErrorAlert(false);
-          }}
-          customMessage={customAlertMessage}
-          successMessage={customSuccesMessage}
-          errorMessage='Erro ao criar categoria'
-        />
+        <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 p-4'>
+          <span className='w-full'>
+            <Typography variant="h4">Nova categoria</Typography>
+          </span>
 
+          <Input
+            size='lg'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            label='Título da categoria'
+          />
+          <div className='mt-5 flex flex-col gap-2'>
+
+            <Typography variant="h5">Escolha uma cor</Typography>
+            <div className=' flex w-full flex-wrap gap-2 rounded-md border p-5'>
+
+              {colors.map((color, index) => (
+                <>
+                  <div className='flex flex-grow' onClick={() => {
+                    setColor(color.hex),
+                    setColorName(color.name);
+                  }} key={index}>
+                    <Chip
+                      value={color.name}
+                      key={index}
+                      className={'w-fit cursor-pointer border text-white shadow-xl shadow-transparent transition-all hover:-translate-y-1 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5'}
+                      style={{ backgroundColor: `${color.hex}`}}
+                    />
+                  </div>
+                </>
+              ))}
+
+            </div>
+            <Typography variant='paragraph' className='flex'>Selecionado: <strong className='ml-2'>{colorName}</strong> </Typography>
+          </div>
+
+          <Button
+            disabled={ title == '' || color == '' ? true : false}
+            size='lg'
+            className='mt-10'
+            onClick={() => submitCategory({
+              title: title,
+              color: color,
+              responseCompleted: handleSubmitCompleted,
+              responseNotCompleted: handleSubmitNotCompleted,
+              responseError: handleSubmitError
+            })}
+          >
+                Salvar categoria
+          </Button>
+        </div>
       </div>
+
+      <Alert
+        open={openAlert || openErrorAlert}
+        success={openAlert}
+        onClose={() => {
+          setOpenAlert(false);
+          setOpenErrorAlert(false);
+        }}
+        customMessage={customAlertMessage}
+        successMessage={customSuccesMessage}
+        errorMessage='Erro ao criar categoria'
+      />
+
+
     </>
   );
 }

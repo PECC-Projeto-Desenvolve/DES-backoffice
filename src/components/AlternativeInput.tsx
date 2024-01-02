@@ -10,6 +10,7 @@ interface IAlternativeInputProps {
         onChange: () => void;
         disabled: boolean;
       };
+      isDarkTheme: boolean;
 }
 
 
@@ -26,23 +27,23 @@ interface IAlternativeInputProps {
  * @param {boolean} props.checkboxProps.disabled - Whether the checkbox is disabled or not.
  * @returns {JSX.Element} A composite component with a label, text input, and a checkbox.
  */
-function AlternativeInput({ label, onChange, value, checkboxProps }: IAlternativeInputProps): JSX.Element {
+function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }: IAlternativeInputProps): JSX.Element {
   return (
     <>
-      <div className="relative flex w-full">
-        <div className="flex items-center gap-2 rounded-l-md border border-r-0 border-blue-gray-200 bg-blue-gray-500/20  px-4 py-2">
-          <Typography className='font-bold text-blue-gray-800'>
+      <div className="relative flex h-fit w-full">
+        <div className=" flex items-center gap-2 rounded-l-md border border-r-0 border-blue-gray-200  bg-blue-gray-500/20 px-4 py-2">
+          <Typography className='font-bold text-black dark:text-white'>
             {label}
           </Typography>
         </div>
         <Input
           type="text"
           size='lg'
-          color='black'
+          color={`${isDarkTheme ? 'white' : 'black'}`}
           placeholder={`Texto da alternativa ${label}`}
-          className="rounded-l-none !border-t-blue-gray-200 bg-white/80 focus:!border-t-gray-900"
+          className="rounded-l-none !border-t-blue-gray-200 bg-white/80 focus:!border-t-gray-900 dark:bg-blue-gray-200/20 dark:focus:!border-t-white"
           labelProps={{
-            className: 'before:content-none after:content-none',
+            className: 'before:content-none after:content-none ',
           }}
           containerProps={{
             className: 'min-w-0',
@@ -50,8 +51,9 @@ function AlternativeInput({ label, onChange, value, checkboxProps }: IAlternativ
           onChange={onChange}
           value={value}
         />
-
-        <Checkbox {...checkboxProps} />
+        <span className='ml-2'>
+          <Checkbox {...checkboxProps} className='border-black dark:border-white dark:bg-white/80'/>
+        </span>
       </div>
     </>
   );

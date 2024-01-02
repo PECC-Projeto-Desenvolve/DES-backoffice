@@ -15,6 +15,8 @@ import HelpDialog from './Dialogs/HelpDialog';
 import ExamCreationDialog from './Dialogs/ExamCreationDialog';
 import ExamCompletionDialog from './Dialogs/ExamCompletionDialog';
 
+import DarkModeToggle from './DarkModeButton';
+
 export {
   Alert,
   AlternativeInput,
@@ -31,4 +33,5 @@ export {
   HelpDialog,
   ExamCreationDialog,
   ExamCompletionDialog,
+  DarkModeToggle,
 };
