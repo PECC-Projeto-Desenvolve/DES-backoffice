@@ -53,25 +53,25 @@ function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: I
   };
 
   React.useEffect(() => {
-    difficulty == 'Fácil' && setDifficultyColor('border-l-green-400');
-    difficulty == 'Difícil' && setDifficultyColor('border-l-red-400');
-    difficulty == 'Média' && setDifficultyColor('border-l-orange-400');
+    difficulty == 'Fácil' && setDifficultyColor('dark:border-l-green-400 border-l-green-600');
+    difficulty == 'Difícil' && setDifficultyColor('border-l-red-400 dark:border-l-red-600');
+    difficulty == 'Média' && setDifficultyColor('border-l-orange-400 dark:border-l-orange-600');
   },[difficulty]);
 
   return (
     <>
-      <li className={`flex h-fit w-full cursor-pointer items-center justify-between rounded-lg border bg-white p-2 ${hoverAnimation} border-l-8 ${difficultyColor}`}>
+      <li className={`flex h-fit w-full cursor-pointer items-center justify-between rounded-lg border bg-white p-2 dark:bg-blue-gray-200/20 ${hoverAnimation} border-l-8 ${difficultyColor} dark:border-blue-gray-400`}>
         <div>
-          <Typography variant='lead'>{title}</Typography>
+          <Typography variant='lead' className='font-bold text-black dark:text-white'>{title}</Typography>
           <div className='flex gap-2'>
-            <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
+            <Typography variant='paragraph' className='text-black dark:text-white'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
           </div>
         </div>
         <div>
 
           <Menu>
             <MenuHandler>
-              <IconButton variant="text">
+              <IconButton variant="text" className='dark:text-white'>
                 <MoreVertical />
               </IconButton>
             </MenuHandler>

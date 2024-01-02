@@ -34,6 +34,7 @@ function QuestionForm() {
   //   const [searchCategories, setSearchCategories] = React.useState('');
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const [isFocused, setIsFocused] = React.useState(false);
 
   React.useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -196,8 +197,8 @@ function QuestionForm() {
             label="Título"
             size='lg'
             onChange={event => handleTitleChange(event.target.value)}
-            labelProps={{ className: 'dark:text-white text-black' }}
             value={title}
+            labelProps={{ className: 'dark:text-white text-black' }}
             color={`${isDarkTheme ? 'white' : 'black'}`}
             className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
           />
@@ -269,10 +270,12 @@ function QuestionForm() {
             resize={true}
             onChange={event => handleStatementChange(event.target.value)}
             value={statement}
-            className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
-            labelProps={{ className: 'dark:text-white text-black' }}
+            labelProps={{ className: isFocused ? 'text-blue-500' : 'text-white' }} // Cor da label muda quando focado
+            onFocus={() => setIsFocused(true)}
+            // onBlur={() => setIsFocused(false)}
             rows={4}
-            // color={`${isDarkTheme ? 'white' : 'black'}`}
+            // color={`${isFocused ? 'white' : 'blue'}`}
+            className={`border ${isFocused ? 'border-blue-500' : 'border-gray-300'} bg-blue-gray-200/20 text-blue-gray-200`} // Muda cor da borda quando focado
           />
 
           <>
@@ -355,12 +358,12 @@ function QuestionForm() {
         />
         <hr className='w-full border border-[#c4c4c4]/50'/>
         <div className='flex h-fit w-full justify-between gap-4'>
-          <Button className='flex items-center gap-4' onClick={handleOpen}>
+          <Button className='flex items-center gap-4' onClick={handleOpen} color='blue'>
             <EyeIcon size={20} /> Pré vizualizar
           </Button>
           <div className='flex h-full gap-4'>
-            <Button variant='outlined' onClick={handleBack}>Cancelar</Button>
-            <Button onClick={handleSubmit}>Salvar</Button>
+            <Button variant='outlined' onClick={handleBack} className='' color='red'>Cancelar</Button>
+            <Button onClick={handleSubmit} className='' color='green'>Salvar</Button>
           </div>
         </div>
       </div>

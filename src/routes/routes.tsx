@@ -38,7 +38,7 @@ function AppRoutes(): JSX.Element {
           </Routes>
         </>
       ) : (
-        <div className={'relative flex h-screen w-screen flex-col gap-4 bg-light-background p-4 px-2 transition-colors dark:bg-blue-gray-900 sm:px-2 md:px-8 lg:px-32'}>
+        <div className={'relative flex h-fit min-h-screen w-screen flex-col gap-4 bg-light-background p-4 px-2 transition-colors dark:bg-blue-gray-900 sm:px-2 md:px-8 lg:px-32'}>
           {/* <div className={`bg- relative flex h-screen w-screen flex-col gap-4 p-4 px-2 transition-all sm:px-2 md:px-8 lg:px-32${darkMode ? 'dark' : 'light'}-background`}> */}
           <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md bg-white p-4'>
             <Typography variant="h5" color="black" onClick={handleNavigate} className='cursor-pointer transition-all hover:text-2xl'>

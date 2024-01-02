@@ -18,38 +18,36 @@ interface IExitConfirmationDialogProps {
  */
 function ExitConfirmationDialog({ open, handleOpen, handleBack }: IExitConfirmationDialogProps) {
   return (
-    <>
-      <Dialog open={open} handler={handleOpen}>
-        <DialogHeader className="flex flex-row gap-2">
-          <AlertTriangle color='red'/>
-          <Typography variant='h4' color='red'>
+    <Dialog open={open} handler={handleOpen} className='bg-white dark:bg-modal-bg'>
+      <DialogHeader className="flex flex-row gap-2">
+        <AlertTriangle color='red'/>
+        <Typography variant='h4' color='red'>
             Você possui alterações não salvas
-          </Typography>
-        </DialogHeader>
-        <DialogBody>
-          <Typography variant='lead'>
+        </Typography>
+      </DialogHeader>
+      <DialogBody>
+        <Typography variant='lead' className='text-blue-gray-800 dark:text-white'>
           Você possui alterações não salvas nesta página. Se você sair agora, todas as alterações feitas serão perdidas.
-          </Typography>
+        </Typography>
 
-          <Typography variant='lead' className='mt-4'>
+        <Typography variant='lead' className='mt-4 text-blue-gray-800 dark:text-white'>
             Tem certeza de que deseja sair sem salvar?
-          </Typography>
-        </DialogBody>
-        <DialogFooter>
-          <Button
-            variant="text"
-            color="red"
-            onClick={handleBack}
-            className="mr-4"
-          >
-            <span>sair sem salvar</span>
-          </Button>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
-            <span>Continuar editando</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
-    </>
+        </Typography>
+      </DialogBody>
+      <DialogFooter>
+        <Button
+          variant="text"
+          color="red"
+          onClick={handleBack}
+          className="mr-4"
+        >
+          <span>sair sem salvar</span>
+        </Button>
+        <Button variant="gradient" color="green" onClick={handleOpen}>
+          <span>Continuar editando</span>
+        </Button>
+      </DialogFooter>
+    </Dialog>
   );
 }
 

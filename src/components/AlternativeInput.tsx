@@ -52,7 +52,7 @@ function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }
           value={value}
         />
         <span className='ml-2'>
-          <Checkbox {...checkboxProps} className='border-black dark:border-white dark:bg-white/80'/>
+          <Checkbox {...checkboxProps} className='border-black dark:border-white' color='green'/>
         </span>
       </div>
     </>

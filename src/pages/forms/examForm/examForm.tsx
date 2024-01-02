@@ -44,7 +44,8 @@ function ExamForm(): JSX.Element {
 
   const [examTitle, setExamTitle] = React.useState('');
 
-
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
   const questions = useSelector((state) => state.question.questions);
   const dispatch = useDispatch();
 
@@ -194,14 +195,14 @@ function ExamForm(): JSX.Element {
         handler={() => handleOpenQuestionPreview}
       />
 
-      <div className='flex h-screen w-screen flex-col gap-4 overflow-hidden rounded bg-white px-8 py-6 transition-all'>
+      <div className='flex h-screen w-screen flex-col gap-4 overflow-hidden rounded bg-white px-8 py-6 transition-all dark:bg-blue-gray-900'>
         <div className='grid h-full max-h-[93%] w-full grid-cols-1 gap-2 lg:grid-cols-2 '>
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             <span className='flex w-full items-center justify-between p-3'>
               <div className='flex items-baseline gap-4'>
-                <Typography variant='h4'>Corpo da prova</Typography>
+                <Typography variant='h4' className='text-black dark:text-white'>Corpo da prova</Typography>
 
-                <Typography variant='paragraph'>{questionOrder.length} / <strong>45</strong></Typography>
+                <Typography variant='paragraph' className='text-black dark:text-white'>{questionOrder.length} / <strong>45</strong></Typography>
               </div>
 
               <Button
@@ -211,6 +212,7 @@ function ExamForm(): JSX.Element {
                 onClick={() => {
                   setQuestionOrder([]);
                 }}
+                color='orange'
               >
                     Limpar questões
               </Button>
@@ -228,8 +230,8 @@ function ExamForm(): JSX.Element {
 
                     </>
                   ): (
-                    <li className='flex h-full w-full select-none flex-col items-center gap-4 rounded-md bg-blue-gray-50/50 p-4'>
-                      <Typography variant='h5'>
+                    <li className='flex h-full w-full select-none flex-col items-center gap-4 rounded-md bg-blue-gray-50/50 p-4 dark:bg-transparent'>
+                      <Typography variant='h5' className='text-black dark:text-white'>
                     clique na questão, arraste e solte aqui
                       </Typography>
                       <img src={DND} className='pointer-events-none animate-fade-in-down select-none'/>
@@ -286,7 +288,7 @@ function ExamForm(): JSX.Element {
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             <div className=' p-2'>
               <div className='mb-2 flex w-full items-center justify-between'>
-                <Typography variant='h4' className='mb-1'>Selecione a questão
+                <Typography variant='h4' className='mb-1 text-black dark:text-white'>Selecione a questão
                   {/* <IconButton variant='text' className='ml-2' onClick={() => fetchQuestions()}>
                     <RefreshCcw size={20}/>
                   </IconButton> */}
@@ -300,6 +302,7 @@ function ExamForm(): JSX.Element {
                     setSearch('');
                     fetchQuestions();
                   }}
+                  color='orange'
                 >
                     Limpar filtros</Button>
               </div>
@@ -401,13 +404,13 @@ function ExamForm(): JSX.Element {
 
         <div className='flex h-fit w-full items-end justify-between rounded-md'>
           <div>
-            <Button variant='outlined' onClick={handleOpenHelpDialog} className='flex items-center gap-2'>
+            <Button variant='outlined' onClick={handleOpenHelpDialog} className='flex items-center gap-2' color='blue'>
             Ajuda
               <BadgeHelp size={20}/>
             </Button>
           </div>
           <div className='flex gap-4'>
-            <Button variant='outlined' onClick={handleOpen}>Cancelar</Button>
+            <Button variant='outlined' onClick={handleOpen} color='red'>Cancelar</Button>
             <Button
               onClick={
                 () =>
@@ -416,7 +419,8 @@ function ExamForm(): JSX.Element {
                     questionIds: getQuestionIds(),
                     responseCompleted() {
                       handleExamSubmitCompleted();
-                    },})} disabled={questionOrder.length >= 5 ? false : true}>Salvar prova</Button>
+                    },})} disabled={questionOrder.length >= 5 ? false : true}
+              color='green'>Salvar prova</Button>
           </div>
         </div>
       </div>

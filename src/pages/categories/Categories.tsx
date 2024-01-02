@@ -39,6 +39,12 @@ function Categories() {
 
   const [customSuccesMessage, setCustomSuccesMessage] = React.useState('');
 
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+  React.useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkTheme(darkMode);
+  }, []);
 
   React.useEffect(() => {
     fetchCategories();
@@ -124,16 +130,22 @@ function Categories() {
 
 
       <BackButton />
-      <div className='grid h-full w-full grid-cols-2 gap-2 '>
-        <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 p-4'>
+      <div className='grid h-full w-full grid-cols-2 gap-4 '>
+        <div className='relative flex w-full flex-col gap-2 overflow-hidden'>
 
           {categories.length > 0 ? (
             <>
               <span className='w-full'>
-                <Typography variant="h4" className='mb-2'>Categorias criadas</Typography>
+                <Typography variant="h4" className='mb-2 text-black dark:text-white'>Categorias criadas</Typography>
               </span>
 
-              <Input label='Buscar por categoria' size='lg' />
+              <Input
+                label='Buscar por categoria'
+                size='lg'
+                labelProps={{ className: 'dark:text-white text-black' }}
+                color={`${isDarkTheme ? 'white' : 'black'}`}
+                className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
+              />
             </>
           ): (
             <>
@@ -198,9 +210,9 @@ function Categories() {
           </div>
         </div>
 
-        <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 bg-white/20 p-4'>
+        <div className='relative flex w-full flex-col gap-2 overflow-hidden'>
           <span className='w-full'>
-            <Typography variant="h4">Nova categoria</Typography>
+            <Typography variant="h4" className='text-black dark:text-white'>Nova categoria</Typography>
           </span>
 
           <Input
@@ -208,12 +220,14 @@ function Categories() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             label='Título da categoria'
+            labelProps={{ className: 'dark:text-white text-black' }}
+            color={`${isDarkTheme ? 'white' : 'black'}`}
+            className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
           />
           <div className='mt-5 flex flex-col gap-2'>
 
-            <Typography variant="h5">Escolha uma cor</Typography>
-            <div className=' flex w-full flex-wrap gap-2 rounded-md border p-5'>
-
+            <Typography variant="h5" className='text-black dark:text-white'>Escolha uma cor</Typography>
+            <div className=' flex w-full flex-wrap gap-2 rounded-md border bg-white p-5 dark:border-blue-gray-200 dark:bg-blue-gray-200/40'>
               {colors.map((color, index) => (
                 <>
                   <div className='flex flex-grow' onClick={() => {
@@ -223,7 +237,7 @@ function Categories() {
                     <Chip
                       value={color.name}
                       key={index}
-                      className={'w-fit cursor-pointer border text-white shadow-xl shadow-transparent transition-all hover:-translate-y-1 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5'}
+                      className={'w-fit cursor-pointer border text-white shadow-xl shadow-transparent transition-all hover:-translate-y-1 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5 dark:border-blue-gray-200 dark:hover:border-blue-gray-200'}
                       style={{ backgroundColor: `${color.hex}`}}
                     />
                   </div>
@@ -231,7 +245,7 @@ function Categories() {
               ))}
 
             </div>
-            <Typography variant='paragraph' className='flex'>Selecionado: <strong className='ml-2'>{colorName}</strong> </Typography>
+            <Typography variant='paragraph' className='flex text-black dark:text-white'>Selecionado: <strong className='ml-2'>{colorName}</strong> </Typography>
           </div>
 
           <Button
@@ -245,6 +259,7 @@ function Categories() {
               responseNotCompleted: handleSubmitNotCompleted,
               responseError: handleSubmitError
             })}
+            color="green"
           >
                 Salvar categoria
           </Button>

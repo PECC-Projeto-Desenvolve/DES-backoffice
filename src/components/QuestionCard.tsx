@@ -66,7 +66,7 @@ function QuestionCard({createdAt, statement, rightAnswer, difficulty, onDragStar
     setColor(selectedColor);
   };
 
-  const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-1 hover:border-blue-gray-100 hover:shadow-blue-gray-900/5 hover:bg-[#fafafa]';
+  const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-1 hover:border-blue-gray-100 dark:hover:border-white hover:shadow-blue-gray-900/5 hover:bg-[#fafafa]';
 
   const menuItems = [
     {
@@ -82,20 +82,20 @@ function QuestionCard({createdAt, statement, rightAnswer, difficulty, onDragStar
   return (
     <>
       <div
-        className={`z-50 flex h-fit w-full cursor-grab items-center justify-between rounded-md border bg-[#fff] active:cursor-grabbing ${hoverAnimation} animate-fade-in-down`}
+        className={`z-50 flex h-fit w-full cursor-grab items-center justify-between rounded-md border bg-white active:cursor-grabbing dark:border-blue-gray-400 dark:bg-blue-gray-200/30 ${hoverAnimation} animate-fade-in-down`}
         onDragStart={onDragStart}
         draggable
       >
         <div className={`flex h-full w-fit items-center justify-center rounded-l-md border-r-blue-gray-300 px-2 ${color}`}>
-          <p className='flex h-5 w-5 items-center justify-center rounded-full border bg-white text-sm'>{decryptRightAnswer(rightAnswer)}</p>
+          <p className='flex h-5 w-5 items-center justify-center rounded-full border bg-white text-sm ' >{decryptRightAnswer(rightAnswer)}</p>
         </div>
 
         <div className='w-full py-1 pl-4'>
-          <Typography variant='small' className='-mb-1'>Enunciado:</Typography>
-          <Typography variant='h6'>{statement.length > 49 ? (`${stringResizer(statement, 50)} ...`) : (statement)}</Typography>
+          <Typography variant='small' className='-mb-1 text-black dark:text-white'>Enunciado:</Typography>
+          <Typography variant='h6' className='text-black dark:text-white'>{statement.length > 49 ? (`${stringResizer(statement, 50)} ...`) : (statement)}</Typography>
 
           <div className='flex gap-2'>
-            <Typography variant='paragraph'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
+            <Typography variant='paragraph' className='text-black dark:text-white'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
             {/* <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography> */}
           </div>
         </div>
@@ -104,7 +104,7 @@ function QuestionCard({createdAt, statement, rightAnswer, difficulty, onDragStar
         <div>
           <Menu>
             <MenuHandler>
-              <IconButton variant="text">
+              <IconButton variant="text" className='text-black dark:text-white'>
                 <MoreVertical />
               </IconButton>
             </MenuHandler>

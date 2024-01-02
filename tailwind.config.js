@@ -47,6 +47,11 @@ export default withMT({
           }
         },
 
+        modal: {
+          bg: '#2E2937',
+          heading: '#4D4955',
+        },
+
         black: '#1b1b1b',
 
         // light: '#fafafa',

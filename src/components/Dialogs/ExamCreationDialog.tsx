@@ -14,12 +14,20 @@ interface ExamCreationDialogProps {
 function ExamCreationDialog({ open, examTitle, setExamTitle, onSubmit, handler }: ExamCreationDialogProps) {
   const navigate = useNavigate();
 
+  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+
+  React.useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkTheme(darkMode);
+  }, []);
+
+
   return (
-    <Dialog open={open} handler={handler} size='md'>
+    <Dialog open={open} handler={handler} size='md' className='dark:bg-modal-bg'>
       <form onSubmit={onSubmit}>
-        <DialogHeader className='-mb-4'>Criação de prova</DialogHeader>
+        <DialogHeader className='-mb-4 text-black dark:text-white' >Criação de prova</DialogHeader>
         <DialogBody>
-          <Typography className='mb-4'>
+          <Typography className='mb-4 text-blue-gray-800 dark:text-blue-gray-100'>
             Seja bem vindo(a) à criação
           </Typography>
           <div className='flex flex-col gap-2'>
@@ -29,6 +37,9 @@ function ExamCreationDialog({ open, examTitle, setExamTitle, onSubmit, handler }
               size='lg'
               value={examTitle}
               onChange={(e) => setExamTitle(e.target.value)}
+              labelProps={{ className: 'dark:text-white text-black' }}
+              color={`${isDarkTheme ? 'white' : 'black'}`}
+              className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
             />
             <Select label="Nível da prova" size='lg' disabled>
               <Option>

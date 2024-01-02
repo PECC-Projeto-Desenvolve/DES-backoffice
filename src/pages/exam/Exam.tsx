@@ -28,8 +28,8 @@ function Exam(): JSX.Element {
 
       <BackButton />
 
-      <div className='grid h-full w-full grid-cols-2 gap-2 '>
-        <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border border-white/40 px-2 py-4'>
+      <div className='grid h-full w-full grid-cols-2 gap-4 '>
+        <div className='relative flex w-full flex-col gap-2 overflow-hidden'>
           {exams.length == 0 ? (
             <>
               <span className='w-full'>
@@ -39,7 +39,7 @@ function Exam(): JSX.Element {
           ):(
             <>
               <span className='w-full'>
-                <Typography variant="h4">Provas criadas</Typography>
+                <Typography variant="h4" className='dark:text-white '>Provas criadas</Typography>
               </span>
               <ul className='relative flex h-full w-full animate-fade-in-down flex-col items-start gap-2 overflow-y-scroll'>
                 {
@@ -63,7 +63,7 @@ function Exam(): JSX.Element {
           )}
 
         </div>
-        <div className='relative w-full rounded-md border border-white/40 bg-white/20 px-2 py-4'>
+        <div className='relative w-full'>
           <div className='grid grid-cols-2 gap-4'>
             <Banner
               rounded='rounded-lg'
