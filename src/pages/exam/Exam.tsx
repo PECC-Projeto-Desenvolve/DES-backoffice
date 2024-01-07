@@ -24,8 +24,6 @@ function Exam(): JSX.Element {
 
   return (
     <>
-
-
       <BackButton />
 
       <div className='grid h-full w-full grid-cols-2 gap-4 '>
@@ -33,7 +31,7 @@ function Exam(): JSX.Element {
           {exams.length == 0 ? (
             <>
               <span className='w-full'>
-                <Typography variant="h4">Você ainda não possui provas criadas</Typography>
+                <Typography variant="h4" className='dark:text-white'>Você ainda não possui provas criadas</Typography>
               </span>
             </>
           ):(
@@ -64,7 +62,7 @@ function Exam(): JSX.Element {
 
         </div>
         <div className='relative w-full'>
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1  lg:grid-cols-2'>
             <Banner
               rounded='rounded-lg'
               icon={<TextSelect size={20}/>}

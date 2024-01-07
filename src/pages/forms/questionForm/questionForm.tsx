@@ -30,9 +30,6 @@ function QuestionForm() {
   const [difficulty, setDifficulty] = React.useState('');
 
   const [categories, setCategories] = React.useState([]);
-  //   const [selectedCategory, setSelectedCategory] = React.useState('');
-  //   const [searchCategories, setSearchCategories] = React.useState('');
-
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
   const [isFocused, setIsFocused] = React.useState(false);
 
@@ -47,13 +44,6 @@ function QuestionForm() {
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
   }, []);
-
-  //   React.useEffect(() => {
-  //     fetch('http://localhost:3000/categories')
-  //       .then(response => response.json())
-  //       .then(data => setCategories(data.map(item => item.title))) // Supondo que cada categoria tenha uma propriedade 'name'
-  //       .catch(error => console.error('Erro ao buscar categorias:', error));
-  //   }, []);
 
   const [open, setOpen] = React.useState(false);
 
@@ -114,10 +104,6 @@ function QuestionForm() {
     setStatement(event);
   };
 
-  //   const handleSelectCategory = (category) => {
-  //     setSelectedCategory(category);
-  //   };
-
   const handleSubmit = async () => {
     if (!title.trim() || !statement.trim() || alternatives.some(alt => !alt.trim())) {
       setOpenErrorAlert(true);
@@ -162,7 +148,6 @@ function QuestionForm() {
           setTitle('');
           setStatement('');
           setDifficulty('');
-          //   setSelectedCategory('');
           setSelectedCheckbox(null);
         }, 1000);
       }
@@ -175,7 +160,6 @@ function QuestionForm() {
       }, 3000);
       console.error('Falha ao salvar a questão:', error);
     }
-
   };
 
   return (
@@ -190,7 +174,6 @@ function QuestionForm() {
 
       <div className=' grid h-full w-full gap-6 px-2 pb-8 xl:grid-cols-2'>
         <div className='flex w-full flex-col gap-4'>
-
           <Typography variant='h4' className='text-black dark:text-white'>Corpo da questão</Typography>
 
           <Input
@@ -203,35 +186,9 @@ function QuestionForm() {
             className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
           />
 
-          {/* <Select
-              label="Categoria"
-              size='lg'
-              disabled={false}
-              value={category}
-              onChange={(value) => setCategory(value)}
-            >
-
-              <Input label='Buscar por categoria' value={searchCategories} onChange={(e) => setSearchCategories(e.target.value)} className='mb-2'/>
-
-              {categories.filter((category) => {
-                return searchCategories.toLocaleLowerCase() === '' ? category : category.title.toLocaleLowerCase().includes(searchCategories);
-              }).map((category, index) => (
-                <>
-                  <Option key={category.id} value={category.title} index={index} className='my-2 bg-white'>
-                    <Chip value={category.title} className='w-fit text-black' style={{ backgroundColor: `#${category.color}`}}/>
-                  </Option>
-                </>
-              ))}
-
-            </Select> */}
-
-
           <Select
             label="Categoria"
-            // labelProps={{ className: 'text-black' }}
             labelProps={{ className: 'dark:text-white text-black' }}
-            //   onChange={(event) => setSelectedCategory(event)}
-            // color={isDarkTheme && 'blue-gray'}
             size='lg'
             className='bg-white/80 dark:bg-blue-gray-200/20'
           >
@@ -241,9 +198,6 @@ function QuestionForm() {
               </Option>
             ))}
           </Select>
-
-          {/* <SelectWithFilter options={categories} /> */}
-
 
           <Select
             label="Dificuldade"
@@ -270,14 +224,11 @@ function QuestionForm() {
             resize={true}
             onChange={event => handleStatementChange(event.target.value)}
             value={statement}
-            labelProps={{ className: isFocused ? 'text-blue-500' : 'text-white' }} // Cor da label muda quando focado
+            labelProps={{ className: isFocused ? 'text-blue-500' : 'text-white' }}
             onFocus={() => setIsFocused(true)}
-            // onBlur={() => setIsFocused(false)}
             rows={4}
-            // color={`${isFocused ? 'white' : 'blue'}`}
-            className={`border ${isFocused ? 'border-blue-500' : 'border-gray-300'} bg-blue-gray-200/20 text-blue-gray-200`} // Muda cor da borda quando focado
+            className={`border ${isFocused ? 'border-blue-500' : 'border-gray-300'} bg-blue-gray-200/20 text-blue-gray-200`}
           />
-
           <>
             {imageSrc ? (
               <>
@@ -311,14 +262,10 @@ function QuestionForm() {
                 </div>
               </>
             )}
-
           </>
-
         </div>
-
         <div className='flex w-full flex-col'>
           <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
-
 
           <div className='flex flex-col gap-4'>
             {['A', 'B', 'C', 'D', 'E'].map((label, index) => (
@@ -338,7 +285,6 @@ function QuestionForm() {
               </>
             ))}
           </div>
-
           <div>
           </div>
 

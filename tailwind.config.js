@@ -60,11 +60,6 @@ export default withMT({
 
         blurred: '#ffffff10',
 
-        modal: {
-          bg: '#2E2937',
-          heading: '#4D4955',
-        },
-
         dark: {
           background: '#121212',
           text: '#F7FAFC',

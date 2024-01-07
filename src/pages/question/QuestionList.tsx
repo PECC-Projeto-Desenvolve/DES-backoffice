@@ -1,13 +1,15 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { populateQuestions } from '../../store/slices/questionsSlice';
-import { Menu, Dialog, IconButton, MenuHandler, MenuItem, MenuList, Typography, Input, DialogHeader } from '@material-tailwind/react';
+import { Menu, Dialog, IconButton, MenuHandler, MenuItem, MenuList, Typography, Input, DialogHeader, Button, Textarea } from '@material-tailwind/react';
 import { stringResizer } from '../../utils';
-import { Eye, MoreVertical, Trash } from 'lucide-react';
+import { ExternalLink, Eye, MoreVertical, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
+import { useNavigate } from 'react-router-dom';
 
 
 function QuestionList() {
+  const navigate = useNavigate();
   const [openPreview, setOpenPreview] = React.useState(false);
   const [questionToPreview, setQuestionToPreview] = React.useState({
     title: '',
@@ -19,14 +21,22 @@ function QuestionList() {
 
   const [newQuestionTitle, setNewQuestionTitle] = React.useState('');
   const [newQuestionStatement, setNewQuestionStatement] = React.useState('');
+  const [newQuestionAlternatives, setNewQuestionAlternatives] = React.useState([]);
 
   const difficultyColorMap = {
-    1: 'border-l-green-400',
-    2: 'border-l-orange-400',
-    3: 'border-l-red-400',
+    1: 'border-l-green-400 dark:border-l-green-600',
+    2: 'border-l-orange-400 dark:border-l-orange-600',
+    3: 'border-l-red-400 dark:border-l-red-600',
   };
 
   const handleOpenQuestionPreview = (index) => {
+    fetch(`http://localhost:3000/alternatives/${index.id}`)
+      .then(response => response.json())
+      .then(data => {
+        setNewQuestionAlternatives(data);
+      })
+      .catch(error => console.error('Erro ao buscar questões:', error));
+
     if (index) {
       setQuestionToPreview(index);
       setNewQuestionTitle(index.title);
@@ -83,8 +93,9 @@ function QuestionList() {
             size='lg'
           />
 
-          <Input
+          <Textarea
             label='Enunciado da questão'
+            resize={true}
             value={newQuestionStatement}
             onFocus={() => {
               setNewQuestionStatement(questionToPreview.statement);
@@ -92,51 +103,68 @@ function QuestionList() {
             onChange={(e) => setNewQuestionStatement(e.target.value)}
             size='lg'
           />
+
+          {newQuestionAlternatives.map((alternative, index) => (
+            <Input
+              key={index}
+              label='Título da questão'
+              value={alternative.text}
+              onFocus={() => {
+                setNewQuestionAlternatives(questionToPreview.alternatives);
+              }}
+              onChange={(e) => setNewQuestionAlternatives[index](e.target.value)}
+              size='lg'
+            />
+          ))}
         </div>
       </Dialog>
 
-      <div className='relative flex h-full w-full flex-col justify-between rounded border border-white bg-[#D2F1FF]/20 p-4'>
-        <BackButton />
-        <div className='mb-3 h-[2rem] w-full bg-gray-300'>
 
-        </div>
-        <div className='relative grid h-[43rem] w-full grid-cols-4 gap-2 overflow-y-scroll'>
+      <div className='mb-3  flex w-full justify-between'>
+        <BackButton />
+        <Button color='blue' className='flex items-center justify-center gap-4' onClick={() => navigate('/question/form')} >Criar questão <ExternalLink size={18}/> </Button>
+      </div>
+
+      <div className='relative flex h-full w-full flex-col justify-between'>
+
+        <div className='relative grid  w-full grid-cols-2 gap-2 overflow-y-scroll'>
           {questions.map((question, index) => (
             <>
-              <div className={`min-h-[7rem] rounded border border-l-8 bg-white p-2 ${difficultyColorMap[question.difficulty]}`} key={index} >
-                <span className='flex w-full items-center justify-between'>
-                  <Typography variant='h6'>{question.title}</Typography>
-                  <div>
-                    <Menu>
-                      <MenuHandler>
-                        <IconButton variant="text">
-                          <MoreVertical size={20}/>
-                        </IconButton>
-                      </MenuHandler>
-                      <MenuList>
-                        <MenuItem
-                          className='flex items-center gap-4'
-                          onClick={() => handleOpenQuestionPreview(question)}
-                        >
-                          <Eye size={20}/>
-                        Visualizar
-                        </MenuItem>
-                        <MenuItem
-                          className='flex items-center gap-4'
-                        >
-                          <Eye size={20}/>
-                        Editar
-                        </MenuItem>
-                        <hr className="my-3" />
-                        <MenuItem className='flex items-center justify-center gap-2 text-red-300' >
-                          <Trash size={20}/>
-                        Excluir
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </div>
+              <div className={`flex h-[5rem] items-center rounded border border-l-8 bg-white p-2 dark:bg-blue-gray-200/20 ${difficultyColorMap[question.difficulty]}`} key={index} >
+                <span className='ml-2 flex w-full flex-col'>
+                  <Typography variant='h6' className='dark:text-white'>{question.title}</Typography>
+
+                  <Typography variant='paragraph' className='dark:text-white'>{question.statement.length > 49 ? (`${stringResizer(question.statement, 50)} ...`) : (question.statement)}</Typography>
                 </span>
-                <Typography variant='paragraph'>{question.statement.length > 49 ? (`${stringResizer(question.statement, 50)} ...`) : (question.statement)}</Typography>
+                <div>
+                  <Menu>
+                    <MenuHandler>
+                      <IconButton variant="text" className='dark:text-white'>
+                        <MoreVertical size={20}/>
+                      </IconButton>
+                    </MenuHandler>
+                    <MenuList>
+                      <MenuItem
+                        className='flex items-center gap-4'
+                        onClick={() => handleOpenQuestionPreview(question)}
+                      >
+                        <Eye size={20}/>
+                        Visualizar
+                      </MenuItem>
+                      <MenuItem
+                        className='flex items-center gap-4'
+                      >
+                        <Eye size={20}/>
+                        Editar
+                      </MenuItem>
+                      <hr className="my-3" />
+                      <MenuItem className='flex items-center justify-center gap-2 text-red-300' >
+                        <Trash size={20}/>
+                        Excluir
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
+                </div>
               </div>
             </>
           ))}
