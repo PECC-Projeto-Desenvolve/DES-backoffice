@@ -17,7 +17,7 @@ import DND from '../../../assets/dnd-placeholder.svg';
 import { deleteQuestion } from '../../../api/question/delete';
 import { submitExam } from '../../../api/exam/submit';
 
-
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function ExamForm(): JSX.Element {
   const [questionOrder, setQuestionOrder] = React.useState<any[]>([]);
@@ -128,7 +128,7 @@ function ExamForm(): JSX.Element {
     const pageString = page ? `&page=${page}` : '';
     const filterString = filter ? `&filter=${filter}` : '';
 
-    fetch(`http://localhost:3000/questions?${pageString}${filterString}`)
+    fetch(`${apiUrl}/questions?${pageString}${filterString}`)
       .then(response => response.json())
       .then(data => {
         dispatch(populateQuestions(data));
@@ -147,7 +147,7 @@ function ExamForm(): JSX.Element {
   }, [firstStepCompleted]);
 
   React.useEffect(() => {
-    fetch('http://localhost:3000/categories')
+    fetch(`${apiUrl}/categories`)
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));

@@ -1,3 +1,5 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Interface for updateCategory function properties.
  * @interface
@@ -21,7 +23,7 @@ interface IUpdateCategoryProps {
  */
 export const updateCategory = async ({ id, newName, responseCompleted }: IUpdateCategoryProps): Promise<void> => {
   try {
-    const response = await fetch(`http://localhost:3000/categories/${id}`, {
+    const response = await fetch(`${apiUrl}/categories/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

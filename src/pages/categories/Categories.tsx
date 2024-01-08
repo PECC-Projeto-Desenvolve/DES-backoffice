@@ -11,6 +11,8 @@ import {
 import { colors } from '../../data/categoryColors';
 import { BackButton } from '../../components/BackButton';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const menuItems = [
   {
     label: 'Editar',
@@ -51,7 +53,7 @@ function Categories() {
   }, []);
 
   const fetchCategories = () => {
-    fetch('http://localhost:3000/categories')
+    fetch(`${apiUrl}/categories`)
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
@@ -132,7 +134,7 @@ function Categories() {
       <BackButton />
 
       <Card className='rounded-md border border-orange-900/80 bg-orange-700/60 p-2'>
-        <Typography className='font-bold text-white '>Não é possível no momento atribuir categoria </Typography>
+        <Typography className='font-bold text-white '>Não é possível no momento atribuir categoria nas questões</Typography>
       </Card>
 
       <div className='grid h-full w-full grid-cols-2 gap-4 '>

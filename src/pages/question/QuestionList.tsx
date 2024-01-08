@@ -1,12 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { populateQuestions } from '../../store/slices/questionsSlice';
-import { Menu, Dialog, IconButton, MenuHandler, MenuItem, MenuList, Typography, Input, DialogHeader, Button, Textarea } from '@material-tailwind/react';
+import { Menu, Dialog, IconButton, MenuHandler, MenuItem, MenuList, Typography, Input, DialogHeader, Button, Textarea, DialogFooter } from '@material-tailwind/react';
 import { stringResizer } from '../../utils';
 import { ExternalLink, Eye, MoreVertical, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 
+const apiUrl = import.meta.env.VITE_API_URL;
 
 function QuestionList() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function QuestionList() {
   };
 
   const handleOpenQuestionPreview = (index) => {
-    fetch(`http://localhost:3000/alternatives/${index.id}`)
+    fetch(`${apiUrl}/alternatives/${index.id}`)
       .then(response => response.json())
       .then(data => {
         setNewQuestionAlternatives(data);
@@ -54,7 +55,7 @@ function QuestionList() {
     const pageString = page ? `&page=${page}` : '';
     const filterString = filter ? `&filter=${filter}` : '';
 
-    fetch(`http://localhost:3000/questions?${pageString}${filterString}`)
+    fetch(`${apiUrl}/questions?${pageString}${filterString}`)
       .then(response => response.json())
       .then(data => {
         dispatch(populateQuestions(data));
@@ -117,12 +118,19 @@ function QuestionList() {
             />
           ))}
         </div>
+
+        <DialogFooter>
+          <span className='flex gap-2'>
+            <Button size='sm' color='red' onClick={() => setOpenPreview(false)}>Fechar</Button>
+            <Button size='sm' color='green'>Salvar</Button>
+          </span>
+        </DialogFooter>
       </Dialog>
 
 
       <div className='mb-3  flex w-full justify-between'>
         <BackButton />
-        <Button color='blue' className='flex items-center justify-center gap-4' onClick={() => navigate('/question/form')} >Criar questão <ExternalLink size={18}/> </Button>
+        <Button color='blue' className='flex items-center justify-center gap-4' onClick={() => navigate('/question/form')} size='sm'>Criar questão <ExternalLink size={18}/> </Button>
       </div>
 
       <div className='relative flex h-full w-full flex-col justify-between'>
@@ -149,16 +157,11 @@ function QuestionList() {
                         onClick={() => handleOpenQuestionPreview(question)}
                       >
                         <Eye size={20}/>
-                        Visualizar
+                        Visualizar / Editar
                       </MenuItem>
-                      <MenuItem
-                        className='flex items-center gap-4'
-                      >
-                        <Eye size={20}/>
-                        Editar
-                      </MenuItem>
+
                       <hr className="my-3" />
-                      <MenuItem className='flex items-center justify-center gap-2 text-red-300' >
+                      <MenuItem className='flex items-center justify-center gap-2 text-red-300' disabled>
                         <Trash size={20}/>
                         Excluir
                       </MenuItem>

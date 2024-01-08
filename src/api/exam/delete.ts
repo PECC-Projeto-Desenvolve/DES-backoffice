@@ -1,3 +1,5 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Interface defining the properties for deleting an exam.
  */
@@ -21,7 +23,7 @@ interface IDeleteExamProps {
  */
 export const deleteExam = async ({ id, responseCompleted }: IDeleteExamProps): Promise<void> => {
   try {
-    const response = await fetch(`http://localhost:3000/exams/${id}`, {
+    const response = await fetch(`${apiUrl}/exams/${id}`, {
       method: 'DELETE',
     });
 

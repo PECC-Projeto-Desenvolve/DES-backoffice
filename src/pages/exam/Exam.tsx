@@ -8,11 +8,13 @@ import { Banner, ExamCard } from '../../components';
 
 import { BackButton } from '../../components/BackButton';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function Exam(): JSX.Element {
   const [exams, setExams] = React.useState([]);
 
   const fetchExams = () => {
-    fetch('http://localhost:3000/exams')
+    fetch(`${apiUrl}/exams`)
       .then(response => response.json())
       .then(data => setExams(data))
       .catch(error => console.error('Erro ao buscar provas:', error));
@@ -31,7 +33,7 @@ function Exam(): JSX.Element {
           {exams.length == 0 ? (
             <>
               <span className='w-full'>
-                <Typography variant="h4" className='dark:text-white'>Você ainda não possui provas criadas</Typography>
+                <Typography variant="h4" className='dark:text-white'>Você ainda não possui provas criadas {apiUrl}</Typography>
               </span>
             </>
           ):(

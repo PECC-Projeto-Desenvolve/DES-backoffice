@@ -1,3 +1,5 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Interface for submitCategory function properties.
  * @interface
@@ -34,7 +36,7 @@ export const submitCategory = async ({
 }: ISubmitCategoryProps): Promise<void> => {
 
   try {
-    const response = await fetch('http://localhost:3000/categories', {
+    const response = await fetch(`${apiUrl}/categories`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

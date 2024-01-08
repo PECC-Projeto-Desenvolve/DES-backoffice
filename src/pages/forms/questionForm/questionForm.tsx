@@ -17,6 +17,8 @@ import { AlertCircle, EyeIcon, Trash2, UploadCloud } from 'lucide-react';
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
 import { BackButton } from '../../../components/BackButton';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
   const [title, setTitle] = React.useState('');
@@ -39,7 +41,7 @@ function QuestionForm() {
   }, []);
 
   React.useEffect(() => {
-    fetch('http://localhost:3000/categories')
+    fetch(`${apiUrl}/categories`)
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
@@ -123,7 +125,7 @@ function QuestionForm() {
     };
 
     try {
-      const response = await fetch('http://localhost:3000/questions', {
+      const response = await fetch('${apiUrl}/questions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

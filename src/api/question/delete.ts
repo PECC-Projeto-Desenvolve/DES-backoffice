@@ -1,3 +1,5 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Interface defining the properties for deleting a question.
  */
@@ -24,7 +26,7 @@ export const deleteQuestion = async ({ id, responseCompleted }: IDeleteQuestionP
   const convertId = id.toString();
 
   try {
-    const response = await fetch(`http://localhost:3000/questions/${convertId}`, {
+    const response = await fetch(`${apiUrl}/questions/${convertId}`, {
       method: 'DELETE',
     });
 

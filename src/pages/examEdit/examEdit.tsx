@@ -5,6 +5,8 @@ import { BackButton } from '../../components/BackButton';
 import { GripVertical } from 'lucide-react';
 import { stringResizer } from '../../utils';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 interface Exam {
     id: string;
     title: string;
@@ -35,7 +37,7 @@ function ExamEdit() {
 
 
   const fetchExam = (examId: string) => {
-    fetch(`http://localhost:3000/${examId}`)
+    fetch(`${apiUrl}/${examId}`)
       .then(response => response.json())
       .then(data => setExam(data as Exam))
       .catch(error => console.error('Erro ao buscar questões:', error));

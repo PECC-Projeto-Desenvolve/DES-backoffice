@@ -1,3 +1,5 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Interface for deleteCategory function properties.
  * @interface
@@ -18,7 +20,7 @@ interface IDeleteCategoryProps {
  */
 export const deleteCategory = async ({ id, responseCompleted }: IDeleteCategoryProps): Promise<void> => {
   try {
-    const response = await fetch(`http://localhost:3000/categories/${id}`, {
+    const response = await fetch(`${apiUrl}categories/${id}`, {
       method: 'DELETE',
     });
 

@@ -1,3 +1,5 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 /**
  * Interface defining the properties for submitting an exam.
  */
@@ -43,7 +45,7 @@ export const submitExam = async ({
 }: ISubmitCategoryProps): Promise<void> => {
 
   try {
-    const response = await fetch('http://localhost:3000/exams', {
+    const response = await fetch(`${apiUrl}/exams`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
