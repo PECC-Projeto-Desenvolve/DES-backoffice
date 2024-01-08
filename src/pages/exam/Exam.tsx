@@ -70,7 +70,7 @@ function Exam(): JSX.Element {
               icon={<TextSelect size={20}/>}
               title="Criar Questões"
               description={
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+                'Crie questões diversificadas, incluindo múltipla escolha, dissertativas e verdadeiro ou falso, para uma avaliação abrangente.'
               }
               path='/question/form'
             />
@@ -79,7 +79,7 @@ function Exam(): JSX.Element {
               icon={<FilePlus2 size={20}/>}
               title="Criar Prova"
               description={
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+                'Desenvolva avaliações personalizadas, selecionando questões e formatando estruturas de prova de acordo com suas necessidades'
               }
               path='/exam/form'
             />
@@ -88,7 +88,7 @@ function Exam(): JSX.Element {
               icon={<Tags size={20} />}
               title="Gerenciar Categorias"
               description={
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+                'Organize questões em categorias temáticas, facilitando a busca e a composição de provas mais eficazes.'
               }
               path='/categories'
             />
@@ -97,7 +97,7 @@ function Exam(): JSX.Element {
               icon={<SearchCheck size={20} />}
               title="Gerenciar Processos"
               description={
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+                'Gerencie processos seletivos, definindo critérios de avaliação e empregando provas para selecionar os melhores candidatos.'
               }
               path='/process'
             />
@@ -106,7 +106,7 @@ function Exam(): JSX.Element {
               icon={<ClipboardSignature size={20} />}
               title="Gerenciar Questões"
               description={
-                'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+                'Edite, exclua ou revise questões existentes, mantendo o banco de questões atualizado e relevante.'
               }
               path='/questions'
             />

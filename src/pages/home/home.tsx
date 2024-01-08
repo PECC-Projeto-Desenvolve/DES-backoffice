@@ -10,34 +10,34 @@ function Home() {
           icon={<SearchCheck />}
           title="Processos"
           description={
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+            'Área para gerenciamento de processos seletivos.'
           }
-          path='process'
+          path='/'
         />
 
         <Banner
           icon={<Users2 />}
           title="Candidatos"
           description={
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+            'Área para o gerenciamento de candidatos.'
           }
-          path='candidates'
+          path='/'
         />
 
         <Banner
           icon={<MapPin />}
           title="Cidades"
           description={
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+            'Área para gerenciamento de cidades aptas a receber um processo seletivo'
           }
-          path='cities'
+          path='/'
         />
 
         <Banner
           icon={<File />}
           title="Provas"
           description={
-            'Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis necessitatibus sunt ad in dolore laborum quae iure praesentium!'
+            'Área de gerenciamento de provas, onde você tem a possibilidade de criar provas e questões'
           }
           path='exam'
         />
