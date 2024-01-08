@@ -47,7 +47,7 @@ function AppRoutes(): JSX.Element {
 
             <span className='flex items-center gap-2'>
               <DarkModeToggle />
-              <Button className="flex items-center gap-4">
+              <Button className="flex items-center gap-4" disabled>
           Sair <LogOut size={18} />
               </Button>
             </span>

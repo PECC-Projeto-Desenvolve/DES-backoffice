@@ -17,7 +17,7 @@ const DarkModeToggle = () => {
   };
 
   return (
-    <IconButton onClick={toggleDarkMode}>
+    <IconButton onClick={toggleDarkMode} className='bg-blue-200 text-blue-900 dark:bg-yellow-200 dark:text-yellow-900'>
       {darkMode ? ( <Sun /> ) : ( <Moon />)}
     </IconButton>
   );
