@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialog, DialogHeader, DialogBody, DialogFooter, Button, Typography } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 

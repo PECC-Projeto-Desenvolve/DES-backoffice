@@ -3,7 +3,6 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { Home } from '../pages/home/home';
 import { Button, Navbar, Typography } from '@material-tailwind/react';
 import { LogOut } from 'lucide-react';
-// import { ExamForm } from '../pages/forms/questionForm/questionForm';
 import { Exam } from '../pages/exam/Exam';
 
 import {useNavigate} from 'react-router-dom';
@@ -34,7 +33,6 @@ function AppRoutes(): JSX.Element {
         <>
           <Routes>
             <Route path='/exam/form' element={<ExamForm />}/>
-            {/* <Route path='/exam/form' element={<SortableListComponent />}/> */}
           </Routes>
         </>
       ) : (

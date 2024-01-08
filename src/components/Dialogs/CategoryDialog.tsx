@@ -51,7 +51,7 @@ function CategoryDialog({ open, color, categoryName, categoryId, value, onChange
             </div>
 
 
-            <Input label="Nome da categoria" size="lg" onChange={onChange} value={value}/>
+            <Input crossOrigin={''} label="Nome da categoria" size="lg" onChange={onChange} value={value}/>
 
           </CardBody>
           <CardFooter  className="flex gap-2 pt-0">

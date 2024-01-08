@@ -85,6 +85,7 @@ function QuestionList() {
 
         <div className='flex w-full flex-col gap-4 p-4 '>
           <Input
+            crossOrigin={''}
             label='Título da questão'
             value={newQuestionTitle}
             onFocus={() => {
@@ -107,6 +108,7 @@ function QuestionList() {
 
           {newQuestionAlternatives.map((alternative, index) => (
             <Input
+              crossOrigin={''}
               key={index}
               label='Título da questão'
               value={alternative.text}

@@ -179,6 +179,7 @@ function QuestionForm() {
           <Typography variant='h4' className='text-black dark:text-white'>Corpo da questão</Typography>
 
           <Input
+            crossOrigin={''}
             label="Título"
             size='lg'
             onChange={event => handleTitleChange(event.target.value)}

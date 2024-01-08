@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 interface SelectWithFilterProps {
     options: string[];
@@ -6,11 +6,11 @@ interface SelectWithFilterProps {
 }
 
 const SelectWithFilter = ({ options }: SelectWithFilterProps) => {
-  const [filteredOptions, setFilteredOptions] = useState(options);
-  const [inputValue, setInputValue] = useState('');
-  const [isOpen, setIsOpen] = useState(false);
+  const [filteredOptions, setFilteredOptions] = React.useState(options);
+  const [inputValue, setInputValue] = React.useState('');
+  const [isOpen, setIsOpen] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setFilteredOptions(
       options.filter(option =>
         option.toLowerCase().includes(inputValue.toLowerCase())

@@ -141,6 +141,10 @@ function ExamForm(): JSX.Element {
   };
 
   React.useEffect(() => {
+    // TODO
+    // REMOVER ESTE ITEM A BAIXO, INSERI APENAS PARA NÃO QUEBRAR O BUILD
+    console.log(categories);
+
     if (firstStepCompleted == 1) {
       fetchQuestions();
     }
@@ -310,6 +314,7 @@ function ExamForm(): JSX.Element {
 
               <div className='flex items-center gap-2'>
                 <Input
+                  crossOrigin={''}
                   label={'Buscar por enunciado'}
                   icon={<Search size={20}/>}
                   size='lg'

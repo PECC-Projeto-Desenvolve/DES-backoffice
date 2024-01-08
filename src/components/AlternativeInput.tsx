@@ -37,6 +37,7 @@ function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }
           </Typography>
         </div>
         <Input
+          crossOrigin={''}
           type="text"
           size='lg'
           color={`${isDarkTheme ? 'white' : 'black'}`}
@@ -52,7 +53,7 @@ function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }
           value={value}
         />
         <span className='ml-2'>
-          <Checkbox {...checkboxProps} className='border-black dark:border-white' color='green'/>
+          <Checkbox crossOrigin={''} {...checkboxProps} className='border-black dark:border-white' color='green'/>
         </span>
       </div>
     </>

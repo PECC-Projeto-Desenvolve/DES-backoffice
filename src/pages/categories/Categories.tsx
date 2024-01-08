@@ -147,6 +147,7 @@ function Categories() {
               </span>
 
               <Input
+                crossOrigin={''}
                 label='Buscar por categoria'
                 size='lg'
                 labelProps={{ className: 'dark:text-white text-black' }}
@@ -223,6 +224,7 @@ function Categories() {
           </span>
 
           <Input
+            crossOrigin={''}
             size='lg'
             value={title}
             onChange={(e) => setTitle(e.target.value)}

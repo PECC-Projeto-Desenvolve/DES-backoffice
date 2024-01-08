@@ -32,6 +32,7 @@ function ExamCreationDialog({ open, examTitle, setExamTitle, onSubmit, handler }
           </Typography>
           <div className='flex flex-col gap-2'>
             <Input
+              crossOrigin={''}
               label={'Título'}
               icon={<Search size={20}/>}
               size='lg'

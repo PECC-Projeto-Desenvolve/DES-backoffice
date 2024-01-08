@@ -1,4 +1,3 @@
-import React from 'react';
 import { Dialog, DialogHeader, DialogFooter, Button } from '@material-tailwind/react';
 import DNDHelper from '../../assets/gifs/drag-n-drop-helper.gif';
 
