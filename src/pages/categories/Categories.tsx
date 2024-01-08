@@ -1,4 +1,4 @@
-import { Button, Chip, Menu, IconButton, Input, MenuHandler, MenuItem, MenuList, Typography } from '@material-tailwind/react';
+import { Button, Chip, Menu, IconButton, Input, MenuHandler, MenuItem, MenuList, Typography, Card } from '@material-tailwind/react';
 import { Edit, MoreVertical, Trash } from 'lucide-react';
 import { Alert, CategoryDialog } from '../../components';
 import React from 'react';
@@ -130,6 +130,11 @@ function Categories() {
 
 
       <BackButton />
+
+      <Card className='rounded-md border border-orange-900/80 bg-orange-700/60 p-2'>
+        <Typography className='font-bold text-white '>Não é possível no momento atribuir categoria </Typography>
+      </Card>
+
       <div className='grid h-full w-full grid-cols-2 gap-4 '>
         <div className='relative flex w-full flex-col gap-2 overflow-hidden'>
 

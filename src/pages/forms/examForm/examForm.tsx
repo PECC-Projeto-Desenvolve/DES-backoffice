@@ -310,14 +310,14 @@ function ExamForm(): JSX.Element {
 
               <div className='flex items-center gap-2'>
                 <Input
-                  label={'Buscar'}
+                  label={'Buscar por enunciado'}
                   icon={<Search size={20}/>}
                   size='lg'
                   value={search}
                   onChange={(event) => setSearch(event.target.value)}
                 />
 
-                <Select
+                {/* <Select
                   label="Categoria"
                   //   onChange={(event) => setSelectedCategory(event)}
                   size='lg'
@@ -328,7 +328,7 @@ function ExamForm(): JSX.Element {
                       <Chip value={category.title} className='w-fit text-white' style={{ backgroundColor: `${category.color}`}}/>
                     </Option>
                   ))}
-                </Select>
+                </Select> */}
 
                 <div>
                   <Select

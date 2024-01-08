@@ -12,7 +12,7 @@ import {
   Chip,
 } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
-import { EyeIcon, Trash2, UploadCloud } from 'lucide-react';
+import { AlertCircle, EyeIcon, Trash2, UploadCloud } from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
 import { BackButton } from '../../../components/BackButton';
@@ -186,18 +186,26 @@ function QuestionForm() {
             className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
           />
 
-          <Select
-            label="Categoria"
-            labelProps={{ className: 'dark:text-white text-black' }}
-            size='lg'
-            className='bg-white/80 dark:bg-blue-gray-200/20'
-          >
-            {categories.map((category, index) => (
-              <Option key={index} value={category.title}>
-                <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
-              </Option>
-            ))}
-          </Select>
+          <span>
+            <Select
+              disabled
+              label="Categoria"
+              labelProps={{ className: 'dark:text-white text-black' }}
+              size='lg'
+              className='bg-white/80 dark:bg-blue-gray-200/20'
+            >
+              {categories.map((category, index) => (
+                <Option key={index} value={category.title}>
+                  <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
+                </Option>
+              ))}
+            </Select>
+            <Typography variant='small' className='mt-2 flex items-center gap-2 text-blue-gray-800 dark:text-blue-gray-200'>
+              <AlertCircle size={14}/>
+                Funcionalidade em desenvolvimento
+            </Typography>
+          </span>
+
 
           <Select
             label="Dificuldade"
