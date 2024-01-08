@@ -133,7 +133,7 @@ function Categories() {
 
       <BackButton />
 
-      <Card className='rounded-md border border-orange-900/80 bg-orange-700/60 p-2'>
+      <Card className='rounded-md border border-blue-gray-500 bg-blue-gray-400/70 p-2'>
         <Typography className='font-bold text-white '>Não é possível no momento atribuir categoria nas questões</Typography>
       </Card>
 
