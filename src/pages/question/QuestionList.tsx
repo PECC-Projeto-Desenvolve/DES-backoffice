@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { populateQuestions } from '../../store/slices/questionsSlice';
 import { Menu, Dialog, IconButton, MenuHandler, MenuItem, MenuList, Typography, Input, DialogHeader, Button, Textarea, DialogFooter } from '@material-tailwind/react';
-import { stringResizer } from '../../utils';
+import { formatDate, stringResizer } from '../../utils';
 import { ExternalLink, Eye, MoreVertical, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
@@ -124,7 +124,7 @@ function QuestionList() {
         <DialogFooter>
           <span className='flex gap-2'>
             <Button size='sm' color='red' onClick={() => setOpenPreview(false)}>Fechar</Button>
-            <Button size='sm' color='green'>Salvar</Button>
+            <Button size='sm' color='green' disabled>Salvar</Button>
           </span>
         </DialogFooter>
       </Dialog>
@@ -140,11 +140,13 @@ function QuestionList() {
         <div className='relative grid  w-full grid-cols-2 gap-2 overflow-y-scroll'>
           {questions.map((question, index) => (
             <>
-              <div className={`flex h-[5rem] items-center rounded border border-l-8 bg-white p-2 dark:bg-blue-gray-200/20 ${difficultyColorMap[question.difficulty]}`} key={index} >
+              <div className={`flex items-center rounded border border-l-8 bg-white p-2 dark:bg-blue-gray-200/20 ${difficultyColorMap[question.difficulty]}`} key={index} >
                 <span className='ml-2 flex w-full flex-col'>
                   <Typography variant='h6' className='dark:text-white'>{question.title}</Typography>
 
                   <Typography variant='paragraph' className='dark:text-white'>{question.statement.length > 49 ? (`${stringResizer(question.statement, 50)} ...`) : (question.statement)}</Typography>
+
+                  <Typography variant='small' className='font-bold'><span className='font-normal'>Criado em: </span>{formatDate(question.createdAt)}</Typography>
                 </span>
                 <div>
                   <Menu>

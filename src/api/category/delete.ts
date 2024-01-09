@@ -20,7 +20,7 @@ interface IDeleteCategoryProps {
  */
 export const deleteCategory = async ({ id, responseCompleted }: IDeleteCategoryProps): Promise<void> => {
   try {
-    const response = await fetch(`${apiUrl}categories/${id}`, {
+    const response = await fetch(`${apiUrl}/categories/${id}`, {
       method: 'DELETE',
     });
 

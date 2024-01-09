@@ -141,21 +141,17 @@ function ExamForm(): JSX.Element {
   };
 
   React.useEffect(() => {
-    // TODO
-    // REMOVER ESTE ITEM A BAIXO, INSERI APENAS PARA NÃO QUEBRAR O BUILD
-    console.log(categories);
-
     if (firstStepCompleted == 1) {
       fetchQuestions();
     }
   }, [firstStepCompleted]);
 
-  React.useEffect(() => {
+  const fetchCategories = () => {
     fetch(`${apiUrl}/categories`)
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
-  }, []);
+  };
 
   React.useEffect(() => {
   }, [questionOrder]);
@@ -322,8 +318,9 @@ function ExamForm(): JSX.Element {
                   onChange={(event) => setSearch(event.target.value)}
                 />
 
-                {/* <Select
+                <Select
                   label="Categoria"
+                  onFocus={() => fetchCategories()}
                   //   onChange={(event) => setSelectedCategory(event)}
                   size='lg'
                   disabled
@@ -333,7 +330,7 @@ function ExamForm(): JSX.Element {
                       <Chip value={category.title} className='w-fit text-white' style={{ backgroundColor: `${category.color}`}}/>
                     </Option>
                   ))}
-                </Select> */}
+                </Select>
 
                 <div>
                   <Select
@@ -424,7 +421,8 @@ function ExamForm(): JSX.Element {
                     questionIds: getQuestionIds(),
                     responseCompleted() {
                       handleExamSubmitCompleted();
-                    },})} disabled={questionOrder.length >= 5 ? false : true}
+                    },})}
+              //  disabled={questionOrder.length >= 5 ? false : true}
               color='green'>Salvar prova</Button>
           </div>
         </div>

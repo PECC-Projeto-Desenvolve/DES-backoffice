@@ -33,7 +33,7 @@ function Exam(): JSX.Element {
           {exams.length == 0 ? (
             <>
               <span className='w-full'>
-                <Typography variant="h4" className='dark:text-white'>Você ainda não possui provas criadas {apiUrl}</Typography>
+                <Typography variant="h4" className='dark:text-white'>Você ainda não possui provas criadas</Typography>
               </span>
             </>
           ):(

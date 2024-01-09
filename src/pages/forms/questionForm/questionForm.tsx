@@ -40,12 +40,12 @@ function QuestionForm() {
     setIsDarkTheme(darkMode);
   }, []);
 
-  React.useEffect(() => {
+  const fetchCategories = () => {
     fetch(`${apiUrl}/categories`)
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
-  }, []);
+  };
 
   const [open, setOpen] = React.useState(false);
 
@@ -66,6 +66,7 @@ function QuestionForm() {
     newAlternatives[index] = value;
     setAlternatives(newAlternatives);
   };
+
 
   const handleBack = () => {
     navigate(-1);
@@ -125,7 +126,7 @@ function QuestionForm() {
     };
 
     try {
-      const response = await fetch('${apiUrl}/questions', {
+      const response = await fetch(`${apiUrl}/questions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -193,6 +194,7 @@ function QuestionForm() {
             <Select
               disabled
               label="Categoria"
+              onFocus={() => fetchCategories()}
               labelProps={{ className: 'dark:text-white text-black' }}
               size='lg'
               className='bg-white/80 dark:bg-blue-gray-200/20'
@@ -279,14 +281,14 @@ function QuestionForm() {
           <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
 
           <div className='flex flex-col gap-4'>
-            {['A', 'B', 'C', 'D', 'E'].map((label, index) => (
+            {/* {['A', 'B', 'C', 'D', 'E'].map((label, index) => (
               <>
                 <AlternativeInput
-                  key={label}
-                  isDarkTheme={isDarkTheme}
-                  label={label}
-                  onChange={(e) => handleInputChange(index, e.target.value)}
-                  value={alternatives[index]}
+
+
+
+
+
                   checkboxProps={{
                     checked: selectedCheckbox === index,
                     onChange: () => handleCheckboxChange(index),
@@ -294,7 +296,22 @@ function QuestionForm() {
                   }}
                 />
               </>
+            ))} */}
+            {alternatives.map((alternative, index) => (
+              <AlternativeInput
+                isDarkTheme={isDarkTheme}
+                key={`alternative-${index}`}
+                label={index}
+                value={alternative.value}
+                onChange={(e) => handleInputChange(index, e.target.value)}
+                checkboxProps={{
+                  checked: selectedCheckbox === index,
+                  onChange: () => handleCheckboxChange(index),
+                  disabled: selectedCheckbox !== null && selectedCheckbox !== index
+                }}
+              />
             ))}
+
           </div>
           <div>
           </div>

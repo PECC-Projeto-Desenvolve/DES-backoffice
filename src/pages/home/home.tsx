@@ -12,7 +12,7 @@ function Home() {
           description={
             'Área para gerenciamento de processos seletivos.'
           }
-          path='/'
+          path='process'
         />
 
         <Banner

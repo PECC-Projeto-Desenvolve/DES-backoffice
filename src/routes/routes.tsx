@@ -12,6 +12,7 @@ import { Categories } from '../pages/categories/Categories';
 import { ExamEdit } from '../pages/examEdit/examEdit';
 import {QuestionList } from '../pages/question/QuestionList';
 import { DarkModeToggle } from '../components';
+import { Process } from '../pages/process/Process';
 
 function AppRoutes(): JSX.Element {
   const location = useLocation();
@@ -61,6 +62,8 @@ function AppRoutes(): JSX.Element {
             <Route path='/questions' element={<QuestionList />}/>
 
             <Route path='/exam' element={<Exam />}/>
+
+            <Route path='/process' element={<Process />}/>
           </Routes>
         </div>
       )}
