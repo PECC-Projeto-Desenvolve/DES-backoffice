@@ -25,16 +25,16 @@ function Process() {
       <BackButton />
 
       <div className='col-span-2 h-fit w-full'>
-        <Typography variant='h4'>Gestão de Processos</Typography>
+        <Typography variant='h4' className='dark:text-white'>Gestão de Processos</Typography>
       </div>
       <section className='grid h-screen w-full grid-cols-2 gap-4'>
         <div className='h-full w-full'>
-          <Typography variant='h4'>Processos em andamento</Typography>
+          <Typography variant='h4' className='dark:text-white'>Processos em andamento</Typography>
         </div>
         <div className='flex h-full w-full flex-col'>
           <span className='mb-2'>
-            <Typography variant='h4'>Cadastrar novo processo</Typography>
-            <Typography variant='small'>Atribua uma prova para um processo</Typography>
+            <Typography variant='h4' className='dark:text-white'>Cadastrar novo processo</Typography>
+            <Typography variant='small' className='dark:text-white'>Atribua uma prova para um processo</Typography>
           </span>
 
 
