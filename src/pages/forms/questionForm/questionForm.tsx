@@ -21,19 +21,24 @@ const apiUrl = import.meta.env.VITE_API_URL;
 
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
+  const [categories, setCategories] = React.useState([]);
   const [title, setTitle] = React.useState('');
   const [statement, setStatement] = React.useState('');
+  const [difficulty, setDifficulty] = React.useState('');
+
+  const [imageSrc, setImageSrc] = React.useState(null);
+  const fileInputRef = React.useRef(null);
+
   const [openAlert, setOpenAlert] = React.useState<boolean>(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState<boolean>(false);
   const [customAlertMessage, setCustomAlertMessage] = React.useState<string>('');
   const [selectedCheckbox, setSelectedCheckbox] = React.useState(null);
-  const [imageSrc, setImageSrc] = React.useState(null);
-  const fileInputRef = React.useRef(null);
-  const [difficulty, setDifficulty] = React.useState('');
 
-  const [categories, setCategories] = React.useState([]);
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
   const [isFocused, setIsFocused] = React.useState(false);
+
+  const [key, setKey] = React.useState(0);
+
 
   React.useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -71,6 +76,11 @@ function QuestionForm() {
   const handleBack = () => {
     navigate(-1);
   };
+
+  const remountComponent = () => {
+    setKey(prevKey => prevKey + 1);
+  };
+
 
   const onDrop = React.useCallback((event) => {
     event.preventDefault();
@@ -148,6 +158,7 @@ function QuestionForm() {
         setTimeout(() => {
           setOpenAlert(false);
           setAlternatives(Array(5).fill(''));
+          remountComponent();
           setTitle('');
           setStatement('');
           setDifficulty('');
@@ -237,10 +248,11 @@ function QuestionForm() {
             resize={true}
             onChange={event => handleStatementChange(event.target.value)}
             value={statement}
-            labelProps={{ className: isFocused ? 'text-blue-500' : 'text-white' }}
+            labelProps={{ className: 'text-white' }}
+            color='blue-gray'
             onFocus={() => setIsFocused(true)}
             rows={4}
-            className={`border ${isFocused ? 'border-blue-500' : 'border-gray-300'} bg-blue-gray-200/20 text-blue-gray-200`}
+            className={` ${isFocused ? 'border-blue-900 ' : 'border-gray-300'} bg-white text-blue-gray-200 dark:bg-blue-gray-200/20 dark:text-white`}
           />
           <>
             {imageSrc ? (
@@ -280,23 +292,7 @@ function QuestionForm() {
         <div className='flex w-full flex-col'>
           <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
 
-          <div className='flex flex-col gap-4'>
-            {/* {['A', 'B', 'C', 'D', 'E'].map((label, index) => (
-              <>
-                <AlternativeInput
-
-
-
-
-
-                  checkboxProps={{
-                    checked: selectedCheckbox === index,
-                    onChange: () => handleCheckboxChange(index),
-                    disabled: selectedCheckbox !== null && selectedCheckbox !== index
-                  }}
-                />
-              </>
-            ))} */}
+          <div className='flex flex-col gap-4' key={key}>
             {alternatives.map((alternative, index) => (
               <AlternativeInput
                 isDarkTheme={isDarkTheme}

@@ -42,7 +42,7 @@ function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }
           type="text"
           size='lg'
           color={`${isDarkTheme ? 'white' : 'black'}`}
-          placeholder={`Texto da alternativa ${label}`}
+          placeholder={'Texto da alternativa'}
           className="rounded-l-none !border-t-blue-gray-200 bg-white/80 focus:!border-t-gray-900 dark:bg-blue-gray-200/20 dark:focus:!border-t-white"
           labelProps={{
             className: 'before:content-none after:content-none ',

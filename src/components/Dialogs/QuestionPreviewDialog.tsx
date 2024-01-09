@@ -1,4 +1,5 @@
-import { Button, Dialog } from '@material-tailwind/react';
+import { Button, Chip, Dialog, Typography } from '@material-tailwind/react';
+import { decryptRightAnswer } from '../../utils';
 import { QuestionContainer } from '../ExamComponents/QuestionContainer';
 
 
@@ -8,6 +9,7 @@ interface QuestionPreviewDialogProps {
   questionToPreview: {
     title: string;
     statement: string;
+    rightAnswer: string;
     alternatives: { text: string }[];
   };
 }
@@ -16,7 +18,7 @@ function QuestionPreviewDialog({ open, handler, questionToPreview }: QuestionPre
   return (
     <Dialog open={open} handler={handler} size='xl' className='p-2'>
       <span className='mb-2 mt-0 flex h-[2rem] w-full items-center justify-end'>
-        <Button variant='text' onClick={handler}>Fechar</Button>
+        <Button variant='text' color='red' onClick={handler}>Fechar</Button>
       </span>
       <div className='w-full'>
         <QuestionContainer
@@ -35,6 +37,12 @@ function QuestionPreviewDialog({ open, handler, questionToPreview }: QuestionPre
             </>
           }
         />
+      </div>
+
+      <div className='p-2'>
+        <span className='flex items-center gap-2'>
+          <Typography variant='h6'>Alternativa correta: </Typography> <Chip color='green' value={decryptRightAnswer(questionToPreview.rightAnswer)}/>
+        </span>
       </div>
     </Dialog>
   );
