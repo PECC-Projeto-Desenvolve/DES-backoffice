@@ -13,6 +13,7 @@ import { ExamEdit } from '../pages/examEdit/examEdit';
 import {QuestionList } from '../pages/question/QuestionList';
 import { DarkModeToggle } from '../components';
 import { Process } from '../pages/process/Process';
+import Candidates from '../pages/candidates/Candidates';
 
 function AppRoutes(): JSX.Element {
   const location = useLocation();
@@ -64,6 +65,8 @@ function AppRoutes(): JSX.Element {
             <Route path='/exam' element={<Exam />}/>
 
             <Route path='/process' element={<Process />}/>
+
+            <Route path='/candidates' element={<Candidates />}/>
           </Routes>
         </div>
       )}

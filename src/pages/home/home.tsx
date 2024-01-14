@@ -21,7 +21,7 @@ function Home() {
           description={
             'Área para o gerenciamento de candidatos.'
           }
-          path='/'
+          path='candidates'
         />
 
         <Banner
