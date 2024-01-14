@@ -22,7 +22,7 @@ interface IExamSelectionProps {
 
 function ExamSelection({ exams, selectedExam, selectedExamID, setSelectedExam, setSelectedExamID, handleFocus }: IExamSelectionProps) {
   return (
-    <div id="exam-selection">
+    <div id="exam-selection" className='transition-all'>
       <Typography variant='lead' className='dark:text-white'>Atribua uma prova para um processo</Typography>
 
       {selectedExamID ? (
@@ -55,7 +55,7 @@ function ExamSelection({ exams, selectedExam, selectedExamID, setSelectedExam, s
           size='lg'
           onFocus={handleFocus}
           labelProps={{ className: 'dark:text-white text-black' }}
-          className='bg-white/80 dark:bg-blue-gray-200/20'
+          className='bg-white/80 dark:bg-blue-gray-200/20 '
           onChange={(value) => {
             setSelectedExamID(value);
             fetch(`${import.meta.env.VITE_API_URL}/exams/${value}`)

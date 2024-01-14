@@ -186,7 +186,7 @@ function QuestionForm() {
 
       <BackButton />
 
-      <div className=' grid h-full w-full gap-6 px-2 pb-8 xl:grid-cols-2'>
+      <div className=' relative grid h-[80vh] w-full gap-6 px-2 pb-8 xl:grid-cols-2'>
         <div className='flex w-full flex-col gap-4'>
           <Typography variant='h4' className='text-black dark:text-white'>Corpo da questão</Typography>
 
@@ -313,30 +313,32 @@ function QuestionForm() {
           </div>
 
         </div>
-      </div>
-      <div className='flex h-fit w-full flex-col gap-4 p-4 '>
-        <Alert
-          open={openAlert || openErrorAlert}
-          success={openAlert}
-          onClose={() => {
-            setOpenAlert(false);
-            setOpenErrorAlert(false);
-          }}
-          customMessage={customAlertMessage}
-          successMessage='Questão criada com sucesso!'
-          errorMessage='Erro ao criar questão'
-        />
-        <hr className='w-full border border-[#c4c4c4]/50'/>
-        <div className='flex h-fit w-full justify-between gap-4'>
-          <Button className='flex items-center gap-4' onClick={handleOpen} color='blue'>
-            <EyeIcon size={20} /> Pré vizualizar
-          </Button>
-          <div className='flex h-full gap-4'>
-            <Button variant='outlined' onClick={handleBack} className='' color='red'>Cancelar</Button>
-            <Button onClick={handleSubmit} className='' color='green'>Salvar</Button>
+
+        <div className='absolute bottom-0 col-span-2 flex h-fit w-full flex-col gap-4 p-4'>
+          <Alert
+            open={openAlert || openErrorAlert}
+            success={openAlert}
+            onClose={() => {
+              setOpenAlert(false);
+              setOpenErrorAlert(false);
+            }}
+            customMessage={customAlertMessage}
+            successMessage='Questão criada com sucesso!'
+            errorMessage='Erro ao criar questão'
+          />
+          <hr className='w-full border border-[#c4c4c4]/50'/>
+          <div className='flex h-fit w-full justify-between gap-4'>
+            <Button className='flex items-center gap-4' onClick={handleOpen} color='blue'>
+              <EyeIcon size={20} /> Pré vizualizar
+            </Button>
+            <div className='flex h-full gap-4'>
+              <Button variant='outlined' onClick={handleBack} className='' color='red'>Cancelar</Button>
+              <Button onClick={handleSubmit} className='' color='green'>Salvar</Button>
+            </div>
           </div>
         </div>
       </div>
+
     </>
   );
 }

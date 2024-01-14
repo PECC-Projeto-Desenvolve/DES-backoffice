@@ -22,7 +22,7 @@ interface ISimulationSelectionProps {
 
 function SimulationSelection({exams, selectedSimulation, setSelectedSimulationID, setSelectedSimulation, selectedSimulationID, handleFocus}: ISimulationSelectionProps){
   return (
-    <div id='simulation-selection'>
+    <div id='simulation-selection' className='transition-all'>
       <Typography variant='lead' className='dark:text-white'>Atribua um simulado</Typography>
       <Typography variant='small' className='dark:text-white'>O simulado serve para o candidato praticar</Typography>
 
