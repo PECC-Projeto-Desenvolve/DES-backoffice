@@ -146,7 +146,7 @@ function QuestionList() {
 
                   <Typography variant='paragraph' className='dark:text-white'>{question.statement.length > 49 ? (`${stringResizer(question.statement, 50)} ...`) : (question.statement)}</Typography>
 
-                  <Typography variant='small' className='font-bold'><span className='font-normal'>Criado em: </span>{formatDate(question.createdAt)}</Typography>
+                  <Typography variant='small' className='font-bold dark:text-blue-gray-200'><span className='font-normal'>Criado em: </span>{formatDate(question.createdAt)}</Typography>
                 </span>
                 <div>
                   <Menu>

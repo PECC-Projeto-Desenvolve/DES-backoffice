@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Dialog, DialogHeader, DialogBody, DialogFooter, Input, Select, Option, Chip, Typography } from '@material-tailwind/react';
+import { Button, Dialog, DialogHeader, DialogBody, DialogFooter, Input, Typography } from '@material-tailwind/react';
 import { Search } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -42,17 +42,6 @@ function ExamCreationDialog({ open, examTitle, setExamTitle, onSubmit, handler }
               color={`${isDarkTheme ? 'white' : 'black'}`}
               className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
             />
-            <Select label="Nível da prova" size='lg' disabled>
-              <Option>
-                <Chip value="Fácil" className='w-fit' color='green'/>
-              </Option>
-              <Option>
-                <Chip value="Médio" className='w-fit' color='orange'/>
-              </Option>
-              <Option>
-                <Chip value="Difícil" className='w-fit' color='red'/>
-              </Option>
-            </Select>
           </div>
         </DialogBody>
         <DialogFooter>

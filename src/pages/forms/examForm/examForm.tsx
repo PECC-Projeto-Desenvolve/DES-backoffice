@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Option, IconButton, Input, Select, Typography, Chip, ButtonGroup, Tooltip } from '@material-tailwind/react';
+import { Button, Option, IconButton, Input, Select, Typography, Chip, Tooltip } from '@material-tailwind/react';
 import { BadgeHelp, Eye, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
@@ -247,23 +247,26 @@ function ExamForm(): JSX.Element {
                       question={question.statement}
                       difficulty={question.difficulty.toString()}
                       buttonPlacement={
-                        <ButtonGroup>
-                          <IconButton onClick={() => {
-                            setQuestionToPreview({
-                              title: question.title,
-                              alternatives: question.alternatives,
-                              difficulty: question.difficulty,
-                              rightAnswer: question.rightAnswer,
-                              statement: question.statement,
-                            });
-                            handleOpenQuestionPreview();
-                          }}>
+                        <div className='flex gap-2'>
+                          <IconButton
+                            onClick={() => {
+                              setQuestionToPreview({
+                                title: question.title,
+                                alternatives: question.alternatives,
+                                difficulty: question.difficulty,
+                                rightAnswer: question.rightAnswer,
+                                statement: question.statement,
+                              });
+                              handleOpenQuestionPreview();
+                            }}
+                            color="blue"
+                          >
                             <Eye size={20}/>
                           </IconButton>
-                          <IconButton onClick={() => handleRemoveQuestion(index)}>
+                          <IconButton onClick={() => handleRemoveQuestion(index)} color="red">
                             <MinusCircle size={20}/>
                           </IconButton>
-                        </ButtonGroup>
+                        </div>
                       }
                     />
                   ))}
@@ -289,9 +292,7 @@ function ExamForm(): JSX.Element {
             <div className=' p-2'>
               <div className='mb-2 flex w-full items-center justify-between'>
                 <Typography variant='h4' className='mb-1 text-black dark:text-white'>Selecione a questão
-                  {/* <IconButton variant='text' className='ml-2' onClick={() => fetchQuestions()}>
-                    <RefreshCcw size={20}/>
-                  </IconButton> */}
+
                 </Typography>
 
                 <Button
