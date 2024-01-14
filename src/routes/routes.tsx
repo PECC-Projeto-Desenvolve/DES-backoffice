@@ -14,6 +14,7 @@ import {QuestionList } from '../pages/question/QuestionList';
 import { DarkModeToggle } from '../components';
 import { Process } from '../pages/process/Process';
 import Candidates from '../pages/candidates/Candidates';
+import CadidateDetails from '../pages/candidates/details/CadidateDetails';
 
 function AppRoutes(): JSX.Element {
   const location = useLocation();
@@ -67,6 +68,7 @@ function AppRoutes(): JSX.Element {
             <Route path='/process' element={<Process />}/>
 
             <Route path='/candidates' element={<Candidates />}/>
+            <Route path='/candidate/:id' element={<CadidateDetails />}/>
           </Routes>
         </div>
       )}
