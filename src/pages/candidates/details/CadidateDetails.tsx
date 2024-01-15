@@ -1,10 +1,12 @@
-import { Card, Chip, IconButton, Tooltip, Typography } from '@material-tailwind/react';
-import { Eye } from 'lucide-react';
+import { Button, Card, Chip, IconButton, Tooltip, Typography } from '@material-tailwind/react';
+import { Eye, Table } from 'lucide-react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { BackButton } from '../../../components/BackButton';
 import QuestionPreviewDialogWithFetch from '../../../components/Dialogs/QuestionPreviewDialogWithFetch';
 import { decryptRightAnswer, formatDate, stringResizer } from '../../../utils';
+
+import { CSVLink } from 'react-csv';
 
 function CadidateDetails() {
   const [candidate, setCandidate] = React.useState([]);
@@ -60,7 +62,7 @@ function CadidateDetails() {
   };
 
   const handleResult = (userAnswer, rightAnser) => {
-    if(userAnswer === rightAnser){
+    if(String.fromCharCode(64 + (userAnswer + 1)) === decryptRightAnswer(rightAnser)){
       return ('✅');
     }
 
@@ -77,6 +79,17 @@ function CadidateDetails() {
     setOpenQuestionPreview(!openQuestionPreview);
   };
 
+  const csvData = userQuestions.map((item, index) => ({
+    NomeDoCandidato: candidate.name,
+    DocumentoDoCandidato: candidate.document,
+    Posicao: index + 1,
+    Nível: item.difficulty === 1 ? 'fácil' : item.difficulty === 2 ? 'média' : 'difícil',
+    AlternativaDoUsuario: String.fromCharCode(64 + (item.position + 1)),
+    AlternativaCorreta: decryptRightAnswer(item.rightAnswer),
+    Resultado: handleResult(item.posiiton, item.rightAnswer)
+  }));
+
+
   return (
     <>
       <BackButton />
@@ -87,40 +100,51 @@ function CadidateDetails() {
         open={openQuestionPreview}
       />
 
-      <span>
-        <Typography variant='small'>Candidato</Typography>
-        <Typography variant='h4'>{candidate.name}</Typography>
-        <Typography variant='paragraph'>{formatDate(candidate.createdAt)}</Typography>
-      </span>
+
 
       <div className='h-full w-full'>
-        <Card>
-          <table className="min-w-full border-collapse border border-gray-300">
-            <thead className="bg-gray-100">
-              <tr>
-                <th className="border border-gray-300 p-2 text-center">Posição</th>
-                <th className="border border-gray-300 p-2 text-center">Dificuldade</th>
-                <th className="border border-gray-300 p-2 text-center">Enunciado</th>
-                <th className="border border-gray-300 p-2 text-center">Alternativa do Usuário</th>
-                <th className="border border-gray-300 p-2 text-center">Alternativa Correta</th>
-                <th className="border border-gray-300 p-2 text-center">Resultado</th>
-                <th className="border border-gray-300 p-2 text-center">Ações</th>
+        <div className='flex w-full items-end justify-between'>
+          <span className='mb-6'>
+            <Typography variant='small' className='dark:text-white'>Candidato</Typography>
+            {candidate.name && <Typography variant='h4' className='dark:text-white'>{candidate.name}</Typography>}
+            {candidate.createdAt && <Typography variant='paragraph' className='dark:text-white'>{formatDate(candidate.createdAt)}</Typography>}
+          </span>
+
+          <CSVLink
+            data={csvData}
+            filename={'dados-candidato.csv'}
+            target="_blank"
+          >
+            <Button className='flex items-center gap-4 rounded-bl-none rounded-br-none' color='cyan'>Exportar CSV <Table size={20} /></Button>
+          </CSVLink>
+        </div>
+        <Card className='overflow-hidden rounded-tr-none'>
+          <table className="min-w-full border-collapse ">
+            <thead className="h-[3rem] border-b bg-blue-900/20">
+              <tr className='text-blue-gray-900'>
+                <th className="p-2 text-center">Posição</th>
+                <th className="p-2 text-center">Nível</th>
+                <th className="p-2 text-center">Enunciado</th>
+                <th className="p-2 text-center">Alternativa do Usuário</th>
+                <th className="p-2 text-center">Alternativa Correta</th>
+                <th className="p-2 text-center">Resultado</th>
+                <th className="p-2 text-center">Ações</th>
               </tr>
             </thead>
             <tbody>
               {userQuestions.map((item, index) => (
-                <tr key={index}>
-                  <td className="border border-gray-300 p-2 text-center">{index + 1}</td>
-                  <td className="border border-gray-300 p-2">
+                <tr key={index} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-100'} border-b`}>
+                  <td className="  p-2 text-center">{index + 1}</td>
+                  <td className="  p-2">
                     {item.difficulty == 1 && <Chip value='fácil' color='green' size='sm' className='text-center'/>}
                     {item.difficulty == 2 && <Chip value='média' color='orange' size='sm' className='text-center'/>}
                     {item.difficulty == 3 && <Chip value='difícil' color='red' size='sm' className='text-center'/>}
                   </td>
-                  <td className="flex h-full gap-2 border-t border-gray-300 p-2 text-center">{stringResizer(item.statement, 65)}...</td>
-                  <td className="border border-gray-300 p-2 text-center">{String.fromCharCode(64 + (item.position + 1))}</td>
-                  <td className="border border-gray-300 p-2 text-center">{decryptRightAnswer(item.rightAnswer)}</td>
-                  <td className="border border-gray-300 p-2 text-center">{handleResult(String.fromCharCode(64 + (item.position + 1)), decryptRightAnswer(item.rightAnswer) )}</td>
-                  <td className="border border-gray-300 p-2 text-center">
+                  <td className="p-2 text-center">{stringResizer(item.statement, 65)}...</td>
+                  <td className="p-2 text-center">{String.fromCharCode(64 + (item.position + 1))}</td>
+                  <td className="p-2 text-center">{decryptRightAnswer(item.rightAnswer)}</td>
+                  <td className="p-2 text-center">{handleResult(item.position, item.rightAnswer)}</td>
+                  <td className="p-2 text-center">
                     <Tooltip content="Ver questão">
                       <IconButton color='blue' onClick={() => {
                         setQuestionToPreview(item.questionId);
