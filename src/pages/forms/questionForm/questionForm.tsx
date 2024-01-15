@@ -254,7 +254,7 @@ function QuestionForm() {
             rows={4}
             className={` ${isFocused ? 'border-blue-900 ' : 'border-gray-300'} bg-white text-blue-gray-200 dark:bg-blue-gray-200/20 dark:text-white`}
           />
-          <>
+          {/* <>
             {imageSrc ? (
               <>
                 <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
@@ -287,7 +287,7 @@ function QuestionForm() {
                 </div>
               </>
             )}
-          </>
+          </> */}
         </div>
         <div className='flex w-full flex-col'>
           <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
