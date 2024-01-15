@@ -90,8 +90,8 @@ function Process() {
                   className='bg-white/80 dark:bg-blue-gray-200/20'
                   onChange={(value) => setSelectedProcess(value)}
                 >
-                  <Option value='processo tal'>
-                    <Typography>Processo tal</Typography>
+                  <Option value='processo'>
+                    <Typography>Processo</Typography>
                   </Option>
                 </Select>
               )}

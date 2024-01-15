@@ -56,7 +56,7 @@ function Candidates() {
       </span>
 
       <div className='h-[3rem] w-full'>
-        <Typography variant='h5'>Lista de candidatos referentes ao processo tal</Typography>
+        <Typography variant='h5'>Lista de candidatos referentes ao processo</Typography>
       </div>
 
       <Card className="h-full w-full overflow-scroll">
