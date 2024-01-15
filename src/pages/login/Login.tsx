@@ -10,7 +10,7 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    if (login == '123' && password == '321') {
+    if (login == 'desenvolver@projetodesenvolve.com' && password == 'pd@02024') {
       localStorage.setItem('authenticated', 'true');
       navigate('/home');
     }
