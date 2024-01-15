@@ -12,7 +12,7 @@ function Candidates() {
   const [reload, setReload] = React.useState(false);
 
   const fetchCandidates = () => {
-    fetch('http://localhost:3000/userexams')
+    fetch(`${import.meta.env.VITE_API_URL}/userexams`)
       .then(response => response.json())
       .then(data => {
         setCandidates(data);

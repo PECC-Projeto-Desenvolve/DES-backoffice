@@ -21,7 +21,7 @@ function CadidateDetails() {
 
   const fetchQuestionDetails = async (questionId) => {
     try {
-      const response = await fetch(`http://localhost:3000/questions/${questionId}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/questions/${questionId}`);
       if (!response.ok) {
         throw new Error(`Erro na API: ${response.status}`);
       }

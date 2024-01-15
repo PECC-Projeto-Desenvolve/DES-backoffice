@@ -19,7 +19,7 @@ function QuestionPreviewDialogWithFetch({ open, handler, questionToPreview }: Qu
   });
 
   const fetchQuestions = (id: number) => {
-    fetch(`http://localhost:3000/questions/${id.toString()}`)
+    fetch(`${import.meta.env.VITE_API_URL}/questions/${id.toString()}`)
       .then(response => response.json())
       .then(data => setQuestion(data))
       .catch(error => console.error('Erro ao buscar questão: ', error));
