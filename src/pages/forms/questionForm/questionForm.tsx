@@ -5,14 +5,19 @@ import {
   Select,
   Typography,
   Button,
-  IconButton,
-  Tooltip,
+  //   IconButton,
+  //   Tooltip,
   Dialog,
   Option,
   Chip,
 } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, EyeIcon, Trash2, UploadCloud } from 'lucide-react';
+import {
+  AlertCircle,
+  EyeIcon,
+  //   Trash2,
+//   UploadCloud
+} from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
 import { BackButton } from '../../../components/BackButton';
@@ -26,8 +31,8 @@ function QuestionForm() {
   const [statement, setStatement] = React.useState('');
   const [difficulty, setDifficulty] = React.useState('');
 
-  const [imageSrc, setImageSrc] = React.useState(null);
-  const fileInputRef = React.useRef(null);
+  //   const [imageSrc, setImageSrc] = React.useState(null);
+  //   const fileInputRef = React.useRef(null);
 
   const [openAlert, setOpenAlert] = React.useState<boolean>(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState<boolean>(false);
@@ -82,32 +87,32 @@ function QuestionForm() {
   };
 
 
-  const onDrop = React.useCallback((event) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => setImageSrc(e.target.result);
-      reader.readAsDataURL(file);
-    }
-  }, []);
+  //   const onDrop = React.useCallback((event) => {
+  //     event.preventDefault();
+  //     const file = event.dataTransfer.files[0];
+  //     if (file && file.type.startsWith('image/')) {
+  //       const reader = new FileReader();
+  //       reader.onload = (e) => setImageSrc(e.target.result);
+  //       reader.readAsDataURL(file);
+  //     }
+  //   }, []);
 
-  const onFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file && file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e) => setImageSrc(e.target.result);
-      reader.readAsDataURL(file);
-    }
-  };
+  //   const onFileChange = (event) => {
+  //     const file = event.target.files[0];
+  //     if (file && file.type.startsWith('image/')) {
+  //       const reader = new FileReader();
+  //       reader.onload = (e) => setImageSrc(e.target.result);
+  //       reader.readAsDataURL(file);
+  //     }
+  //   };
 
-  const onAreaClick = () => {
-    fileInputRef.current.click();
-  };
+  //   const onAreaClick = () => {
+  //     fileInputRef.current.click();
+  //   };
 
-  const onDeleteImgSrc = () => {
-    setImageSrc(null);
-  };
+  //   const onDeleteImgSrc = () => {
+  //     setImageSrc(null);
+  //   };
 
   const handleTitleChange = (event) => {
     setTitle(event);
@@ -180,7 +185,12 @@ function QuestionForm() {
     <>
       <Dialog open={open} handler={handleOpen} size='xl'>
         <div className='w-full'>
-          <QuestionContainer alternatives={alternatives} statement={statement} title={title} imageSrc={imageSrc}/>
+          <QuestionContainer
+            alternatives={alternatives}
+            statement={statement}
+            title={title}
+            // imageSrc={imageSrc}
+          />
         </div>
       </Dialog>
 
