@@ -1,20 +1,22 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { Home } from '../pages/home/home';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Navbar, Typography } from '@material-tailwind/react';
 import { LogOut } from 'lucide-react';
-import { Exam } from '../pages/exam/Exam';
+import { DarkModeToggle } from '../components';
+import PrivateRoute from './auth';
 
-import {useNavigate} from 'react-router-dom';
 import { QuestionForm } from '../pages/forms/questionForm/questionForm';
 import { ExamForm } from '../pages/forms/examForm/examForm';
 import { Categories } from '../pages/categories/Categories';
 import { ExamEdit } from '../pages/examEdit/examEdit';
 import {QuestionList } from '../pages/question/QuestionList';
-import { DarkModeToggle } from '../components';
 import { Process } from '../pages/process/Process';
 import Candidates from '../pages/candidates/Candidates';
 import CadidateDetails from '../pages/candidates/details/CadidateDetails';
+import Login from '../pages/login/Login';
+import RedirectComponent from '../components/RedirectComponent';
+import { Home } from '../pages/home/home';
+import { Exam } from '../pages/exam/Exam';
 
 function AppRoutes(): JSX.Element {
   const location = useLocation();
@@ -30,17 +32,22 @@ function AppRoutes(): JSX.Element {
     localStorage.getItem;
   }, []);
 
+  const handleExit = () => {
+    localStorage.removeItem('authenticated');
+    navigate('/login');
+  };
+
   return (
     <>
-      { paths.includes('exam/form') ? (
+      { paths.includes('exam/form') || paths.includes('/login') ? (
         <>
           <Routes>
             <Route path='/exam/form' element={<ExamForm />}/>
+            <Route path='/login' element={<Login />}/>
           </Routes>
         </>
       ) : (
         <div className={'relative flex h-fit min-h-screen w-screen flex-col gap-4 bg-light-background p-4 px-2 transition-colors dark:bg-blue-gray-900 sm:px-2 md:px-8 lg:px-32'}>
-          {/* <div className={`bg- relative flex h-screen w-screen flex-col gap-4 p-4 px-2 transition-all sm:px-2 md:px-8 lg:px-32${darkMode ? 'dark' : 'light'}-background`}> */}
           <Navbar fullWidth className='mx-auto flex h-fit items-center justify-between rounded-md bg-white p-4'>
             <Typography variant="h5" color="black" onClick={handleNavigate} className='cursor-pointer transition-all hover:text-2xl'>
           Desenvolve Backoffice
@@ -48,7 +55,7 @@ function AppRoutes(): JSX.Element {
 
             <span className='flex items-center gap-2'>
               <DarkModeToggle />
-              <Button className="flex items-center gap-4" disabled>
+              <Button className="flex items-center gap-4" color='red' onClick={() => handleExit()}>
           Sair <LogOut size={18} />
               </Button>
             </span>
@@ -56,19 +63,16 @@ function AppRoutes(): JSX.Element {
 
 
           <Routes>
-            <Route path='/' element={<Home />}/>
-
-            <Route path='/question/form' element={<QuestionForm />}/>
-            <Route path='/categories' element={<Categories />}/>
-            <Route path='/exam/edit/:id' element={<ExamEdit />}/>
-            <Route path='/questions' element={<QuestionList />}/>
-
-            <Route path='/exam' element={<Exam />}/>
-
-            <Route path='/process' element={<Process />}/>
-
-            <Route path='/candidates' element={<Candidates />}/>
-            <Route path='/candidate/:id' element={<CadidateDetails />}/>
+            <Route path='/' element={<RedirectComponent />} />
+            <Route path='/home' element={<PrivateRoute><Home /></PrivateRoute>} />
+            <Route path='/question/form' element={<PrivateRoute><QuestionForm /></PrivateRoute>} />
+            <Route path='/categories' element={<PrivateRoute><Categories /></PrivateRoute>} />
+            <Route path='/exam/edit/:id' element={<PrivateRoute><ExamEdit /></PrivateRoute>} />
+            <Route path='/questions' element={<PrivateRoute><QuestionList /></PrivateRoute>} />
+            <Route path='/exam' element={<PrivateRoute><Exam /></PrivateRoute>} />
+            <Route path='/process' element={<PrivateRoute><Process /></PrivateRoute>} />
+            <Route path='/candidates' element={<PrivateRoute><Candidates /></PrivateRoute>} />
+            <Route path='/candidate/:id' element={<PrivateRoute><CadidateDetails /></PrivateRoute>} />
           </Routes>
         </div>
       )}

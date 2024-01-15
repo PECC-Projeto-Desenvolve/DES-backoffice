@@ -9,7 +9,11 @@ import { decryptRightAnswer, formatDate, stringResizer } from '../../../utils';
 import { CSVLink } from 'react-csv';
 
 function CadidateDetails() {
-  const [candidate, setCandidate] = React.useState([]);
+  const [candidate, setCandidate] = React.useState({
+    name: '',
+    document: '',
+    createdAt: '',
+  });
   const [userQuestions, setUserQuestions] = React.useState([]);
   const [questionToPreview, setQuestionToPreview] = React.useState(null);
   const [openQuestionPreview, setOpenQuestionPreview] = React.useState(false);
@@ -99,8 +103,6 @@ function CadidateDetails() {
         handler={handlePreviewQuestion}
         open={openQuestionPreview}
       />
-
-
 
       <div className='h-full w-full'>
         <div className='flex w-full items-end justify-between'>

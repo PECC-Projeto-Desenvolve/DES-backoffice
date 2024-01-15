@@ -12,7 +12,7 @@ function Home() {
           description={
             'Área para gerenciamento de processos seletivos.'
           }
-          path='process'
+          path='/process'
         />
 
         <Banner
@@ -21,7 +21,7 @@ function Home() {
           description={
             'Área para o gerenciamento de candidatos.'
           }
-          path='candidates'
+          path='/candidates'
         />
 
         <Banner
@@ -39,7 +39,7 @@ function Home() {
           description={
             'Área de gerenciamento de provas, onde você tem a possibilidade de criar provas e questões'
           }
-          path='exam'
+          path='/exam'
         />
       </div>
     </>
