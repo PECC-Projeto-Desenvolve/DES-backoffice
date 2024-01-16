@@ -1,12 +1,13 @@
 import React from 'react';
+import '../../../components/init';
 import {
   Input,
   Textarea,
   Select,
   Typography,
   Button,
-  //   IconButton,
-  //   Tooltip,
+  IconButton,
+  Tooltip,
   Dialog,
   Option,
   Chip,
@@ -15,8 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import {
   AlertCircle,
   EyeIcon,
-  //   Trash2,
-//   UploadCloud
+  Trash2,
+  UploadCloud
 } from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
@@ -31,8 +32,8 @@ function QuestionForm() {
   const [statement, setStatement] = React.useState('');
   const [difficulty, setDifficulty] = React.useState('');
 
-  //   const [imageSrc, setImageSrc] = React.useState(null);
-  //   const fileInputRef = React.useRef(null);
+  const [imageSrc, setImageSrc] = React.useState(null);
+  const fileInputRef = React.useRef(null);
 
   const [openAlert, setOpenAlert] = React.useState<boolean>(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState<boolean>(false);
@@ -87,32 +88,32 @@ function QuestionForm() {
   };
 
 
-  //   const onDrop = React.useCallback((event) => {
-  //     event.preventDefault();
-  //     const file = event.dataTransfer.files[0];
-  //     if (file && file.type.startsWith('image/')) {
-  //       const reader = new FileReader();
-  //       reader.onload = (e) => setImageSrc(e.target.result);
-  //       reader.readAsDataURL(file);
-  //     }
-  //   }, []);
+  const onDrop = React.useCallback((event) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => setImageSrc(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  }, []);
 
-  //   const onFileChange = (event) => {
-  //     const file = event.target.files[0];
-  //     if (file && file.type.startsWith('image/')) {
-  //       const reader = new FileReader();
-  //       reader.onload = (e) => setImageSrc(e.target.result);
-  //       reader.readAsDataURL(file);
-  //     }
-  //   };
+  const onFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => setImageSrc(e.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
 
-  //   const onAreaClick = () => {
-  //     fileInputRef.current.click();
-  //   };
+  const onAreaClick = () => {
+    fileInputRef.current.click();
+  };
 
-  //   const onDeleteImgSrc = () => {
-  //     setImageSrc(null);
-  //   };
+  const onDeleteImgSrc = () => {
+    setImageSrc(null);
+  };
 
   const handleTitleChange = (event) => {
     setTitle(event);
@@ -138,6 +139,7 @@ function QuestionForm() {
       alternatives,
       rightAnswer: selectedCheckbox.toString(),
       difficulty: Number(difficulty),
+      image: imageSrc,
     };
 
     try {
@@ -165,6 +167,7 @@ function QuestionForm() {
           setAlternatives(Array(5).fill(''));
           remountComponent();
           setTitle('');
+          setImageSrc('');
           setStatement('');
           setDifficulty('');
           setSelectedCheckbox(null);
@@ -189,7 +192,7 @@ function QuestionForm() {
             alternatives={alternatives}
             statement={statement}
             title={title}
-            // imageSrc={imageSrc}
+            imageSrc={imageSrc}
           />
         </div>
       </Dialog>
@@ -264,7 +267,7 @@ function QuestionForm() {
             rows={4}
             className={` ${isFocused ? 'border-blue-900 ' : 'border-gray-300'} bg-white text-blue-gray-200 dark:bg-blue-gray-200/20 dark:text-white`}
           />
-          {/* <>
+          <>
             {imageSrc ? (
               <>
                 <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
@@ -297,7 +300,7 @@ function QuestionForm() {
                 </div>
               </>
             )}
-          </> */}
+          </>
         </div>
         <div className='flex w-full flex-col'>
           <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
