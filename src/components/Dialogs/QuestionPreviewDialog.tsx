@@ -9,6 +9,7 @@ interface QuestionPreviewDialogProps {
   questionToPreview: {
     title: string;
     statement: string;
+    image: string;
     rightAnswer: string;
     alternatives: { text: string }[];
   };
@@ -24,6 +25,7 @@ function QuestionPreviewDialog({ open, handler, questionToPreview }: QuestionPre
         <QuestionContainer
           title={questionToPreview.title}
           statement={questionToPreview.statement}
+          imageSrc={questionToPreview.image}
           alternativesWrapper={
             <>
               {questionToPreview.alternatives.map((alternative, index) => (

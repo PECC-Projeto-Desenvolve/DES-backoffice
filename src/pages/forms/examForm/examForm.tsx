@@ -32,6 +32,7 @@ function ExamForm(): JSX.Element {
     title: '',
     statement: '',
     difficulty: '',
+    image: '',
     alternatives: [],
     rightAnswer: ''
   });
@@ -256,6 +257,7 @@ function ExamForm(): JSX.Element {
                                 difficulty: question.difficulty,
                                 rightAnswer: question.rightAnswer,
                                 statement: question.statement,
+                                image: question.image
                               });
                               handleOpenQuestionPreview();
                             }}
@@ -389,6 +391,7 @@ function ExamForm(): JSX.Element {
                             difficulty: question.difficulty,
                             rightAnswer: question.rightAnswer,
                             statement: question.statement,
+                            image: question.image,
                           });
                           handleOpenQuestionPreview();
                         }

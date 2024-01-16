@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Card, IconButton, Tooltip, Typography } from '@material-tailwind/react';
-import { Eye, RotateCw } from 'lucide-react';
+import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Tooltip, Typography } from '@material-tailwind/react';
+import { AlertTriangle, Eye, RotateCw, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils';
@@ -8,6 +8,8 @@ import { formatDate } from '../../utils';
 function Candidates() {
   const navigate = useNavigate();
   const [candidates, setCandidates] = React.useState([]);
+  const [candidateToDelete, setCandidatesToDelete] = React.useState('');
+  const [openDelete, setOpenDelete] = React.useState(false);
 
   const [reload, setReload] = React.useState(false);
 
@@ -34,12 +36,76 @@ function Candidates() {
     navigate(`/candidate/${param}`);
   };
 
+  const handleOpenDelete = () => {
+    setOpenDelete(!openDelete);
+  };
+
+  const handleConfirmCandidateDelete = async (id: string) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao deletar a candidato');
+      }
+
+      handleOpenDelete();
+      setCandidatesToDelete('');
+
+      setTimeout(() => {
+        fetchCandidates();
+      }, 500);
+
+      console.log('Candidato deletada com sucesso');
+    } catch (error) {
+      console.error('Erro ao deletar a candidato:', error);
+    }
+  };
+
   React.useEffect(() => {
     fetchCandidates();
   }, []);
 
   return (
     <>
+      <Dialog
+        open={openDelete}
+        handler={handleOpenDelete}
+      >
+        <DialogHeader className='gap-2' >
+          <AlertTriangle color='orange'/>
+          <Typography variant='h4' color='orange'>
+            Ação irreversível
+          </Typography>
+        </DialogHeader>
+
+        <DialogBody className='-mt-4'>
+          <Typography variant='lead'>
+    Ao clicar em confirmar, você estará removendo permanentemente este candidato
+          </Typography>
+        </DialogBody>
+
+        <DialogFooter className='gap-4'>
+          <Button
+            color='green'
+            onClick={() => {
+              setCandidatesToDelete('');
+              handleOpenDelete();
+            }}
+          >
+            Cancelar
+          </Button>
+
+          <Button
+            color='red'
+            onClick={() => handleConfirmCandidateDelete(candidateToDelete)}
+          >
+            Confirmar
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
       <BackButton/>
       <span className='flex w-full items-center justify-between'>
         <Typography variant='h4'>Candidatos</Typography>
@@ -79,7 +145,19 @@ function Candidates() {
                 <td className="border border-gray-300 p-2 text-center">{formatDate(candidate.createdAt)}</td>
                 <td className="border border-gray-300 p-2 text-center">###</td>
                 <td className="border border-gray-300 p-2 text-center">#####</td>
-                <td className="flex items-center justify-center border border-gray-300 p-2">
+                <td className="flex items-center justify-center gap-2 border border-gray-300 p-2">
+                  <Tooltip content='Excluir candidato'>
+                    <IconButton
+                      color='red'
+                      onClick={() => {
+                        setCandidatesToDelete(candidate.id);
+                        handleOpenDelete();
+                      }}
+                    >
+                      <Trash />
+                    </IconButton>
+                  </Tooltip>
+                  {/*  */}
                   <Tooltip content='Ver resultado'>
                     <IconButton
                       color='blue'

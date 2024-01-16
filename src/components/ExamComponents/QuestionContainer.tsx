@@ -20,11 +20,6 @@ interface IQuestionContainerProps {
  * @returns {JSX.Element} A section containing the question title, statement, image (if present), and alternatives.
  */
 function QuestionContainer({ alternatives, title, statement, imageSrc, alternativesWrapper }: IQuestionContainerProps): JSX.Element {
-  const [estadoMudou, setEstadoMudou] = React.useState(false);
-
-  React.useEffect(() => {
-    setEstadoMudou(!!imageSrc);
-  }, [imageSrc]);
 
   return (
     <>
@@ -39,14 +34,11 @@ function QuestionContainer({ alternatives, title, statement, imageSrc, alternati
           </p>
         </div>
 
-        {estadoMudou ? (
-          <div className='flex w-full items-center justify-center'>
-            <img src={imageSrc} alt="Uploaded" className="mb-6 max-h-[12rem] rounded" />
-          </div>
-        ) : (
-          <>
-          </>
-        )}
+        {imageSrc &&
+        <div className='flex w-full items-center justify-center px-[20rem]'>
+          <img src={imageSrc} alt="Uploaded" className="mb-6 max-w-[38rem] rounded-lg" />
+        </div>
+        }
 
         <div className='mb-8 flex w-full flex-col gap-4 px-8'>
           {alternatives && alternatives.map((label, index) => (
