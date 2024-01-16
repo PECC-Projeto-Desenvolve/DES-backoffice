@@ -77,8 +77,8 @@ function Candidates() {
                 <td className="border border-gray-300 p-2 text-center">{candidate.name}</td>
                 <td className="border border-gray-300 p-2 text-center">{candidate.document}</td>
                 <td className="border border-gray-300 p-2 text-center">{formatDate(candidate.createdAt)}</td>
-                <td className="border border-gray-300 p-2 text-center">10</td>
-                <td className="border border-gray-300 p-2 text-center">aprovado</td>
+                <td className="border border-gray-300 p-2 text-center">###</td>
+                <td className="border border-gray-300 p-2 text-center">#####</td>
                 <td className="flex items-center justify-center border border-gray-300 p-2">
                   <Tooltip content='Ver resultado'>
                     <IconButton
