@@ -28,6 +28,7 @@ function CadidateDetails() {
       const questionData = await response.json();
       return {
         statement: questionData.statement,
+        image: questionData.image,
         rightAnswer: questionData.rightAnswer,
         difficulty: questionData.difficulty
       };
@@ -54,6 +55,7 @@ function CadidateDetails() {
         setUserQuestions(data.questions.map((q, index) => ({
           ...q,
           statement: questionsDetails[index] ? questionsDetails[index].statement : 'Detalhe indisponível',
+          image: questionsDetails[index] ? questionsDetails[index].image : 'Imagem indisponível',
           rightAnswer: questionsDetails[index] ? questionsDetails[index].rightAnswer : 'Resposta indisponível',
           difficulty: questionsDetails[index] ? questionsDetails[index].difficulty : 'Dificuldade indisponível'
         })));

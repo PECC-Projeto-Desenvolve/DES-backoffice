@@ -1,3 +1,4 @@
+import { Typography } from '@material-tailwind/react';
 import React from 'react';
 
 interface IQuestionContainerProps {
@@ -35,8 +36,9 @@ function QuestionContainer({ alternatives, title, statement, imageSrc, alternati
         </div>
 
         {imageSrc &&
-        <div className='flex w-full items-center justify-center px-[20rem]'>
-          <img src={imageSrc} alt="Uploaded" className="mb-6 max-w-[38rem] rounded-lg" />
+        <div className='mb-6 flex w-full cursor-pointer flex-col items-center justify-center px-[20rem]'>
+          <img src={imageSrc} alt="Uploaded" className="max-w-[28rem] rounded-lg" />
+          <Typography color='white'>Clique na imagem para ampliar</Typography>
         </div>
         }
 

@@ -11,6 +11,7 @@ import {
   Dialog,
   Option,
   Chip,
+  Switch,
 } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -44,6 +45,8 @@ function QuestionForm() {
   const [isFocused, setIsFocused] = React.useState(false);
 
   const [key, setKey] = React.useState(0);
+
+  const [isSwitchActive, setIsSwitchActive] = React.useState(false);
 
 
   React.useEffect(() => {
@@ -124,7 +127,7 @@ function QuestionForm() {
   };
 
   const handleSubmit = async () => {
-    if (!title.trim() || !statement.trim() || alternatives.some(alt => !alt.trim())) {
+    if (!title.trim() || alternatives.some(alt => !alt.trim())) {
       setOpenErrorAlert(true);
       setCustomAlertMessage('Os campos devem ser preenchidos!');
       setTimeout(() => {
@@ -182,6 +185,10 @@ function QuestionForm() {
       }, 3000);
       console.error('Falha ao salvar a questão:', error);
     }
+  };
+
+  const handleSwitchChange = (event) => {
+    setIsSwitchActive(event.target.checked);
   };
 
   return (
@@ -255,18 +262,42 @@ function QuestionForm() {
             </Option>
           </Select>
 
-          <Textarea
-            label='Enunciado'
-            size='lg'
-            resize={true}
-            onChange={event => handleStatementChange(event.target.value)}
-            value={statement}
-            labelProps={{ className: 'text-white' }}
-            color='blue-gray'
-            onFocus={() => setIsFocused(true)}
-            rows={4}
-            className={` ${isFocused ? 'border-blue-900 ' : 'border-gray-300'} bg-white text-blue-gray-200 dark:bg-blue-gray-200/20 dark:text-white`}
-          />
+          <span className='mb-4'>
+            <Textarea
+              label='Enunciado'
+              size='lg'
+              resize={true}
+              onChange={event => handleStatementChange(event.target.value)}
+              value={statement}
+              labelProps={{ className: 'text-white' }}
+              color='blue-gray'
+              onFocus={() => setIsFocused(true)}
+              rows={4}
+              disabled={isSwitchActive}
+              className={` ${isFocused ? 'border-blue-900 ' : 'border-gray-300'} bg-white text-blue-gray-200 dark:bg-blue-gray-200/20 dark:text-white`}
+            />
+
+            <Switch
+              crossOrigin={''}
+              color="blue"
+              label={
+                <div>
+                  <Typography color="blue-gray" className="font-medium">
+            Desabilitar Enunciado
+                  </Typography>
+                  <Typography variant="small" color="gray" className="font-normal">
+            Caso você esteja usando uma imagem para representar o enunciado, marque esta opção
+                  </Typography>
+                </div>
+              }
+              containerProps={{
+                className: '-mt-5',
+              }}
+              checked={isSwitchActive}
+              onChange={handleSwitchChange}
+            />
+
+          </span>
           <>
             {imageSrc ? (
               <>

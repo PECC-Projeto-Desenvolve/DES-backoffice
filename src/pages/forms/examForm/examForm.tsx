@@ -314,7 +314,7 @@ function ExamForm(): JSX.Element {
               <div className='flex items-center gap-2'>
                 <Input
                   crossOrigin={''}
-                  label={'Buscar por enunciado'}
+                  label={'Buscar por título'}
                   icon={<Search size={20}/>}
                   size='lg'
                   value={search}
@@ -366,11 +366,11 @@ function ExamForm(): JSX.Element {
                 <>
                   {questions.filter((question) => {
                     const isQuestionInOrdered = questionOrder.some(
-                      orderedQuestion => orderedQuestion.statement === question.statement
+                      orderedQuestion => orderedQuestion.title === question.title
                     );
 
                     const matchesSearch = !isQuestionInOrdered &&
-                (search.toLocaleLowerCase() === '' || question.statement.toLocaleLowerCase().includes(search));
+                (search.toLocaleLowerCase() === '' || question.title.toLocaleLowerCase().includes(search));
 
                     return matchesSearch;
                   })
