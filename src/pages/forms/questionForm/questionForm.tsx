@@ -81,6 +81,73 @@ function QuestionForm() {
     setAlternatives(newAlternatives);
   };
 
+  //   const resizeImage = (file, maxWidth, maxHeight, callback) => {
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       const img = new Image();
+  //       img.onload = () => {
+  //         const canvas = document.createElement('canvas');
+  //         let width = img.width;
+  //         let height = img.height;
+
+  //         if (width > height) {
+  //           if (width > maxWidth) {
+  //             height *= maxWidth / width;
+  //             width = maxWidth;
+  //           }
+  //         } else {
+  //           if (height > maxHeight) {
+  //             width *= maxHeight / height;
+  //             height = maxHeight;
+  //           }
+  //         }
+
+  //         canvas.width = width;
+  //         canvas.height = height;
+  //         const ctx = canvas.getContext('2d');
+  //         ctx.drawImage(img, 0, 0, width, height);
+  //         callback(canvas.toDataURL(file.type));
+  //       };
+  //       img.src = e.target.result;
+  //     };
+  //     reader.readAsDataURL(file);
+  //   };
+
+  const resizeImage = (file, maxWidth, maxHeight, callback) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target.result;
+      if (typeof result === 'string') {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          if (width > height) {
+            if (width > maxWidth) {
+              height *= maxWidth / width;
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width *= maxHeight / height;
+              height = maxHeight;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          callback(canvas.toDataURL(file.type));
+        };
+        img.src = result;
+      } else {
+        console.error('FileReader result is not a string');
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleBack = () => {
     navigate(-1);
@@ -96,7 +163,13 @@ function QuestionForm() {
     const file = event.dataTransfer.files[0];
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onload = (e) => setImageSrc(e.target.result);
+      reader.onload = (e) => {
+        if (typeof e.target.result === 'string') {
+          resizeImage(file, 800, 800, (resizedImage) => {
+            setImageSrc(resizedImage);
+          });
+        }
+      };
       reader.readAsDataURL(file);
     }
   }, []);
@@ -105,7 +178,13 @@ function QuestionForm() {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
-      reader.onload = (e) => setImageSrc(e.target.result);
+      reader.onload = (e) => {
+        if (typeof e.target.result === 'string') {
+          resizeImage(file, 800, 800, (resizedImage) => {
+            setImageSrc(resizedImage);
+          });
+        }
+      };
       reader.readAsDataURL(file);
     }
   };
