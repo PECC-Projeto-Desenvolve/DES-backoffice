@@ -9,6 +9,32 @@ interface IQuestionContainerProps {
     alternativesWrapper?: React.ReactNode;
 }
 
+const addClassToStrong = (htmlString, className) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(htmlString, 'text/html');
+
+  const processNode = (node) => {
+    if (node.nodeType === 1) {
+      // Se for um elemento
+      if (node.tagName.toLowerCase() === 'strong') {
+        node.classList.add(className);
+      } else {
+        // Recursivamente processa os filhos do elemento
+        for (const child of node.childNodes) {
+          processNode(child);
+        }
+      }
+    }
+  };
+
+  // Processa o corpo do documento
+  for (const child of doc.body.childNodes) {
+    processNode(child);
+  }
+
+  return doc.body.innerHTML;
+};
+
 /**
  * Renders a container for displaying a question, its alternatives, and an optional image.
  *
@@ -21,6 +47,7 @@ interface IQuestionContainerProps {
  * @returns {JSX.Element} A section containing the question title, statement, image (if present), and alternatives.
  */
 function QuestionContainer({ alternatives, title, statement, imageSrc, alternativesWrapper }: IQuestionContainerProps): JSX.Element {
+  const formattedStatement = addClassToStrong(statement, 'font-bold');
 
   return (
     <>
@@ -30,9 +57,7 @@ function QuestionContainer({ alternatives, title, statement, imageSrc, alternati
         </div>
 
         <div className="w-full space-y-8 p-8">
-          <p className="select-none text-white">
-            {statement}
-          </p>
+          <div className="select-none text-white" style={{ whiteSpace: 'pre-wrap', fontFamily: 'Poppins'}} dangerouslySetInnerHTML={{ __html: formattedStatement }} />
         </div>
 
         {imageSrc &&

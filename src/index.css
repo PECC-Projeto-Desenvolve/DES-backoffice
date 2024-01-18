@@ -26,3 +26,12 @@ margin: 15px 50px;
 .custom-input-class label {
     color: #ff0000; /* ou a cor que você desejar */
   }
+
+.my-custom-quill-editor .ql-editor {
+  font-size: 18px;
+  height: 100px;
+}
+.my-custom-quill-window-editor .ql-editor {
+  font-size: 18px;
+  height: 200px;
+}

@@ -1,15 +1,37 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { populateQuestions } from '../../store/slices/questionsSlice';
-import { Menu, Dialog, IconButton, MenuHandler, MenuItem, MenuList, Typography, Input, DialogHeader, Button, Textarea, DialogFooter } from '@material-tailwind/react';
+import { Menu, Dialog, IconButton, MenuHandler, MenuItem, MenuList, Typography, Input, DialogHeader, Button, DialogFooter } from '@material-tailwind/react';
 import { formatDate, stringResizer } from '../../utils';
 import { ExternalLink, Eye, MoreVertical, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
 function QuestionList() {
+  const modules = {
+    toolbar: [
+      [{ header: [ false] }],
+      ['bold', 'italic'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold', 'italic',
+    'list', 'bullet',
+  ];
+
+  const handleTextChange = (value: string) => {
+    setNewQuestionStatement(value);
+  };
+
   const navigate = useNavigate();
   const [openPreview, setOpenPreview] = React.useState(false);
   const [questionToPreview, setQuestionToPreview] = React.useState({
@@ -23,6 +45,8 @@ function QuestionList() {
   const [newQuestionTitle, setNewQuestionTitle] = React.useState('');
   const [newQuestionStatement, setNewQuestionStatement] = React.useState('');
   const [newQuestionAlternatives, setNewQuestionAlternatives] = React.useState([]);
+
+  const [questionId, setQuestionId] = React.useState(0);
 
   const difficultyColorMap = {
     1: 'border-l-green-400 dark:border-l-green-600',
@@ -42,7 +66,9 @@ function QuestionList() {
       setQuestionToPreview(index);
       setNewQuestionTitle(index.title);
       setNewQuestionStatement(index.statement);
+      setQuestionId(index.id);
     }
+
     setOpenPreview(!openPreview);
   };
 
@@ -74,6 +100,48 @@ function QuestionList() {
     }
   }, []);
 
+  const updateQuestion = async (questionId: string | number) => {
+    try {
+      const response = await fetch(`${apiUrl}/questions/${questionId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          newTitle: newQuestionTitle,
+          newStatement: newQuestionStatement,
+        }),
+      });
+
+      if (response.ok) {
+        fetchQuestions();
+        setOpenPreview(false);
+
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: 'success',
+          title: `Questão '${questionId}' salva com sucesso! `,
+          text: '',
+        });
+
+      } else {
+        console.error('Erro ao atualizar a questão:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Erro ao atualizar a questão:', error);
+    }
+  };
+
   return (
     <>
 
@@ -95,19 +163,18 @@ function QuestionList() {
             size='lg'
           />
 
-          <Textarea
-            label='Enunciado da questão'
-            resize={true}
+          <ReactQuill
+            theme="snow"
+            modules={modules}
+            formats={formats}
             value={newQuestionStatement}
-            onFocus={() => {
-              setNewQuestionStatement(questionToPreview.statement);
-            }}
-            onChange={(e) => setNewQuestionStatement(e.target.value)}
-            size='lg'
+            onChange={(value) => handleTextChange(value)}
+            className="my-custom-quill-editor bg-white"
           />
 
           {newQuestionAlternatives.map((alternative, index) => (
             <Input
+              disabled
               crossOrigin={''}
               key={index}
               label='Título da questão'
@@ -124,7 +191,7 @@ function QuestionList() {
         <DialogFooter>
           <span className='flex gap-2'>
             <Button size='sm' color='red' onClick={() => setOpenPreview(false)}>Fechar</Button>
-            <Button size='sm' color='green' disabled>Salvar</Button>
+            <Button size='sm' color='green' onClick={() => updateQuestion(questionId)}>Salvar</Button>
           </span>
         </DialogFooter>
       </Dialog>
@@ -144,7 +211,9 @@ function QuestionList() {
                 <span className='ml-2 flex w-full flex-col'>
                   <Typography variant='h6' className='dark:text-white'>{question.title}</Typography>
 
-                  <Typography variant='paragraph' className='dark:text-white'>{question.statement.length > 49 ? (`${stringResizer(question.statement, 50)} ...`) : (question.statement)}</Typography>
+
+                  <div  dangerouslySetInnerHTML={{ __html: stringResizer(question.statement, 50) }}/>
+                  {/* <Typography variant='paragraph' className='dark:text-white'>{question.statement.length > 49 ? (`${stringResizer(question.statement, 50)} ...`) : (question.statement)}</Typography> */}
 
                   <Typography variant='small' className='font-bold dark:text-blue-gray-200'><span className='font-normal'>Criado em: </span>{formatDate(question.createdAt)}</Typography>
                 </span>

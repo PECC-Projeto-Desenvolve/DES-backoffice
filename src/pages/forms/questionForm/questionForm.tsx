@@ -2,7 +2,6 @@ import React from 'react';
 import '../../../components/init';
 import {
   Input,
-  Textarea,
   Select,
   Typography,
   Button,
@@ -12,6 +11,8 @@ import {
   Option,
   Chip,
   Switch,
+  DialogBody,
+  DialogFooter,
 } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -24,13 +25,15 @@ import {
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
 import { BackButton } from '../../../components/BackButton';
 
-const apiUrl = import.meta.env.VITE_API_URL;
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
   const [categories, setCategories] = React.useState([]);
   const [title, setTitle] = React.useState('');
-  const [statement, setStatement] = React.useState('');
+  const [statement, setStatement] = React.useState<string>('');
+  const [newStatement, setNewStatement] = React.useState<string>('');
   const [difficulty, setDifficulty] = React.useState('');
 
   const [imageSrc, setImageSrc] = React.useState(null);
@@ -42,12 +45,35 @@ function QuestionForm() {
   const [selectedCheckbox, setSelectedCheckbox] = React.useState(null);
 
   const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-  const [isFocused, setIsFocused] = React.useState(false);
+  //   const [isFocused, setIsFocused] = React.useState(false);
+  //   const [isHidden, setIsHidden] = React.useState(false);
 
   const [key, setKey] = React.useState(0);
 
   const [isSwitchActive, setIsSwitchActive] = React.useState(false);
+  const [isStatementActive, setIsStatementActive] = React.useState(false);
 
+  const modules = {
+    toolbar: [
+      [{ header: [ false] }],
+      ['bold', 'italic'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+    ],
+  };
+
+  const formats = [
+    'header',
+    'bold', 'italic',
+    'list', 'bullet',
+  ];
+
+  const handleTextChange = (value: string) => {
+    setStatement(value);
+  };
+
+  const handleWindowTextChange = (value: string) => {
+    setNewStatement(value);
+  };
 
   React.useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -55,7 +81,7 @@ function QuestionForm() {
   }, []);
 
   const fetchCategories = () => {
-    fetch(`${apiUrl}/categories`)
+    fetch(`${import.meta.env.VITE_API_URL}/categories`)
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
@@ -80,38 +106,6 @@ function QuestionForm() {
     newAlternatives[index] = value;
     setAlternatives(newAlternatives);
   };
-
-  //   const resizeImage = (file, maxWidth, maxHeight, callback) => {
-  //     const reader = new FileReader();
-  //     reader.onload = (e) => {
-  //       const img = new Image();
-  //       img.onload = () => {
-  //         const canvas = document.createElement('canvas');
-  //         let width = img.width;
-  //         let height = img.height;
-
-  //         if (width > height) {
-  //           if (width > maxWidth) {
-  //             height *= maxWidth / width;
-  //             width = maxWidth;
-  //           }
-  //         } else {
-  //           if (height > maxHeight) {
-  //             width *= maxHeight / height;
-  //             height = maxHeight;
-  //           }
-  //         }
-
-  //         canvas.width = width;
-  //         canvas.height = height;
-  //         const ctx = canvas.getContext('2d');
-  //         ctx.drawImage(img, 0, 0, width, height);
-  //         callback(canvas.toDataURL(file.type));
-  //       };
-  //       img.src = e.target.result;
-  //     };
-  //     reader.readAsDataURL(file);
-  //   };
 
   const resizeImage = (file, maxWidth, maxHeight, callback) => {
     const reader = new FileReader();
@@ -201,11 +195,18 @@ function QuestionForm() {
     setTitle(event);
   };
 
-  const handleStatementChange = (event) => {
-    setStatement(event);
+  const handleSaveStatementFromWindow = (value) => {
+    setStatement(value);
+    setTimeout(() => {
+      setIsStatementActive(false);
+    }, 500);
   };
 
   const handleSubmit = async () => {
+    if (isSwitchActive) {
+      setStatement('');
+    }
+
     if (!title.trim() || alternatives.some(alt => !alt.trim())) {
       setOpenErrorAlert(true);
       setCustomAlertMessage('Os campos devem ser preenchidos!');
@@ -225,7 +226,7 @@ function QuestionForm() {
     };
 
     try {
-      const response = await fetch(`${apiUrl}/questions`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/questions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -270,6 +271,11 @@ function QuestionForm() {
     setIsSwitchActive(event.target.checked);
   };
 
+  const handleOpenStatementWindow = () => {
+    setNewStatement(statement);
+    setIsStatementActive(!isStatementActive);
+  };
+
   return (
     <>
       <Dialog open={open} handler={handleOpen} size='xl'>
@@ -283,100 +289,124 @@ function QuestionForm() {
         </div>
       </Dialog>
 
+      <Dialog open={isStatementActive} handler={handleOpenStatementWindow} size="xl">
+        <DialogBody className=''>
+          <ReactQuill
+            theme="snow"
+            modules={modules}
+            formats={formats}
+            value={newStatement}
+            onChange={(value) => handleWindowTextChange(value)}
+            className="my-custom-quill-window-editor"
+          />
+        </DialogBody>
+        <DialogFooter className='gap-4'>
+          <Button color='red' onClick={() => setIsStatementActive(false)}>Fechar</Button>
+          <Button color='green' onClick={() => handleSaveStatementFromWindow(newStatement)}>salvar</Button>
+        </DialogFooter>
+      </Dialog>
+
       <BackButton />
 
       <div className=' relative grid h-[80vh] w-full gap-6 px-2 pb-8 xl:grid-cols-2'>
         <div className='flex w-full flex-col gap-4'>
           <Typography variant='h4' className='text-black dark:text-white'>Corpo da questão</Typography>
 
-          <Input
-            crossOrigin={''}
-            label="Título"
-            size='lg'
-            onChange={event => handleTitleChange(event.target.value)}
-            value={title}
-            labelProps={{ className: 'dark:text-white text-black' }}
-            color={`${isDarkTheme ? 'white' : 'black'}`}
-            className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
-          />
-
-          <span>
-            <Select
-              disabled
-              label="Categoria"
-              onFocus={() => fetchCategories()}
-              labelProps={{ className: 'dark:text-white text-black' }}
+          <div className='flex flex-col gap-4'>
+            <Input
+              crossOrigin={''}
+              label="Título"
               size='lg'
+              onChange={event => handleTitleChange(event.target.value)}
+              value={title}
+              labelProps={{ className: 'dark:text-white text-black' }}
+              color={`${isDarkTheme ? 'white' : 'black'}`}
+              className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
+            />
+
+            <span>
+              <Select
+                disabled
+                label="Categoria"
+                onFocus={() => fetchCategories()}
+                labelProps={{ className: 'dark:text-white text-black' }}
+                size='lg'
+                className='bg-white/80 dark:bg-blue-gray-200/20'
+              >
+                {categories.map((category, index) => (
+                  <Option key={index} value={category.title}>
+                    <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
+                  </Option>
+                ))}
+              </Select>
+              <Typography variant='small' className='mt-2 flex items-center gap-2 text-blue-gray-800 dark:text-blue-gray-200'>
+                <AlertCircle size={14}/>
+                Funcionalidade em desenvolvimento
+              </Typography>
+            </span>
+
+
+            <Select
+              label="Dificuldade"
+              size='lg'
+              value={difficulty}
+              onChange={(value) => setDifficulty(value)}
+              labelProps={{ className: 'dark:text-white text-black' }}
               className='bg-white/80 dark:bg-blue-gray-200/20'
             >
-              {categories.map((category, index) => (
-                <Option key={index} value={category.title}>
-                  <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
-                </Option>
-              ))}
+              <Option value="1" index={1}>
+                <Chip value="Fácil" className='w-fit' color='green'/>
+              </Option>
+              <Option value="2" index={2}>
+                <Chip value="Médio" className='w-fit' color='orange'/>
+              </Option>
+              <Option value="3" index={3}>
+                <Chip value="Difícil" className='w-fit' color='red'/>
+              </Option>
             </Select>
-            <Typography variant='small' className='mt-2 flex items-center gap-2 text-blue-gray-800 dark:text-blue-gray-200'>
-              <AlertCircle size={14}/>
-                Funcionalidade em desenvolvimento
-            </Typography>
-          </span>
+          </div>
 
+          <div>
+            <div className={`h-fit transition-opacity ${!isSwitchActive ? 'opacity-100' : 'opacity-0'} flex flex-col`}>
+              <ReactQuill
+                theme="snow"
+                modules={modules}
+                formats={formats}
+                value={statement}
+                onChange={(value) => handleTextChange(value)}
+                className="my-custom-quill-editor bg-white"
+              />
 
-          <Select
-            label="Dificuldade"
-            size='lg'
-            value={difficulty}
-            onChange={(value) => setDifficulty(value)}
-            labelProps={{ className: 'dark:text-white text-black' }}
-            className='bg-white/80 dark:bg-blue-gray-200/20'
-          >
-            <Option value="1" index={1}>
-              <Chip value="Fácil" className='w-fit' color='green'/>
-            </Option>
-            <Option value="2" index={2}>
-              <Chip value="Médio" className='w-fit' color='orange'/>
-            </Option>
-            <Option value="3" index={3}>
-              <Chip value="Difícil" className='w-fit' color='red'/>
-            </Option>
-          </Select>
+              <Button
+                size='sm'
+                className='mt-2 bg-blue-gray-200 text-blue-gray-800'
+                onClick={handleOpenStatementWindow}
+              >Ampliar janela de enunciado</Button>
+            </div>
 
-          <span className='mb-4'>
-            <Textarea
-              label='Enunciado'
-              size='lg'
-              resize={true}
-              onChange={event => handleStatementChange(event.target.value)}
-              value={statement}
-              labelProps={{ className: 'text-white' }}
-              color='blue-gray'
-              onFocus={() => setIsFocused(true)}
-              rows={4}
-              disabled={isSwitchActive}
-              className={` ${isFocused ? 'border-blue-900 ' : 'border-gray-300'} bg-white text-blue-gray-200 dark:bg-blue-gray-200/20 dark:text-white`}
-            />
-
-            <Switch
-              crossOrigin={''}
-              color="blue"
-              label={
-                <div>
-                  <Typography color="blue-gray" className="font-medium">
+            <div className='mt-2'>
+              <Switch
+                className=''
+                crossOrigin={''}
+                color="blue"
+                label={
+                  <div>
+                    <Typography color="blue-gray" className="font-medium">
             Desabilitar Enunciado
-                  </Typography>
-                  <Typography variant="small" color="gray" className="font-normal">
+                    </Typography>
+                    <Typography variant="small" color="gray" className="font-normal">
             Caso você esteja usando uma imagem para representar o enunciado, marque esta opção
-                  </Typography>
-                </div>
-              }
-              containerProps={{
-                className: '-mt-5',
-              }}
-              checked={isSwitchActive}
-              onChange={handleSwitchChange}
-            />
-
-          </span>
+                    </Typography>
+                  </div>
+                }
+                containerProps={{
+                  className: '-mt-5',
+                }}
+                checked={isSwitchActive}
+                onChange={handleSwitchChange}
+              />
+            </div>
+          </div>
           <>
             {imageSrc ? (
               <>

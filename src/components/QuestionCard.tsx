@@ -92,8 +92,8 @@ function QuestionCard({createdAt, statement, rightAnswer, difficulty, onDragStar
 
         <div className='w-full py-1 pl-4'>
           <Typography variant='small' className='-mb-1 text-black dark:text-white'>Enunciado:</Typography>
-          <Typography variant='h6' className='text-black dark:text-white'>{statement.length > 49 ? (`${stringResizer(statement, 50)} ...`) : (statement)}</Typography>
-
+          {/* <Typography variant='h6' className='text-black dark:text-white'>{statement.length > 49 ? (`${stringResizer(statement, 50)} ...`) : (statement)}</Typography> */}
+          <div dangerouslySetInnerHTML={{ __html: stringResizer(statement, 50) }}/>
           <div className='flex gap-2'>
             <Typography variant='paragraph' className='text-black dark:text-white'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
             {/* <Typography variant='paragraph'>atualizada em: <strong>{formatDate(updatedAt)}</strong></Typography> */}

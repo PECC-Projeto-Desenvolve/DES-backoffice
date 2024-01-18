@@ -1,4 +1,3 @@
-import { Typography } from '@material-tailwind/react';
 import { GripVertical } from 'lucide-react';
 import React from 'react';
 import { stringResizer } from '../utils';
@@ -47,9 +46,7 @@ function ExamQuestionLabel({ id, index, question, buttonPlacement, counter, diff
       <p className='flex h-6 w-6 items-center justify-center rounded-full bg-black p-2 text-sm text-white'>{counter + 1}</p>
 
       <div className='mx-2 w-full'>
-        <Typography variant='h6'>
-          {question.length > 49 ? (`${stringResizer(question, 50)} ...`) : (question)}
-        </Typography>
+        <div dangerouslySetInnerHTML={{ __html: stringResizer(question, 50) }}/>
       </div>
 
       {buttonPlacement}

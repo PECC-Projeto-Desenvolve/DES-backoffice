@@ -28,6 +28,7 @@ function CadidateDetails() {
       const questionData = await response.json();
       return {
         statement: questionData.statement,
+        title: questionData.title,
         image: questionData.image,
         rightAnswer: questionData.rightAnswer,
         difficulty: questionData.difficulty
@@ -55,6 +56,7 @@ function CadidateDetails() {
         setUserQuestions(data.questions.map((q, index) => ({
           ...q,
           statement: questionsDetails[index] ? questionsDetails[index].statement : 'Detalhe indisponível',
+          title: questionsDetails[index] ? questionsDetails[index].title : 'Título indisponível',
           image: questionsDetails[index] ? questionsDetails[index].image : 'Imagem indisponível',
           rightAnswer: questionsDetails[index] ? questionsDetails[index].rightAnswer : 'Resposta indisponível',
           difficulty: questionsDetails[index] ? questionsDetails[index].difficulty : 'Dificuldade indisponível'
@@ -128,7 +130,7 @@ function CadidateDetails() {
               <tr className='text-blue-gray-900'>
                 <th className="p-2 text-center">Posição</th>
                 <th className="p-2 text-center">Nível</th>
-                <th className="p-2 text-center">Enunciado</th>
+                <th className="p-2 text-center">Título</th>
                 <th className="p-2 text-center">Alternativa do Usuário</th>
                 <th className="p-2 text-center">Alternativa Correta</th>
                 <th className="p-2 text-center">Resultado</th>
@@ -144,8 +146,8 @@ function CadidateDetails() {
                     {item.difficulty == 2 && <Chip value='média' color='orange' size='sm' className='text-center'/>}
                     {item.difficulty == 3 && <Chip value='difícil' color='red' size='sm' className='text-center'/>}
                   </td>
-                  <td className="p-2 text-center">{stringResizer(item.statement, 65)}...</td>
-                  <td className="p-2 text-center">{String.fromCharCode(64 + (item.position + 1))}</td>
+                  <td className="p-2 text-center">{stringResizer(item.title, 65)}</td>
+                  <td className="p-2 text-center">{item.position == 8 ? ('####') : String.fromCharCode(64 + (item.position + 1))}</td>
                   <td className="p-2 text-center">{decryptRightAnswer(item.rightAnswer)}</td>
                   <td className="p-2 text-center">{handleResult(item.position, item.rightAnswer)}</td>
                   <td className="p-2 text-center">
