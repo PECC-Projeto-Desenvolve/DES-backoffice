@@ -24,6 +24,7 @@ function ExamForm(): JSX.Element {
   const [open, setOpen] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
   const [openExamCompletedDialog, setOpenExamCompletedDialog] = React.useState(false);
+  const [disableLoadMoraButton, setDisableLoadMoraButton] = React.useState(false);
 
   const [firstStepCompleted, setFirstStepCompleted] = React.useState(0);
   const [search, setSearch] = React.useState<string>('');
@@ -138,6 +139,7 @@ function ExamForm(): JSX.Element {
           dispatch(populateQuestions(data));
         } else {
           dispatch(addMoreQuestions(data));
+          setDisableLoadMoraButton(false);
         }
 
       })
@@ -415,8 +417,10 @@ function ExamForm(): JSX.Element {
                       color='cyan'
                       className='flex items-center justify-center gap-2'
                       onClick={() => {
+                        setDisableLoadMoraButton(true);
                         setCurrentPage((state) => state + 1);
                       }}
+                      disabled={disableLoadMoraButton}
                     >
                       <RefreshCcw size={20}/>
                       Carregar mais questões
