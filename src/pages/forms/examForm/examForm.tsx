@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, Option, IconButton, Input, Select, Typography, Chip, Tooltip } from '@material-tailwind/react';
-import { BadgeHelp, Eye, MinusCircle, PlusCircleIcon, Search } from 'lucide-react';
+import { BadgeHelp, Eye, MinusCircle, PlusCircleIcon, RefreshCcw, Search } from 'lucide-react';
 
 import { useNavigate } from 'react-router-dom';
 import { ExitConfirmationDialog, QuestionCard, Skeleton, QuestionPreviewDialog, HelpDialog, ExamCreationDialog, ExamCompletionDialog } from '../../../components';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { populateQuestions } from '../../../store/slices/questionsSlice';
+import { addMoreQuestions, populateQuestions } from '../../../store/slices/questionsSlice';
 
 import { ExamQuestionLabel } from '../../../components/ExamQuestionLabel';
 
@@ -39,6 +39,8 @@ function ExamForm(): JSX.Element {
 
   const [openHelpDialog, setOpenHelpDialog] = React.useState(false);
   const [difficulty, setDifficulty] = React.useState('');
+
+  const [currentPage, setCurrentPage] = React.useState(0);
 
   const [categories, setCategories] = React.useState([]);
   //   const [selectedCategory, setSelectedCategory] = React.useState('');
@@ -125,14 +127,19 @@ function ExamForm(): JSX.Element {
     useSensor(KeyboardSensor)
   );
 
-  const fetchQuestions = (page?: string, filter?: string) => {
-    const pageString = page ? `&page=${page}` : '';
+  const fetchQuestions = ( filter?: string) => {
+    const pageString = `&page=${currentPage}`;
     const filterString = filter ? `&filter=${filter}` : '';
 
     fetch(`${apiUrl}/questions?${pageString}${filterString}`)
       .then(response => response.json())
       .then(data => {
-        dispatch(populateQuestions(data));
+        if (currentPage == 0) {
+          dispatch(populateQuestions(data));
+        } else {
+          dispatch(addMoreQuestions(data));
+        }
+
       })
       .catch(error => console.error('Erro ao buscar questões:', error));
   };
@@ -145,7 +152,7 @@ function ExamForm(): JSX.Element {
     if (firstStepCompleted == 1) {
       fetchQuestions();
     }
-  }, [firstStepCompleted]);
+  }, [firstStepCompleted, currentPage]);
 
   const fetchCategories = () => {
     fetch(`${apiUrl}/categories`)
@@ -293,8 +300,8 @@ function ExamForm(): JSX.Element {
           <div className='relative flex w-full flex-col gap-2 overflow-hidden rounded-md border px-2 py-4'>
             <div className=' p-2'>
               <div className='mb-2 flex w-full items-center justify-between'>
-                <Typography variant='h4' className='mb-1 text-black dark:text-white'>Selecione a questão
-
+                <Typography variant='h4' className='mb-1 text-black dark:text-white'>
+                    Selecione a questão
                 </Typography>
 
                 <Button
@@ -343,7 +350,7 @@ function ExamForm(): JSX.Element {
                     onChange={(value) => {
                       setDifficulty(value);
                       //   setSelectedCategory(null);
-                      fetchQuestions('0', value);
+                      fetchQuestions('0');
                     }}
                   >
                     <Option value="1" index={1}>
@@ -402,6 +409,19 @@ function ExamForm(): JSX.Element {
                       />
 
                     ))}
+                  <span className='h-[3rem] w-full'>
+                    <Button
+                      fullWidth
+                      color='cyan'
+                      className='flex items-center justify-center gap-2'
+                      onClick={() => {
+                        setCurrentPage((state) => state + 1);
+                      }}
+                    >
+                      <RefreshCcw size={20}/>
+                      Carregar mais questões
+                    </Button>
+                  </span>
                 </>
               )}
             </div>

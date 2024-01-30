@@ -20,11 +20,15 @@ export const questionSlice = createSlice({
   reducers: {
     populateQuestions: (state, action: PayloadAction<any>) => {
       state.questions = action.payload;
+    },
+    addMoreQuestions: (state, action: PayloadAction<any>) => {
+      state.questions = [...state.questions, ...action.payload];
+
     }
   },
 });
 
-export const { populateQuestions } = questionSlice.actions;
+export const { populateQuestions, addMoreQuestions } = questionSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 // export const selectQuestion = (state: RootState) => state.question;
