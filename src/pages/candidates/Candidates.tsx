@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Tooltip, Typography } from '@material-tailwind/react';
+import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Tooltip, Typography } from '@material-tailwind/react';
 import { AlertTriangle, Eye, RotateCw, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,11 @@ function Candidates() {
   const navigate = useNavigate();
   const [candidates, setCandidates] = React.useState([]);
   const [candidateToDelete, setCandidatesToDelete] = React.useState('');
+  const [candidateNameToDelete, setCandidatesNameToDelete] = React.useState('');
+  const [candidateDocToDelete, setCandidatesDocToDelete] = React.useState('');
   const [openDelete, setOpenDelete] = React.useState(false);
+
+  const [tokenDelete, setTokenDelete] = React.useState('');
 
   const [reload, setReload] = React.useState(false);
 
@@ -38,6 +42,7 @@ function Candidates() {
 
   const handleOpenDelete = () => {
     setOpenDelete(!openDelete);
+    setTokenDelete('');
   };
 
   const handleConfirmCandidateDelete = async (id: string) => {
@@ -80,10 +85,29 @@ function Candidates() {
           </Typography>
         </DialogHeader>
 
-        <DialogBody className='-mt-4'>
+        <DialogBody className='-mt-4 flex flex-col items-center'>
           <Typography variant='lead'>
     Ao clicar em confirmar, você estará removendo permanentemente este candidato
           </Typography>
+
+          <div className='mb-4 mt-2 w-fit rounded-md bg-[#f4f4f4] p-4'>
+            <Typography variant='lead'>
+              {candidateNameToDelete}
+            </Typography>
+            {/*  */}
+            <Typography variant='lead'>
+              {candidateDocToDelete}
+            </Typography>
+          </div>
+
+          <Input
+            crossOrigin={''}
+            label='Token'
+            value={tokenDelete}
+            type="password"
+            size='lg'
+            onChange={(e) => setTokenDelete(e.target.value)}
+          />
         </DialogBody>
 
         <DialogFooter className='gap-4'>
@@ -100,6 +124,7 @@ function Candidates() {
           <Button
             color='red'
             onClick={() => handleConfirmCandidateDelete(candidateToDelete)}
+            disabled={tokenDelete != 'LpI0k7pl2lUEX0L8'}
           >
             Confirmar
           </Button>
@@ -151,6 +176,8 @@ function Candidates() {
                       color='red'
                       onClick={() => {
                         setCandidatesToDelete(candidate.id);
+                        setCandidatesNameToDelete(candidate.name);
+                        setCandidatesDocToDelete(candidate.document);
                         handleOpenDelete();
                       }}
                     >
