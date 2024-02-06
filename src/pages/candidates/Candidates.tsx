@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Tooltip, Typography } from '@material-tailwind/react';
-import { AlertTriangle, Eye, RotateCw, Trash } from 'lucide-react';
+import { AlertTriangle, Eye, FileCheck, RotateCw, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils';
@@ -148,6 +148,22 @@ function Candidates() {
 
       <div className='h-[3rem] w-full'>
         <Typography variant='h5'>Lista de candidatos referentes ao processo</Typography>
+      </div>
+
+      <div className='mb-2 grid min-h-[5rem] w-full grid-cols-4 gap-4'>
+        <Card className='h-full w-full p-4'
+        >
+          <div className='flex items-center gap-2 text-black'>
+            <FileCheck size={20}  />
+            <Typography variant='h6' className='m-0'> Total de provas </Typography>
+          </div>
+          <div className='my-2 flex w-full items-center justify-center'>
+            <Typography variant='lead' className='text-4xl font-bold' color='black'>
+              {candidates.length}
+            </Typography>
+          </div>
+        </Card>
+
       </div>
 
       <Card className="h-full w-full overflow-scroll">
