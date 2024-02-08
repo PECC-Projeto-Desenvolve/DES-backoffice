@@ -77,11 +77,12 @@ function QuestionList() {
   const questions = useSelector((state) => state.question.questions);
   const dispatch = useDispatch();
 
-  const fetchQuestions = (page?: string, filter?: string) => {
-    const pageString = page ? `&page=${page}` : '';
-    const filterString = filter ? `&filter=${filter}` : '';
+  //   const fetchQuestions = (page?: string, filter?: string) => {
+  const fetchQuestions = () => {
+    // const pageString = page ? `&page=${page}` : '';
+    // const filterString = filter ? `&filter=${filter}` : '';
 
-    fetch(`${apiUrl}/questions?${pageString}${filterString}`)
+    fetch(`${apiUrl}/questions?limit=200`)
       .then(response => response.json())
       .then(data => {
         dispatch(populateQuestions(data));
