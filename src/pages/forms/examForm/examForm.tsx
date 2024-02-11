@@ -17,16 +17,18 @@ import DND from '../../../assets/dnd-placeholder.svg';
 import { deleteQuestion } from '../../../api/question/delete';
 import { submitExam } from '../../../api/exam/submit';
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
+/**
+ * Component for creating and managing the form to create an exam.
+ * @returns {JSX.Element} The ExamForm component.
+ */
 function ExamForm(): JSX.Element {
   const [questionOrder, setQuestionOrder] = React.useState<any[]>([]);
-  const [open, setOpen] = React.useState(false);
-  const [openPreview, setOpenPreview] = React.useState(false);
-  const [openExamCompletedDialog, setOpenExamCompletedDialog] = React.useState(false);
-  const [disableLoadMoraButton, setDisableLoadMoraButton] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [openPreview, setOpenPreview] = React.useState<boolean>(false);
+  const [openExamCompletedDialog, setOpenExamCompletedDialog] = React.useState<boolean>(false);
+  const [disableLoadMoraButton, setDisableLoadMoraButton] = React.useState<boolean>(false);
 
-  const [firstStepCompleted, setFirstStepCompleted] = React.useState(0);
+  const [firstStepCompleted, setFirstStepCompleted] = React.useState<number>(0);
   const [search, setSearch] = React.useState<string>('');
 
   const [questionToPreview, setQuestionToPreview] = React.useState({
@@ -38,15 +40,15 @@ function ExamForm(): JSX.Element {
     rightAnswer: ''
   });
 
-  const [openHelpDialog, setOpenHelpDialog] = React.useState(false);
-  const [difficulty, setDifficulty] = React.useState('');
+  const [openHelpDialog, setOpenHelpDialog] = React.useState<boolean>(false);
+  const [difficulty, setDifficulty] = React.useState<string>('');
 
-  const [currentPage, setCurrentPage] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState<number>(0);
 
-  const [categories, setCategories] = React.useState([]);
-  //   const [selectedCategory, setSelectedCategory] = React.useState('');
+  const [categories, setCategories] = React.useState<any[]>([]);
+  //   const [selectedCategory, setSelectedCategory] = React.useState<string>('');
 
-  const [examTitle, setExamTitle] = React.useState('');
+  const [examTitle, setExamTitle] = React.useState<string>('');
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
@@ -55,21 +57,44 @@ function ExamForm(): JSX.Element {
 
   const navigate = useNavigate();
 
+  /**
+ * Toggles the visibility of the question preview dialog.
+ */
   const handleOpenQuestionPreview = () => {
     setOpenPreview(!openPreview);
   };
+
+  /**
+ * Toggles the visibility of the exam completion dialog.
+ */
   const handleExamSubmitCompleted = () => {
     setOpenExamCompletedDialog(!openExamCompletedDialog);
   };
 
+  /**
+ * Initiates the deletion of a question by its ID and triggers a re-fetch of questions upon successful deletion.
+ *
+ * @param {number} questionId - The unique identifier of the question to be deleted.
+ */
   const handleDeleteQuestion = (questionId: number) => {
     deleteQuestion({ id: questionId, responseCompleted: () => fetchQuestions() });
   };
 
+  /**
+ * Sets the data for the dragged question to enable dropping it into the exam form.
+ *
+ * @param {React.DragEvent} e - The drag event.
+ * @param {string} widgetType - The data representing the question being dragged.
+ */
   const handleOnDrag = (e: React.DragEvent, widgetType: string) => {
     e.dataTransfer.setData('widgetType', JSON.stringify(widgetType));
   };
 
+  /**
+ * Handles the press enter action to confirm the first step of the exam creation process.
+ *
+ * @param {React.KeyboardEvent} e - The keyboard event.
+ */
   const handlePressEnter = (e) => {
     e.preventDefault();
     if (examTitle !== '') {
@@ -77,6 +102,11 @@ function ExamForm(): JSX.Element {
     }
   };
 
+  /**
+ * Handles dropping a question into the exam form area, adding it to the list of questions in the exam.
+ *
+ * @param {React.DragEvent} e - The drag event.
+ */
   const handleOnDrop = (e: React.DragEvent) => {
     setSearch('');
     setDifficulty('');
@@ -86,10 +116,20 @@ function ExamForm(): JSX.Element {
     setQuestionOrder([...questionOrder, JSON.parse(widgetType)]);
   };
 
+  /**
+ * Removes a question from the exam form based on its index in the list.
+ *
+ * @param {number} indexToRemove - The index of the question to remove from the exam form.
+ */
   const handleRemoveQuestion = (indexToRemove) => {
     setQuestionOrder(questionOrder.filter((_, index) => index !== indexToRemove));
   };
 
+  /**
+ * Handles the end of a drag operation, reordering questions in the exam form if necessary.
+ *
+ * @param {any} event - The event object containing information about the drag operation.
+ */
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
 
@@ -103,10 +143,16 @@ function ExamForm(): JSX.Element {
     }
   };
 
+  /**
+ * Navigates back to the previous page.
+ */
   const handleBack = () => {
     navigate(-1);
   };
 
+  /**
+ * Handles opening the exit confirmation dialog or navigating back if no questions have been added to the exam.
+ */
   const handleOpen = () => {
     if (questionOrder.length > 0) {
       setOpen(!open);
@@ -115,10 +161,18 @@ function ExamForm(): JSX.Element {
     }
   };
 
+  /**
+ * Toggles the visibility of the help dialog.
+ */
   const handleOpenHelpDialog = () => {
     setOpenHelpDialog(!openHelpDialog);
   };
 
+  /**
+ * Prevents the default action (which is to cancel the drop) to allow dropping.
+ *
+ * @param {React.DragEvent} e - The drag event.
+ */
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
@@ -128,11 +182,16 @@ function ExamForm(): JSX.Element {
     useSensor(KeyboardSensor)
   );
 
+  /**
+ * Fetches questions from the server based on the current page and optional filter criteria.
+ *
+ * @param {string} [filter] - Optional filter criteria for fetching questions.
+ */
   const fetchQuestions = ( filter?: string) => {
     const pageString = `&page=${currentPage}`;
     const filterString = filter ? `&filter=${filter}` : '';
 
-    fetch(`${apiUrl}/questions?${pageString}${filterString}`)
+    fetch(`${import.meta.env.VITE_API_URL}/questions?${pageString}${filterString}`)
       .then(response => response.json())
       .then(data => {
         if (currentPage == 0) {
@@ -146,18 +205,20 @@ function ExamForm(): JSX.Element {
       .catch(error => console.error('Erro ao buscar questões:', error));
   };
 
+  /**
+ * Retrieves the IDs of all questions currently added to the exam form, converting them to strings.
+ *
+ * @returns {string[]} An array of question IDs as strings.
+ */
   const getQuestionIds = () => {
     return questionOrder.map(question => question.id.toString());
   };
 
-  React.useEffect(() => {
-    if (firstStepCompleted == 1) {
-      fetchQuestions();
-    }
-  }, [firstStepCompleted, currentPage]);
-
+  /**
+ * Fetches categories from the server and updates the component's state with the fetched data.
+ */
   const fetchCategories = () => {
-    fetch(`${apiUrl}/categories`)
+    fetch(`${import.meta.env.VITE_API_URL}/categories`)
       .then(response => response.json())
       .then(data => setCategories(data))
       .catch(error => console.error('Erro ao buscar categorias:', error));
@@ -166,7 +227,16 @@ function ExamForm(): JSX.Element {
   React.useEffect(() => {
   }, [questionOrder]);
 
-
+  /**
+ * React effect hook that triggers the fetching of questions when either the first step of the exam form is completed
+ * or when the current page number changes. This ensures that questions are loaded and updated appropriately based on
+ * the user's progress through the exam creation process and their interaction with pagination.
+ */
+  React.useEffect(() => {
+    if (firstStepCompleted == 1) {
+      fetchQuestions();
+    }
+  }, [firstStepCompleted, currentPage]);
 
   return (
     <>

@@ -22,21 +22,24 @@ interface IExamCardProps {
 }
 
 /**
- * Renders an exam card component with title, creation, and update dates, and a menu for actions.
+ * Renders an `ExamCard` component displaying information about an exam, including title, difficulty, and dates.
+ * It also provides an interactive menu with options to edit, duplicate, or delete the exam.
  *
- * @param {object} props - Component props.
+ * @param {IExamCardProps} props - The properties for the ExamCard component.
  * @param {string} props.title - The title of the exam.
  * @param {string} props.createdAt - The creation date of the exam.
- * @param {string} props.updatedAt - The last update date of the exam.
- * @param {string} props.difficulty - The exam difficulty based on questions quantity.
- * @returns {JSX.Element} A list item representing an exam card with interactive elements.
+ * @param {string} props.updatedAt - The last update date of the exam. Optional.
+ * @param {string} props.difficulty - The difficulty level of the exam.
+ * @param {string} props.id - The unique identifier of the exam.
+ * @param {Function} props.handleDeleteCompleted - Callback function to be called after deleting an exam.
+ * @returns {JSX.Element} A list item element styled as a card that displays the exam's information and a menu for actions.
  */
 function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: IExamCardProps): JSX.Element {
   const hoverAnimation = 'shadow-xl shadow-transparent transition-all hover:-translate-y-2 hover:shadow-blue-gray-900/5 hover:bg-[#fafafa]';
 
   const navigate = useNavigate();
 
-  const [difficultyColor, setDifficultyColor] = React.useState('');
+  const [difficultyColor, setDifficultyColor] = React.useState<string>('');
   const menuItems = [
     {
       label: 'Editar',
@@ -63,9 +66,11 @@ function ExamCard({ title, createdAt, difficulty, id, handleDeleteCompleted }: I
       <li className={`flex h-fit w-full cursor-pointer items-center justify-between rounded-lg border bg-white p-2 dark:bg-blue-gray-200/20 ${hoverAnimation} border-l-8 ${difficultyColor} dark:border-blue-gray-400`}>
         <div>
           <Typography variant='lead' className='font-bold text-black dark:text-white'>{title}</Typography>
+
           <div className='flex gap-2'>
             <Typography variant='paragraph' className='text-black dark:text-white'>criada em: <strong>{formatDate(createdAt)}</strong></Typography>
           </div>
+          <Typography variant='small' className='text-gray-500'>{id}</Typography>
         </div>
         <div>
 

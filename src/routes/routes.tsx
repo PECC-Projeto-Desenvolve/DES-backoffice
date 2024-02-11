@@ -25,7 +25,7 @@ function AppRoutes(): JSX.Element {
   const navigate = useNavigate();
 
   const handleNavigate = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   React.useEffect(() => {

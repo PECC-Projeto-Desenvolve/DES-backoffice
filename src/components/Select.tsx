@@ -2,13 +2,12 @@ import React from 'react';
 
 interface SelectWithFilterProps {
     options: string[];
-    // onSelect: (selectedOption: string) => void;
 }
 
 const SelectWithFilter = ({ options }: SelectWithFilterProps) => {
   const [filteredOptions, setFilteredOptions] = React.useState(options);
-  const [inputValue, setInputValue] = React.useState('');
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [inputValue, setInputValue] = React.useState<string>('');
+  const [isOpen, setIsOpen] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     setFilteredOptions(

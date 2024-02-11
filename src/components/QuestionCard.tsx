@@ -27,24 +27,24 @@ interface IQuestionCardProps {
 }
 
 /**
- * Renders a draggable question card with details such as statement, right answer, and timestamps.
- * This component utilizes Material Tailwind components and custom utilities for styling and functionality.
+ * Renders a `QuestionCard` component displaying a question's statement, difficulty level, and creation date.
+ * It includes an interactive menu for viewing or deleting the question. The component is draggable for reordering.
  *
- * @component
- * @param {Object} props
- * @param {string|number} [props.id] - Unique identifier for the question.
+ * @param {IQuestionCardProps} props - Properties passed to the component.
+ * @param {string|number} [props.id] - The unique identifier for the question. Optional.
  * @param {string} props.statement - The statement of the question.
- * @param {string} props.rightAnswer - Encrypted right answer for the question.
- * @param {string} props.createdAt - Timestamp of when the question was created.
- * @param {string} props.updatedAt - Timestamp of when the question was last updated.
- * @param {string|number} props.difficulty - Difficulty level of the question.
- * @param {Function} props.onDragStart - Function to handle the drag start event.
- * @param {Function} props.handleOpenView - Function to handle opening the question view.
- * @returns {JSX.Element} The QuestionCard component.
+ * @param {string} props.rightAnswer - The encrypted answer to the question.
+ * @param {string} props.createdAt - The date the question was created.
+ * @param {string} [props.updatedAt] - The date the question was last updated. Optional.
+ * @param {string|number} props.difficulty - The difficulty level of the question.
+ * @param {Function} props.onDragStart - Function to handle drag start events.
+ * @param {Function} props.handleOpenView - Function to handle the action of viewing the question details.
+ * @param {Function} props.handleDeleteQuestion - Function to handle the action of deleting the question.
+ * @returns {JSX.Element} A draggable and interactive card representing a question.
  */
 function QuestionCard({createdAt, statement, rightAnswer, difficulty, onDragStart, handleOpenView, handleDeleteQuestion}: IQuestionCardProps): JSX.Element {
 
-  const [color, setColor] = React.useState('');
+  const [color, setColor] = React.useState<string>('');
 
   const getDifficultyColor = (difficulty) => {
     let selectedColor;

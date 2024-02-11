@@ -15,11 +15,9 @@ const addClassToStrong = (htmlString, className) => {
 
   const processNode = (node) => {
     if (node.nodeType === 1) {
-      // Se for um elemento
       if (node.tagName.toLowerCase() === 'strong') {
         node.classList.add(className);
       } else {
-        // Recursivamente processa os filhos do elemento
         for (const child of node.childNodes) {
           processNode(child);
         }
@@ -27,7 +25,6 @@ const addClassToStrong = (htmlString, className) => {
     }
   };
 
-  // Processa o corpo do documento
   for (const child of doc.body.childNodes) {
     processNode(child);
   }
@@ -53,7 +50,7 @@ function QuestionContainer({ alternatives, title, statement, imageSrc, alternati
     <>
       <section className="w-full overflow-hidden rounded-lg border border-border bg-modal-bg shadow-lg">
         <div className="flex h-20 w-full select-none items-center justify-between bg-modal-heading px-8">
-          <p className="select-none text-2xl text-white">{title}</p>
+          <p className="select-none text-lg text-white">{title}</p>
         </div>
 
         <div className="w-full space-y-8 p-8">

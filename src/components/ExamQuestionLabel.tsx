@@ -13,9 +13,23 @@ interface IExamQuestionLabel {
     buttonPlacement: React.ReactNode
 }
 
+/**
+ * Renders a sortable label for an exam question within a list, including a drag handle, question summary,
+ * and a custom button placement area. It uses the `useSortable` hook from `@dnd-kit/sortable` for drag-and-drop
+ * functionality and dynamically assigns a border color based on the difficulty level of the question.
+ *
+ * @param {IExamQuestionLabel} props - The properties for the ExamQuestionLabel component.
+ * @param {string} props.id - The unique identifier of the question, used for sorting.
+ * @param {string} props.index - The index of the question in the list.
+ * @param {number} props.counter - The display number of the question in the list.
+ * @param {string} props.question - The text of the question, which will be resized and sanitized before display.
+ * @param {string} props.difficulty - The difficulty level of the question, affecting the border color.
+ * @param {React.ReactNode} props.buttonPlacement - A React node for placing custom buttons or icons alongside the question.
+ * @returns {JSX.Element} A list item element that represents a question label with sortable functionality.
+ */
 function ExamQuestionLabel({ id, index, question, buttonPlacement, counter, difficulty }: IExamQuestionLabel) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
-  const [difficultyColor, setDifficultyColor] = React.useState('');
+  const [difficultyColor, setDifficultyColor] = React.useState<string>('');
 
   const style = {
     transform: CSS.Transform.toString(transform),

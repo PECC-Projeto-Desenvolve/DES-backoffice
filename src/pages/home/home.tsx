@@ -12,7 +12,7 @@ function Home() {
           description={
             'Área para gerenciamento de processos seletivos.'
           }
-          path='/process'
+          disabled
         />
 
         <Banner
@@ -30,7 +30,7 @@ function Home() {
           description={
             'Área para gerenciamento de cidades aptas a receber um processo seletivo'
           }
-          path='/'
+          disabled
         />
 
         <Banner

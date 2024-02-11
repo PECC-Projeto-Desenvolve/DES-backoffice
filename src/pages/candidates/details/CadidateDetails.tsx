@@ -8,17 +8,34 @@ import { decryptRightAnswer, formatDate, stringResizer } from '../../../utils';
 
 import { CSVLink } from 'react-csv';
 
+/**
+ * Displays detailed information about a candidate's exam attempt, including their answers, question details,
+ * and the ability to preview each question. It also supports exporting the exam data to a CSV file.
+ * Utilizes Material Tailwind components and custom hooks for fetching data and managing state.
+ *
+ * @returns {JSX.Element} A comprehensive view of a candidate's exam attempt, including personal information,
+ * question responses, and export functionality.
+ */
 function CadidateDetails() {
   const [candidate, setCandidate] = React.useState({
     name: '',
     document: '',
     createdAt: '',
   });
-  const [userQuestions, setUserQuestions] = React.useState([]);
+  const [userQuestions, setUserQuestions] = React.useState<any[]>([]);
   const [questionToPreview, setQuestionToPreview] = React.useState(null);
-  const [openQuestionPreview, setOpenQuestionPreview] = React.useState(false);
+  const [openQuestionPreview, setOpenQuestionPreview] = React.useState<boolean>(false);
   const { id } = useParams();
 
+  /**
+ * Asynchronously fetches the details of a question from the server using its unique identifier.
+ * It constructs the request URL using an environment variable for the API base URL.
+ *
+ * @async
+ * @param {string} questionId - The unique identifier of the question to fetch details for.
+ * @returns {Promise<Object|null>} The question details including statement, title, image, right answer, and difficulty
+ * on success; otherwise, returns null if an error occurs during the fetch operation.
+ */
   const fetchQuestionDetails = async (questionId) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/questions/${questionId}`);
@@ -40,6 +57,14 @@ function CadidateDetails() {
     }
   };
 
+  /**
+ * Asynchronously fetches exam details for a specific candidate by their exam ID. It retrieves the candidate's information
+ * and the details of each question in the exam, including handling cases where question details are not available.
+ * Utilizes an environment variable for the API base URL and updates component state with the fetched data.
+ *
+ * @async
+ * @param {string} id - The unique identifier of the candidate's exam to fetch.
+ */
   const fetchExam = async (id) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams/${id}`);
@@ -69,7 +94,16 @@ function CadidateDetails() {
     }
   };
 
-  const handleResult = (userAnswer, rightAnser) => {
+  /**
+ * Determines the result of a user's answer to a question by comparing it against the correct answer.
+ * The user's answer is represented by a numeric index, which is converted to a corresponding letter
+ * (e.g., 0 to A, 1 to B, etc.). The correct answer is decrypted before comparison.
+ *
+ * @param {number} userAnswer - The numeric index of the user's selected answer option.
+ * @param {string} rightAnser - The encrypted string of the correct answer option.
+ * @returns {string} A string indicating whether the user's answer is correct (✅) or incorrect (❌).
+ */
+  const handleResult = (userAnswer: number, rightAnser: string) => {
     if(String.fromCharCode(64 + (userAnswer + 1)) === decryptRightAnswer(rightAnser)){
       return ('✅');
     }
@@ -77,16 +111,29 @@ function CadidateDetails() {
     return ('❌');
   };
 
+  /**
+ * Executes the `fetchExam` function to retrieve exam details for a specific ID when the component mounts or when the `id` changes.
+ * This effect ensures that the component fetches and updates the exam information relevant to the current `id`.
+ */
   React.useEffect(() => {
     if (id) {
       fetchExam(id);
     }
   }, [id]);
 
+  /**
+ * Toggles the visibility state of the question preview dialog. It inverses the current state
+ * to show or hide the preview based on user interaction.
+ */
   const handlePreviewQuestion = () => {
     setOpenQuestionPreview(!openQuestionPreview);
   };
 
+  /**
+ * Maps user questions to a format suitable for CSV export, including details such as the candidate's name,
+ * document, question position, difficulty level, user's answer, correct answer, and the result of the comparison.
+ * The difficulty is translated into human-readable form, and answers are converted from numeric indexes to letters.
+ */
   const csvData = userQuestions.map((item, index) => ({
     NomeDoCandidato: candidate.name,
     DocumentoDoCandidato: candidate.document,

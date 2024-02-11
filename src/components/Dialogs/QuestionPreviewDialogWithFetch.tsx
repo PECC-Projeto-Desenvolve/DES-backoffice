@@ -18,10 +18,18 @@ function QuestionPreviewDialogWithFetch({ open, handler, questionToPreview }: Qu
     alternatives: [],
   });
 
+
   const fetchQuestions = (id: number) => {
     fetch(`${import.meta.env.VITE_API_URL}/questions/${id.toString()}`)
       .then(response => response.json())
-      .then(data => setQuestion(data))
+      .then(data => {
+
+        if(data.alternatives && data.alternatives.length > 0) {
+          const sortedAlternatives = data.alternatives.sort((a, b) => a.position - b.position);
+          data = {...data, alternatives: sortedAlternatives};
+        }
+        setQuestion(data);
+      })
       .catch(error => console.error('Erro ao buscar questão: ', error));
   };
 

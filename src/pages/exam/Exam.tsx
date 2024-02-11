@@ -1,25 +1,49 @@
 import {
+  Button,
+  Card,
+  CardFooter,
   Typography,
 } from '@material-tailwind/react';
 import { ClipboardSignature, FilePlus2, SearchCheck, Tags, TextSelect } from 'lucide-react';
 
 import React from 'react';
-import { Banner, ExamCard } from '../../components';
+import { useNavigate } from 'react-router-dom';
+import { Banner, ExamCard, Skeleton } from '../../components';
 
 import { BackButton } from '../../components/BackButton';
 
-const apiUrl = import.meta.env.VITE_API_URL;
-
+/**
+ * Component representing the Exam page.
+ * @returns {JSX.Element} The Exam component structure.
+ */
 function Exam(): JSX.Element {
-  const [exams, setExams] = React.useState([]);
+  const [exams, setExams] = React.useState<any[]>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
+  const navigate = useNavigate();
+
+  /**
+ * Fetches the list of exams from the server and updates the component's state with the fetched data.
+ * Sets the loading state to true before starting the fetch operation and to false upon completion or error.
+ */
   const fetchExams = () => {
-    fetch(`${apiUrl}/exams`)
+    setIsLoading(true);
+    fetch(`${import.meta.env.VITE_API_URL}/exams`)
       .then(response => response.json())
-      .then(data => setExams(data))
-      .catch(error => console.error('Erro ao buscar provas:', error));
+      .then(data => {
+        setExams(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error('Erro ao buscar provas:', error);
+        setIsLoading(false);
+      });
   };
 
+  /**
+ * Invokes `fetchExams` to load the exams when the component mounts.
+ * The empty dependency array ensures this effect runs only once after the initial render.
+ */
   React.useEffect(() => {
     fetchExams();
   }, []);
@@ -29,39 +53,45 @@ function Exam(): JSX.Element {
       <BackButton />
 
       <div className='grid h-full w-full grid-cols-2 gap-4 '>
-        <div className='relative flex w-full flex-col gap-2 overflow-hidden'>
-          {exams.length == 0 ? (
-            <>
-              <span className='w-full'>
-                <Typography variant="h4" className='dark:text-white'>Você ainda não possui provas criadas</Typography>
-              </span>
-            </>
-          ):(
-            <>
-              <span className='w-full'>
-                <Typography variant="h4" className='dark:text-white '>Provas criadas</Typography>
-              </span>
-              <ul className='relative flex h-full w-full animate-fade-in-down flex-col items-start gap-2 overflow-y-scroll'>
-                {
-                  exams.map((exam, index) => (
-                    <>
-                      <ExamCard
-                        key={index}
-                        title={exam.title}
-                        createdAt={exam.createdAt}
-                        updatedAt={exam.updatedAt}
-                        difficulty={exam.difficulty}
-                        id={exam.id}
-                        handleDeleteCompleted={() => fetchExams()}
-                      />
-                    </>
+        <div className='relative flex w-full flex-col gap-2'>
 
-                  ))
-                }
+          {isLoading ? (
+            <>
+              <Typography variant='h4'>Provas criadas</Typography>
+              <section className='flex flex-col gap-2'>
+                <Skeleton />
+                <Skeleton />
+                <Skeleton />
+              </section>
+            </>
+          ) : exams.length === 0 ? (
+            <Card className='mb-4 p-4'>
+              <div>
+                <Typography variant='h5' color='black'>Você ainda não tem provas criadas</Typography>
+              </div>
+
+              <CardFooter>
+                <Button fullWidth color='green' onClick={() => navigate('form')}>Criar prova</Button>
+              </CardFooter>
+            </Card>
+          ) : (
+            <>
+              <Typography variant='h4'>Provas criadas</Typography>
+              <ul className='relative flex h-full w-full animate-fade-in-down flex-col items-start gap-2 overflow-y-scroll'>
+                {exams.map((exam, index) => (
+                  <ExamCard
+                    key={index}
+                    title={exam.title}
+                    createdAt={exam.createdAt}
+                    updatedAt={exam.updatedAt}
+                    difficulty={exam.difficulty}
+                    id={exam.id}
+                    handleDeleteCompleted={fetchExams}
+                  />
+                ))}
               </ul>
             </>
           )}
-
         </div>
         <div className='relative w-full'>
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-1  lg:grid-cols-2'>
@@ -91,6 +121,7 @@ function Exam(): JSX.Element {
                 'Organize questões em categorias temáticas, facilitando a busca e a composição de provas mais eficazes.'
               }
               path='/categories'
+              disabled
             />
             <Banner
               rounded='rounded-lg'
@@ -100,6 +131,7 @@ function Exam(): JSX.Element {
                 'Gerencie processos seletivos, definindo critérios de avaliação e empregando provas para selecionar os melhores candidatos.'
               }
               path='/process'
+              disabled
             />
             <Banner
               rounded='rounded-lg'

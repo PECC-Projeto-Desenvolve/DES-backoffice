@@ -1,26 +1,8 @@
 import React from 'react';
 import '../../../components/init';
-import {
-  Input,
-  Select,
-  Typography,
-  Button,
-  IconButton,
-  Tooltip,
-  Dialog,
-  Option,
-  Chip,
-  Switch,
-  DialogBody,
-  DialogFooter,
-} from '@material-tailwind/react';
+import { Input, Select, Typography, Button, IconButton, Tooltip, Dialog, Option, Chip, Switch, DialogBody, DialogFooter } from '@material-tailwind/react';
 import { useNavigate } from 'react-router-dom';
-import {
-  AlertCircle,
-  EyeIcon,
-  Trash2,
-  UploadCloud
-} from 'lucide-react';
+import { AlertCircle, EyeIcon, Trash2, UploadCloud } from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
 import { BackButton } from '../../../components/BackButton';
@@ -28,30 +10,37 @@ import { BackButton } from '../../../components/BackButton';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+/**
+ * Component for creating and managing a form to create or edit a question.
+ * @returns {JSX.Element} The QuestionForm component.
+ */
 function QuestionForm() {
   const [alternatives, setAlternatives] = React.useState(Array(5).fill(''));
-  const [categories, setCategories] = React.useState([]);
-  const [title, setTitle] = React.useState('');
+  const [categories, setCategories] = React.useState<any[]>([]);
+  const [title, setTitle] = React.useState<string>('');
   const [statement, setStatement] = React.useState<string>('');
-  const [newStatement, setNewStatement] = React.useState<string>('');
-  const [difficulty, setDifficulty] = React.useState('');
-
+  const [difficulty, setDifficulty] = React.useState<string>('');
   const [imageSrc, setImageSrc] = React.useState(null);
-  const fileInputRef = React.useRef(null);
-
-  const [openAlert, setOpenAlert] = React.useState<boolean>(false);
-  const [openErrorAlert, setOpenErrorAlert] = React.useState<boolean>(false);
-  const [customAlertMessage, setCustomAlertMessage] = React.useState<string>('');
   const [selectedCheckbox, setSelectedCheckbox] = React.useState(null);
 
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
-  //   const [isFocused, setIsFocused] = React.useState(false);
-  //   const [isHidden, setIsHidden] = React.useState(false);
+  const fileInputRef = React.useRef(null);
 
-  const [key, setKey] = React.useState(0);
+  const [newStatement, setNewStatement] = React.useState<string>('');
 
-  const [isSwitchActive, setIsSwitchActive] = React.useState(false);
-  const [isStatementActive, setIsStatementActive] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [openAlert, setOpenAlert] = React.useState<boolean>(false);
+  const [openErrorAlert, setOpenErrorAlert] = React.useState<boolean>(false);
+
+  const [customAlertMessage, setCustomAlertMessage] = React.useState<string>('');
+
+  const [isDarkTheme, setIsDarkTheme] = React.useState<boolean>(false);
+
+  const [key, setKey] = React.useState<number>(0);
+
+  const [isSwitchActive, setIsSwitchActive] = React.useState<boolean>(false);
+  const [isStatementActive, setIsStatementActive] = React.useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const modules = {
     toolbar: [
@@ -67,19 +56,27 @@ function QuestionForm() {
     'list', 'bullet',
   ];
 
+  /**
+ * Updates the state with the new statement text from the rich text editor.
+ *
+ * @param {string} value - The updated statement text.
+ */
   const handleTextChange = (value: string) => {
     setStatement(value);
   };
 
+  /**
+ * Updates the state with the new statement text from the expanded window rich text editor.
+ *
+ * @param {string} value - The updated statement text from the expanded window.
+ */
   const handleWindowTextChange = (value: string) => {
     setNewStatement(value);
   };
 
-  React.useEffect(() => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    setIsDarkTheme(darkMode);
-  }, []);
-
+  /**
+ * Fetches the list of question categories from the server and updates the categories state.
+ */
   const fetchCategories = () => {
     fetch(`${import.meta.env.VITE_API_URL}/categories`)
       .then(response => response.json())
@@ -87,8 +84,11 @@ function QuestionForm() {
       .catch(error => console.error('Erro ao buscar categorias:', error));
   };
 
-  const [open, setOpen] = React.useState(false);
-
+  /**
+ * Handles the change event for the checkbox selection of alternatives, allowing for only one selection.
+ *
+ * @param {number} index - The index of the selected checkbox.
+ */
   const handleCheckboxChange = (index) => {
     if (selectedCheckbox === index) {
       setSelectedCheckbox(null);
@@ -97,16 +97,32 @@ function QuestionForm() {
     }
   };
 
+  /**
+ * Toggles the open state of the dialog.
+ */
   const handleOpen = () => setOpen(!open);
 
-  const navigate = useNavigate();
-
+  /**
+ * Updates the alternatives state with changes from input fields.
+ *
+ * @param {number} index - The index of the alternative being changed.
+ * @param {string} value - The new value of the alternative.
+ */
   const handleInputChange = (index, value) => {
     const newAlternatives = [...alternatives];
     newAlternatives[index] = value;
     setAlternatives(newAlternatives);
   };
 
+  /**
+ * Resizes an image file to fit within specified maximum width and height dimensions while maintaining aspect ratio.
+ * The resized image is converted to a data URL and passed to a callback function.
+ *
+ * @param {File} file - The image file to be resized.
+ * @param {number} maxWidth - The maximum allowed width of the image.
+ * @param {number} maxHeight - The maximum allowed height of the image.
+ * @param {Function} callback - A callback function that receives the resized image as a data URL.
+ */
   const resizeImage = (file, maxWidth, maxHeight, callback) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -143,15 +159,26 @@ function QuestionForm() {
     reader.readAsDataURL(file);
   };
 
+  /**
+ * Navigates the user back to the previous page in the browser's history stack.
+ */
   const handleBack = () => {
     navigate(-1);
   };
 
+  /**
+ * Increments the key state to force the re-rendering of a component.
+ * This technique is useful for triggering a component to reinitialize its state or effects.
+ */
   const remountComponent = () => {
     setKey(prevKey => prevKey + 1);
   };
 
-
+  /**
+ * Handles the drop event for uploading an image, resizing the image before setting it to state.
+ *
+ * @param {React.DragEvent} event - The drop event containing the file to be uploaded.
+ */
   const onDrop = React.useCallback((event) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
@@ -168,6 +195,11 @@ function QuestionForm() {
     }
   }, []);
 
+  /**
+ * Handles the file input change for uploading an image, resizing the image before setting it to state.
+ *
+ * @param {React.ChangeEvent<HTMLInputElement>} event - The change event containing the file to be uploaded.
+ */
   const onFileChange = (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -183,18 +215,34 @@ function QuestionForm() {
     }
   };
 
+  /**
+ * Triggers the click event on the hidden file input when the upload area is clicked.
+ */
   const onAreaClick = () => {
     fileInputRef.current.click();
   };
 
+  /**
+ * Clears the current image source from the state.
+ */
   const onDeleteImgSrc = () => {
     setImageSrc(null);
   };
 
+  /**
+ * Updates the title state with the new value from the input field.
+ *
+ * @param {React.ChangeEvent<HTMLInputElement>} event - The change event from the title input field.
+ */
   const handleTitleChange = (event) => {
     setTitle(event);
   };
 
+  /**
+ * Saves the statement from the expanded window editor to the main form state and closes the expanded window.
+ *
+ * @param {string} value - The statement text to save.
+ */
   const handleSaveStatementFromWindow = (value) => {
     setStatement(value);
     setTimeout(() => {
@@ -202,6 +250,9 @@ function QuestionForm() {
     }, 500);
   };
 
+  /**
+ * Validates input fields and submits the question form data to the server.
+ */
   const handleSubmit = async () => {
     if (isSwitchActive) {
       setStatement('');
@@ -267,14 +318,28 @@ function QuestionForm() {
     }
   };
 
+  /**
+ * Toggles the switch state indicating whether the statement should be disabled, and clears the statement if disabled.
+ *
+ * @param {React.ChangeEvent<HTMLInputElement>} event - The change event for the switch.
+ */
   const handleSwitchChange = (event) => {
     setIsSwitchActive(event.target.checked);
+    setStatement('');
   };
 
+  /**
+ * Toggles the visibility of the expanded window for editing the statement in a larger view.
+ */
   const handleOpenStatementWindow = () => {
     setNewStatement(statement);
     setIsStatementActive(!isStatementActive);
   };
+
+  React.useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    setIsDarkTheme(darkMode);
+  }, []);
 
   return (
     <>
@@ -308,166 +373,167 @@ function QuestionForm() {
 
       <BackButton />
 
-      <div className=' relative grid h-[80vh] w-full gap-6 px-2 pb-8 xl:grid-cols-2'>
-        <div className='flex w-full flex-col gap-4'>
-          <Typography variant='h4' className='text-black dark:text-white'>Corpo da questão</Typography>
+      <div className='relative flex h-[80vh] w-full flex-col gap-6 overflow-hidden lg:justify-between'>
+        <div className='flex flex-col gap-6 overflow-y-scroll lg:flex-row'>
+          <div className='flex w-full flex-col gap-4'>
+            <Typography variant='h4' className='text-black dark:text-white'>Corpo da questão</Typography>
 
-          <div className='flex flex-col gap-4'>
-            <Input
-              crossOrigin={''}
-              label="Título"
-              size='lg'
-              onChange={event => handleTitleChange(event.target.value)}
-              value={title}
-              labelProps={{ className: 'dark:text-white text-black' }}
-              color={`${isDarkTheme ? 'white' : 'black'}`}
-              className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
-            />
-
-            <span>
-              <Select
-                disabled
-                label="Categoria"
-                onFocus={() => fetchCategories()}
-                labelProps={{ className: 'dark:text-white text-black' }}
+            <div className='flex flex-col gap-4'>
+              <Input
+                crossOrigin={''}
+                label="Título"
                 size='lg'
+                onChange={event => handleTitleChange(event.target.value)}
+                value={title}
+                labelProps={{ className: 'dark:text-white text-black' }}
+                color={`${isDarkTheme ? 'white' : 'black'}`}
+                className='bg-white/80 text-black dark:bg-blue-gray-200/20 dark:text-white'
+              />
+
+              <span>
+                <Select
+                  disabled
+                  label="Categoria"
+                  onFocus={() => fetchCategories()}
+                  labelProps={{ className: 'dark:text-white text-black' }}
+                  size='lg'
+                  className='bg-white/80 dark:bg-blue-gray-200/20'
+                >
+                  {categories.map((category, index) => (
+                    <Option key={index} value={category.title}>
+                      <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
+                    </Option>
+                  ))}
+                </Select>
+                <Typography variant='small' className='mt-2 flex items-center gap-2 text-blue-gray-800 dark:text-blue-gray-200'>
+                  <AlertCircle size={14}/>
+                Funcionalidade em desenvolvimento
+                </Typography>
+              </span>
+
+
+              <Select
+                label="Dificuldade"
+                size='lg'
+                value={difficulty}
+                onChange={(value) => setDifficulty(value)}
+                labelProps={{ className: 'dark:text-white text-black' }}
                 className='bg-white/80 dark:bg-blue-gray-200/20'
               >
-                {categories.map((category, index) => (
-                  <Option key={index} value={category.title}>
-                    <Chip value={category.title} style={{ backgroundColor: `${category.color}`}} className='w-fit text-white'/>
-                  </Option>
-                ))}
+                <Option value="1" index={1}>
+                  <Chip value="Fácil" className='w-fit' color='green'/>
+                </Option>
+                <Option value="2" index={2}>
+                  <Chip value="Médio" className='w-fit' color='orange'/>
+                </Option>
+                <Option value="3" index={3}>
+                  <Chip value="Difícil" className='w-fit' color='red'/>
+                </Option>
               </Select>
-              <Typography variant='small' className='mt-2 flex items-center gap-2 text-blue-gray-800 dark:text-blue-gray-200'>
-                <AlertCircle size={14}/>
-                Funcionalidade em desenvolvimento
-              </Typography>
-            </span>
-
-
-            <Select
-              label="Dificuldade"
-              size='lg'
-              value={difficulty}
-              onChange={(value) => setDifficulty(value)}
-              labelProps={{ className: 'dark:text-white text-black' }}
-              className='bg-white/80 dark:bg-blue-gray-200/20'
-            >
-              <Option value="1" index={1}>
-                <Chip value="Fácil" className='w-fit' color='green'/>
-              </Option>
-              <Option value="2" index={2}>
-                <Chip value="Médio" className='w-fit' color='orange'/>
-              </Option>
-              <Option value="3" index={3}>
-                <Chip value="Difícil" className='w-fit' color='red'/>
-              </Option>
-            </Select>
-          </div>
-
-          <div>
-            <div className={`h-fit transition-opacity ${!isSwitchActive ? 'opacity-100' : 'opacity-0'} flex flex-col`}>
-              <ReactQuill
-                theme="snow"
-                modules={modules}
-                formats={formats}
-                value={statement}
-                onChange={(value) => handleTextChange(value)}
-                className="my-custom-quill-editor bg-white"
-              />
-
-              <Button
-                size='sm'
-                className='mt-2 bg-blue-gray-200 text-blue-gray-800'
-                onClick={handleOpenStatementWindow}
-              >Ampliar janela de enunciado</Button>
             </div>
 
-            <div className='mt-2'>
-              <Switch
-                className=''
-                crossOrigin={''}
-                color="blue"
-                label={
-                  <div>
-                    <Typography color="blue-gray" className="font-medium">
+            <div>
+              <div className={`h-fit transition-opacity ${!isSwitchActive ? 'opacity-100' : 'opacity-0'} flex flex-col`}>
+                <ReactQuill
+                  theme="snow"
+                  modules={modules}
+                  formats={formats}
+                  value={statement}
+                  onChange={(value) => handleTextChange(value)}
+                  className="my-custom-quill-editor bg-white"
+                />
+
+                <Button
+                  size='sm'
+                  className='mt-2 bg-blue-gray-200 text-blue-gray-800'
+                  onClick={handleOpenStatementWindow}
+                >Ampliar janela de enunciado</Button>
+              </div>
+
+              <div className='mt-2'>
+                <Switch
+                  className=''
+                  crossOrigin={''}
+                  color="blue"
+                  label={
+                    <div>
+                      <Typography className="font-medium text-blue-gray-800 dark:text-blue-gray-100">
             Desabilitar Enunciado
-                    </Typography>
-                    <Typography variant="small" color="gray" className="font-normal">
+                      </Typography>
+                      <Typography variant="small" className="font-normal dark:text-blue-gray-200">
             Caso você esteja usando uma imagem para representar o enunciado, marque esta opção
-                    </Typography>
-                  </div>
-                }
-                containerProps={{
-                  className: '-mt-5',
-                }}
-                checked={isSwitchActive}
-                onChange={handleSwitchChange}
-              />
+                      </Typography>
+                    </div>
+                  }
+                  containerProps={{
+                    className: '-mt-5',
+                  }}
+                  checked={isSwitchActive}
+                  onChange={handleSwitchChange}
+                />
+              </div>
             </div>
-          </div>
-          <>
-            {imageSrc ? (
-              <>
-                <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
-                  <img src={imageSrc} alt="Uploaded" className="max-h-[8rem] rounded" />
+            <>
+              {imageSrc ? (
+                <>
+                  <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
+                    <img src={imageSrc} alt="Uploaded" className="max-h-[8rem] rounded" />
 
-                  <Tooltip content="Excluir imagem">
-                    <IconButton color="red" onClick={onDeleteImgSrc}>
-                      <Trash2 />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-              </>
-            ) : (
-              <>
-                <div
-                  className="cursor-pointer rounded border-2 border-dashed border-black p-4 text-center transition-all dark:border-white"
-                  onClick={onAreaClick}
-                  onDragOver={(event) => event.preventDefault()}
-                  onDrop={onDrop}>
-                  <div className='flex items-center justify-center gap-3'>
-                    <UploadCloud className='text-black dark:text-white'/>
-                    <Typography className='text-black dark:text-white' variant='paragraph'> Arraste e solte a imagem aqui ou clique para selecionar </Typography>
+                    <Tooltip content="Excluir imagem">
+                      <IconButton color="red" onClick={onDeleteImgSrc}>
+                        <Trash2 />
+                      </IconButton>
+                    </Tooltip>
                   </div>
-                  <input
-                    type="file"
-                    onChange={onFileChange}
-                    ref={fileInputRef}
-                    className="hidden"
-                  />
-                </div>
-              </>
-            )}
-          </>
-        </div>
-        <div className='flex w-full flex-col'>
-          <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="cursor-pointer rounded border-2 border-dashed border-black p-4 text-center transition-all dark:border-white"
+                    onClick={onAreaClick}
+                    onDragOver={(event) => event.preventDefault()}
+                    onDrop={onDrop}>
+                    <div className='flex items-center justify-center gap-3'>
+                      <UploadCloud className='text-black dark:text-white'/>
+                      <Typography className='text-black dark:text-white' variant='paragraph'> Arraste e solte a imagem aqui ou clique para selecionar </Typography>
+                    </div>
+                    <input
+                      type="file"
+                      onChange={onFileChange}
+                      ref={fileInputRef}
+                      className="hidden"
+                    />
+                  </div>
+                </>
+              )}
+            </>
+          </div>
+          <div className='flex w-full flex-col'>
+            <Typography variant='h4' className='mb-4 text-black dark:text-white'>Alternativas</Typography>
 
-          <div className='flex flex-col gap-4' key={key}>
-            {alternatives.map((alternative, index) => (
-              <AlternativeInput
-                isDarkTheme={isDarkTheme}
-                key={`alternative-${index}`}
-                label={index}
-                value={alternative.value}
-                onChange={(e) => handleInputChange(index, e.target.value)}
-                checkboxProps={{
-                  checked: selectedCheckbox === index,
-                  onChange: () => handleCheckboxChange(index),
-                  disabled: selectedCheckbox !== null && selectedCheckbox !== index
-                }}
-              />
-            ))}
+            <div className='mb-4 flex flex-col gap-4' key={key}>
+              {alternatives.map((alternative, index) => (
+                <AlternativeInput
+                  isDarkTheme={isDarkTheme}
+                  key={`alternative-${index}`}
+                  label={index}
+                  value={alternative.value}
+                  onChange={(e) => handleInputChange(index, e.target.value)}
+                  checkboxProps={{
+                    checked: selectedCheckbox === index,
+                    onChange: () => handleCheckboxChange(index),
+                    disabled: selectedCheckbox !== null && selectedCheckbox !== index
+                  }}
+                />
+              ))}
+            </div>
+            <div>
+            </div>
 
           </div>
-          <div>
-          </div>
-
         </div>
 
-        <div className='absolute bottom-0 col-span-2 flex h-fit w-full flex-col gap-4 p-4'>
+        <div className='flex h-fit w-full flex-col gap-4 p-4'>
           <Alert
             open={openAlert || openErrorAlert}
             success={openAlert}

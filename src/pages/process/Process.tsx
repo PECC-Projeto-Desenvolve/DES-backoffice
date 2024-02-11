@@ -7,21 +7,21 @@ import { SimulationSelection } from './components/SimulationSelection';
 import { Trash } from 'lucide-react';
 
 function Process() {
-  const [exams, setExams] = React.useState([]);
+  const [exams, setExams] = React.useState<any[]>([]);
 
-  const [selectedExamID, setSelectedExamID] = React.useState('');
+  const [selectedExamID, setSelectedExamID] = React.useState<string>('');
   const [selectedExam, setSelectedExam] = React.useState({
     title: '',
     id: '',
   });
 
-  const [selectedSimulationID, setSelectedSimulationID] = React.useState('');
+  const [selectedSimulationID, setSelectedSimulationID] = React.useState<string>('');
   const [selectedSimulation, setSelectedSimulation] = React.useState({
     title: '',
     id: '',
   });
 
-  const [selectedProcess, setSelectedProcess] = React.useState('');
+  const [selectedProcess, setSelectedProcess] = React.useState<string>('');
 
   const handleFocus = () => {
     if (exams.length === 0) {

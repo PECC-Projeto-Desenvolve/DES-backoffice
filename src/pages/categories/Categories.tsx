@@ -21,27 +21,27 @@ const menuItems = [
 ];
 
 function Categories() {
-  const [categories, setCategories] = React.useState([]);
+  const [categories, setCategories] = React.useState<any[]>([]);
 
-  const [title, setTitle] = React.useState('');
-  const [color, setColor] = React.useState('');
+  const [title, setTitle] = React.useState<string>('');
+  const [color, setColor] = React.useState<string>('');
   const [colorName, setColorName] = React.useState('Nenhum');
 
-  const [openNewNameDialog, setOpenNewNameDialog] = React.useState(false);
+  const [openNewNameDialog, setOpenNewNameDialog] = React.useState<boolean>(false);
 
-  const [categoryIdToEdit, setCategoryIdToEdit] = React.useState('');
-  const [categoryNameToEdit, setCategoryNameToEdit] = React.useState('');
-  const [categoryColorToEdit, setCategoryColorToEdit] = React.useState('');
+  const [categoryIdToEdit, setCategoryIdToEdit] = React.useState<string>('');
+  const [categoryNameToEdit, setCategoryNameToEdit] = React.useState<string>('');
+  const [categoryColorToEdit, setCategoryColorToEdit] = React.useState<string>('');
 
-  const [newCategoryName, setNewCategoryName] = React.useState('');
+  const [newCategoryName, setNewCategoryName] = React.useState<string>('');
 
   const [openAlert, setOpenAlert] = React.useState<boolean>(false);
   const [openErrorAlert, setOpenErrorAlert] = React.useState<boolean>(false);
   const [customAlertMessage, setCustomAlertMessage] = React.useState<string>('');
 
-  const [customSuccesMessage, setCustomSuccesMessage] = React.useState('');
+  const [customSuccesMessage, setCustomSuccesMessage] = React.useState<string>('');
 
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const [isDarkTheme, setIsDarkTheme] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';

@@ -33,7 +33,6 @@ function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }
       <div className="relative flex h-fit w-full">
         <div className=" flex items-center gap-2 rounded-l-md border border-r-0 border-blue-gray-200  bg-blue-gray-500/20 px-4 py-2">
           <Typography className='font-bold text-black dark:text-white'>
-            {/* {Number(label)} */}
             {String.fromCharCode(64 + (Number(label) + 1))}
           </Typography>
         </div>

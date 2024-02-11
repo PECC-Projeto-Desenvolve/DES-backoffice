@@ -4,12 +4,13 @@ interface IIconProps {
 }
 
 /**
- * Renders an SVG icon that changes orientation based on the provided `id` and `open` props.
+ * Renders a `SelectWithFilter` component that allows users to filter through a list of options
+ * in a dropdown by typing in an input field. The component filters options based on the input's
+ * value and updates the list dynamically.
  *
- * @param {object} props - Component props.
- * @param {number} props.id - Unique identifier for the icon.
- * @param {number} props.open - Identifier to determine the icon's orientation.
- * @returns {JSX.Element} An SVG icon which rotates when the `id` matches the `open` value.
+ * @param {SelectWithFilterProps} props - Properties passed to the component.
+ * @param {string[]} props.options - An array of strings representing the selectable options.
+ * @returns {JSX.Element} A component comprising an input field for filtering and a dropdown list of options.
  */
 function Icon({ id, open }: IIconProps) {
   return (

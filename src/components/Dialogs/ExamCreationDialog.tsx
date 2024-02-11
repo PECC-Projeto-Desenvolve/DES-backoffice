@@ -14,7 +14,7 @@ interface ExamCreationDialogProps {
 function ExamCreationDialog({ open, examTitle, setExamTitle, onSubmit, handler }: ExamCreationDialogProps) {
   const navigate = useNavigate();
 
-  const [isDarkTheme, setIsDarkTheme] = React.useState(false);
+  const [isDarkTheme, setIsDarkTheme] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';

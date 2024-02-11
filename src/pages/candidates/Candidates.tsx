@@ -1,23 +1,36 @@
 import React from 'react';
 import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Tooltip, Typography } from '@material-tailwind/react';
-import { AlertTriangle, Eye, FileCheck, RotateCw, Trash } from 'lucide-react';
+import { AlertTriangle, Eye, FileCheck, FileSpreadsheet, MenuSquare, RotateCw, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils';
 
+/**
+ * Renders a Candidates component that displays a list of candidates and their exam details.
+ * Includes functionality to delete a candidate, preview candidate results, and reload the candidate list.
+ * Utilizes Material Tailwind components for UI elements and Lucide icons for visual cues.
+ *
+ * @returns {JSX.Element} A comprehensive view that includes a dialog for deleting candidates,
+ * a button to go back, and dynamic content showing the total number of exams and candidate details.
+ */
 function Candidates() {
   const navigate = useNavigate();
-  const [candidates, setCandidates] = React.useState([]);
-  const [candidateToDelete, setCandidatesToDelete] = React.useState('');
-  const [candidateNameToDelete, setCandidatesNameToDelete] = React.useState('');
-  const [candidateDocToDelete, setCandidatesDocToDelete] = React.useState('');
-  const [openDelete, setOpenDelete] = React.useState(false);
+  const [candidates, setCandidates] = React.useState<any[]>([]);
+  const [candidateToDelete, setCandidatesToDelete] = React.useState<string>('');
+  const [candidateNameToDelete, setCandidatesNameToDelete] = React.useState<string>('');
+  const [candidateDocToDelete, setCandidatesDocToDelete] = React.useState<string>('');
+  const [openDelete, setOpenDelete] = React.useState<boolean>(false);
 
-  const [tokenDelete, setTokenDelete] = React.useState('');
+  const [tokenDelete, setTokenDelete] = React.useState<string>('');
 
-  const [reload, setReload] = React.useState(false);
+  const [reload, setReload] = React.useState<boolean>(false);
 
+  /**
+ * Fetches the list of candidates and their exam details from the server.
+ * Updates the component's state with the fetched data to display the list of candidates.
+ */
   const fetchCandidates = () => {
+    // Fetch request to the server and state update with the response data.
     fetch(`${import.meta.env.VITE_API_URL}/userexams`)
       .then(response => response.json())
       .then(data => {
@@ -26,6 +39,10 @@ function Candidates() {
       .catch((error) => console.error('Error:', error));
   };
 
+  /**
+ * Toggles the reload state to initiate the fetching of candidates data again.
+ * It calls `fetchCandidates` to refresh the list of candidates and resets the reload state afterwards.
+ */
   const handleReload = () => {
     setReload(!reload);
 
@@ -36,15 +53,30 @@ function Candidates() {
     }
   };
 
+  /**
+ * Navigates to the detail view of a specific candidate identified by their unique ID.
+ *
+ * @param {string} param - The unique identifier for the candidate.
+ */
   const handlePreview = (param: string) => {
     navigate(`/candidate/${param}`);
   };
 
+  /**
+ * Toggles the visibility of the delete confirmation dialog and resets the deletion token input field.
+ */
   const handleOpenDelete = () => {
     setOpenDelete(!openDelete);
     setTokenDelete('');
   };
 
+  /**
+ * Asynchronously sends a request to delete a candidate by their unique identifier.
+ * Upon successful deletion, it closes the delete confirmation dialog, clears the candidate to delete state,
+ * and refreshes the list of candidates after a brief delay.
+ *
+ * @param {string} id - The unique identifier of the candidate to be deleted.
+ */
   const handleConfirmCandidateDelete = async (id: string) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams/${id}`, {
@@ -133,21 +165,13 @@ function Candidates() {
 
       <BackButton/>
       <span className='flex w-full items-center justify-between'>
-        <Typography variant='h4'>Candidatos</Typography>
+        <Typography variant='h4' className='dark:text-white'>Candidatos</Typography>
 
-        <Button
-          color='green'
-          className='flex items-center justify-center gap-4 transition-all'
-          onClick={handleReload}
-          disabled={reload}
-        >
-          {!reload ? <RotateCw size={20} className=""/> : <RotateCw size={20} className="animate-spin"/> }
-          {!reload && 'Atualizar lista' }
-        </Button>
+
       </span>
 
       <div className='h-[3rem] w-full'>
-        <Typography variant='h5'>Lista de candidatos referentes ao processo</Typography>
+        <Typography variant='h5' className='dark:text-white'>Lista de candidatos referentes ao processo</Typography>
       </div>
 
       <div className='mb-2 grid min-h-[5rem] w-full grid-cols-4 gap-4'>
@@ -164,57 +188,100 @@ function Candidates() {
           </div>
         </Card>
 
+        <Card className='h-full w-full p-4'>
+
+        </Card>
+        <Card className='h-full w-full p-4'>
+
+        </Card>
+        <Card className='h-full w-full p-4'>
+
+        </Card>
+
       </div>
 
-      <Card className="h-full w-full overflow-scroll">
-        <table className=" table-auto border-collapse border border-gray-300">
-          <thead className="bg-blue-gray-50">
-            <tr>
-              <th className="border border-gray-300 p-2">Candidato</th>
-              <th className="border border-gray-300 p-2">CPF</th>
-              <th className="border border-gray-300 p-2">Data e hora da Prova</th>
-              <th className="border border-gray-300 p-2">Qtd. Questões</th>
-              <th className="border border-gray-300 p-2">Status</th>
-              <th className="border border-gray-300 p-2">Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {candidates.map((candidate, index) => (
-              <tr key={index} className="even:bg-blue-gray-50/50">
-                <td className="border border-gray-300 p-2 text-center">{candidate.name}</td>
-                <td className="border border-gray-300 p-2 text-center">{candidate.document}</td>
-                <td className="border border-gray-300 p-2 text-center">{formatDate(candidate.createdAt)}</td>
-                <td className="border border-gray-300 p-2 text-center">###</td>
-                <td className="border border-gray-300 p-2 text-center">#####</td>
-                <td className="flex items-center justify-center gap-2 border border-gray-300 p-2">
-                  <Tooltip content='Excluir candidato'>
-                    <IconButton
-                      color='red'
-                      onClick={() => {
-                        setCandidatesToDelete(candidate.id);
-                        setCandidatesNameToDelete(candidate.name);
-                        setCandidatesDocToDelete(candidate.document);
-                        handleOpenDelete();
-                      }}
-                    >
-                      <Trash />
-                    </IconButton>
-                  </Tooltip>
-                  {/*  */}
-                  <Tooltip content='Ver resultado'>
-                    <IconButton
-                      color='blue'
-                      onClick={() => handlePreview(candidate.id)}
-                    >
-                      <Eye />
-                    </IconButton>
-                  </Tooltip>
-                </td>
+      <div className=' flex flex-col items-end'>
+        <span className='flex gap-4'>
+          <Button
+            color='blue-gray'
+            className='flex items-center justify-center gap-4 rounded-b-none transition-all'
+            onClick={handleReload}
+            disabled
+          >
+            <MenuSquare size={20}/>
+            Ação em massa
+          </Button>
+          {/*  */}
+          <Button
+            color='blue'
+            className='flex items-center justify-center gap-4 rounded-b-none transition-all'
+            onClick={handleReload}
+            disabled
+          >
+            <FileSpreadsheet size={20}/>
+            Baixar CSV
+          </Button>
+          {/*  */}
+          <Button
+            color='green'
+            className='flex items-center justify-center gap-4 rounded-b-none transition-all'
+            onClick={handleReload}
+            disabled={reload}
+          >
+            {!reload ? <RotateCw size={20} className=""/> : <RotateCw size={20} className="animate-spin"/> }
+            {!reload && 'Atualizar lista' }
+          </Button>
+        </span>
+        <Card className="h-full w-full overflow-scroll rounded-r-none">
+          <table className=" table-auto border-collapse border border-gray-300">
+            <thead className="bg-blue-gray-50">
+              <tr>
+                <th className="border border-gray-300 p-2">Candidato</th>
+                <th className="border border-gray-300 p-2">CPF</th>
+                <th className="border border-gray-300 p-2">Data e hora da Prova</th>
+                <th className="border border-gray-300 p-2">Qtd. Questões</th>
+                <th className="border border-gray-300 p-2">Status</th>
+                <th className="border border-gray-300 p-2">Ações</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+            </thead>
+            <tbody>
+              {candidates.map((candidate, index) => (
+                <tr key={index} className="even:bg-blue-gray-50/50">
+                  <td className="border border-gray-300 p-2 text-center">{candidate.name}</td>
+                  <td className="border border-gray-300 p-2 text-center">{candidate.document}</td>
+                  <td className="border border-gray-300 p-2 text-center">{formatDate(candidate.createdAt)}</td>
+                  <td className="border border-gray-300 p-2 text-center">###</td>
+                  <td className="border border-gray-300 p-2 text-center">#####</td>
+                  <td className="flex items-center justify-center gap-2 border border-gray-300 p-2">
+                    <Tooltip content='Excluir candidato'>
+                      <IconButton
+                        color='red'
+                        onClick={() => {
+                          setCandidatesToDelete(candidate.id);
+                          setCandidatesNameToDelete(candidate.name);
+                          setCandidatesDocToDelete(candidate.document);
+                          handleOpenDelete();
+                        }}
+                      >
+                        <Trash />
+                      </IconButton>
+                    </Tooltip>
+                    {/*  */}
+                    <Tooltip content='Ver resultado'>
+                      <IconButton
+                        color='blue'
+                        onClick={() => handlePreview(candidate.id)}
+                      >
+                        <Eye />
+                      </IconButton>
+                    </Tooltip>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      </div>
     </>
   );
 }
