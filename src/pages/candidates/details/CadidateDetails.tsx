@@ -1,5 +1,5 @@
 import { Button, Card, Chip, IconButton, Tooltip, Typography } from '@material-tailwind/react';
-import { Eye, Table } from 'lucide-react';
+import { Eye, Table, UserCheck } from 'lucide-react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { BackButton } from '../../../components/BackButton';
@@ -7,6 +7,7 @@ import QuestionPreviewDialogWithFetch from '../../../components/Dialogs/Question
 import { decryptRightAnswer, formatDate, stringResizer } from '../../../utils';
 
 import { CSVLink } from 'react-csv';
+import Swal from 'sweetalert2';
 
 /**
  * Displays detailed information about a candidate's exam attempt, including their answers, question details,
@@ -22,9 +23,11 @@ function CadidateDetails() {
     document: '',
     createdAt: '',
   });
+  //   const [candidateId, setCandidateId] = React.useState<string>('');
   const [userQuestions, setUserQuestions] = React.useState<any[]>([]);
   const [questionToPreview, setQuestionToPreview] = React.useState(null);
   const [openQuestionPreview, setOpenQuestionPreview] = React.useState<boolean>(false);
+  const [correctAnswersCount, setCorrectAnswersCount] = React.useState<number>(0);
   const { id } = useParams();
 
   /**
@@ -78,14 +81,21 @@ function CadidateDetails() {
         const questionsDetails = await Promise.all(
           data.questions.map((q) => fetchQuestionDetails(q.questionId))
         );
-        setUserQuestions(data.questions.map((q, index) => ({
+
+        const updatedQuestions = data.questions.map((q, index) => ({
           ...q,
           statement: questionsDetails[index] ? questionsDetails[index].statement : 'Detalhe indisponível',
           title: questionsDetails[index] ? questionsDetails[index].title : 'Título indisponível',
           image: questionsDetails[index] ? questionsDetails[index].image : 'Imagem indisponível',
           rightAnswer: questionsDetails[index] ? questionsDetails[index].rightAnswer : 'Resposta indisponível',
           difficulty: questionsDetails[index] ? questionsDetails[index].difficulty : 'Dificuldade indisponível'
-        })));
+        }));
+
+        setUserQuestions(updatedQuestions);
+
+        const correctAnswers = updatedQuestions.reduce((acc, question) => acc + (handleResult(question.position, question.rightAnswer) === '✅' ? 1 : 0), 0);
+
+        setCorrectAnswersCount(correctAnswers);
       } else {
         console.error('Resposta da API não contém "questions"');
       }
@@ -144,6 +154,96 @@ function CadidateDetails() {
     Resultado: handleResult(item.posiiton, item.rightAnswer)
   }));
 
+  const syncCandidate = async (candidateDocument: string) => {
+    try {
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': `${import.meta.env.VITE_API_KEY}`
+        }
+      };
+
+      const response = await fetch(`${import.meta.env.VITE_DES_API_URL}/form/cpf/${candidateDocument}`, options);
+      if (!response.ok) {
+        throw new Error('Erro na requisição');
+      }
+      const data = await response.json();
+
+      const patchOptions = {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': `${import.meta.env.VITE_API_KEY}`
+        },
+        body: JSON.stringify({ score: correctAnswersCount })
+      };
+
+      const patchResponse = await fetch(`${import.meta.env.VITE_DES_API_URL}/form/${data.id}/prova`, patchOptions);
+
+      if (!patchResponse.ok) {
+        throw new Error('Erro na atualização do score do candidato');
+      }
+
+    } catch (error) {
+      console.error('Erro ao buscar dados:', error);
+    }
+  };
+
+  const handleSyncScore = async () => {
+    if (!id) {
+      console.error('ID do candidato não disponível');
+      return;
+    }
+
+    syncCandidate(candidate.document);
+
+    try {
+      const patchOptions = {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newScore: correctAnswersCount })
+      };
+
+      const response = await fetch(`http://localhost:3000/userexams/${id}/score`, patchOptions);
+
+      if (!response.ok) {
+        throw new Error('Erro na atualização do score do candidato');
+      }
+
+      console.log('Score do candidato atualizado com sucesso.');
+
+    } catch (error) {
+      console.error('Erro ao sincronizar o score:', error);
+    } finally {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        }
+      });
+      Toast.fire({
+        icon: 'success',
+        title: 'Sincronização realizada com sucesso!',
+        text: `O resultado do candidato ${candidate.name} foram atualizados com sucesso!`,
+      });
+    }
+  };
+
+  const handleSync = () => {
+    if (!candidate.document) {
+      return;
+    }
+
+    handleSyncScore();
+  };
 
   return (
     <>
@@ -157,18 +257,52 @@ function CadidateDetails() {
 
       <div className='h-full w-full'>
         <div className='flex w-full items-end justify-between'>
-          <span className='mb-6'>
+          <span className='mb-4 w-full'>
             <Typography variant='small' className='dark:text-white'>Candidato</Typography>
-            {candidate.name && <Typography variant='h4' className='dark:text-white'>{candidate.name}</Typography>}
+
+            <div className='flex items-center gap-4'>
+              {candidate.name && <Typography variant='h4' className='dark:text-white'>{candidate.name}</Typography>}
+              <Chip
+                color='blue'
+                value={
+                  <span className='flex items-center gap-2'>
+                    <Typography
+                      variant="small"
+                      color="white"
+                      className="font-medium capitalize leading-none"
+                    >
+                    Total de acertos: {' '}
+                    </Typography>
+                    <Typography variant='small'>{correctAnswersCount} /</Typography>
+                    <Typography variant='small'>{userQuestions.length}</Typography>
+                  </span>
+                }
+              />
+            </div>
+
             {candidate.createdAt && <Typography variant='paragraph' className='dark:text-white'>{formatDate(candidate.createdAt)}</Typography>}
+
+            <div className='mt-2 w-full rounded-md bg-blue-200/40 px-4 py-2 shadow-sm'>
+              <Typography className='font-bold text-blue-gray-900 dark:text-white'>O botão de sincronizar serve para sincronizar a nota do candidato para caso a nota não esteja no banco de dados principal. Evite cliques ecessivos.</Typography>
+            </div>
           </span>
+        </div>
+        <div className='flex w-full items-end justify-end'>
+          <Button
+            className='mr-3 flex items-center gap-4 whitespace-nowrap rounded-bl-none rounded-br-none'
+            color='light-green'
+            onClick={handleSync}
+          >
+            Sincronizar
+            <UserCheck size={20} />
+          </Button>
 
           <CSVLink
             data={csvData}
             filename={'dados-candidato.csv'}
             target="_blank"
           >
-            <Button className='flex items-center gap-4 rounded-bl-none rounded-br-none' color='cyan'>Exportar CSV <Table size={20} /></Button>
+            <Button className='flex items-center gap-4 whitespace-nowrap rounded-bl-none rounded-br-none' color='cyan'>Exportar CSV <Table size={20} /></Button>
           </CSVLink>
         </div>
         <Card className='overflow-hidden rounded-tr-none'>

@@ -16,9 +16,11 @@ import { formatDate } from '../../utils';
 function Candidates() {
   const navigate = useNavigate();
   const [candidates, setCandidates] = React.useState<any[]>([]);
+
   const [candidateToDelete, setCandidatesToDelete] = React.useState<string>('');
   const [candidateNameToDelete, setCandidatesNameToDelete] = React.useState<string>('');
   const [candidateDocToDelete, setCandidatesDocToDelete] = React.useState<string>('');
+
   const [openDelete, setOpenDelete] = React.useState<boolean>(false);
 
   const [tokenDelete, setTokenDelete] = React.useState<string>('');
@@ -30,7 +32,6 @@ function Candidates() {
  * Updates the component's state with the fetched data to display the list of candidates.
  */
   const fetchCandidates = () => {
-    // Fetch request to the server and state update with the response data.
     fetch(`${import.meta.env.VITE_API_URL}/userexams`)
       .then(response => response.json())
       .then(data => {
@@ -39,6 +40,44 @@ function Candidates() {
       .catch((error) => console.error('Error:', error));
   };
 
+  //     try {
+  //       const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams`);
+  //       if (!response.ok) {
+  //         throw new Error('Erro ao buscar candidatos');
+  //       }
+  //       const candidatesData = await response.json();
+
+  //       const scorePromises = candidatesData.map(async (candidate) => {
+  //         try {
+  //           const cpfResponse = await fetch(`http://a81810609ea6e4d2d92049c3603105d0-2068008776.us-east-1.elb.amazonaws.com/form/cpf/${candidate.document}`, {
+  //             method: 'GET',
+  //             headers: {
+  //               'Content-Type': 'application/json',
+  //               'api-key': `${import.meta.env.VITE_API_KEY}`,
+  //             },
+  //           });
+
+  //           if (!cpfResponse.ok) {
+  //             throw new Error('Erro ao buscar dados do candidato');
+  //           }
+  //           const cpfData = await cpfResponse.json();
+
+  //           const score = cpfData.score ? cpfData.score : null;
+
+  //           return { ...candidate, score };
+  //         } catch (error) {
+  //           console.error('Erro ao buscar score do candidato:', error);
+  //           return { ...candidate, score: null };
+  //         }
+  //       });
+
+  //       const updatedCandidates = await Promise.all(scorePromises);
+
+  //       setCandidates(updatedCandidates);
+  //     } catch (error) {
+  //       console.error('Erro geral:', error);
+  //     }
+  //   };
   /**
  * Toggles the reload state to initiate the fetching of candidates data again.
  * It calls `fetchCandidates` to refresh the list of candidates and resets the reload state afterwards.
@@ -103,6 +142,14 @@ function Candidates() {
   React.useEffect(() => {
     fetchCandidates();
   }, []);
+
+  const sortedCandidates = [...candidates].sort((a, b) => {
+
+    const dateA = new Date(a.createdAt).getTime();
+    const dateB = new Date(b.createdAt).getTime();
+
+    return dateA - dateB;
+  });
 
   return (
     <>
@@ -245,12 +292,12 @@ function Candidates() {
               </tr>
             </thead>
             <tbody>
-              {candidates.map((candidate, index) => (
+              {sortedCandidates.map((candidate, index) => (
                 <tr key={index} className="even:bg-blue-gray-50/50">
                   <td className="border border-gray-300 p-2 text-center">{candidate.name}</td>
                   <td className="border border-gray-300 p-2 text-center">{candidate.document}</td>
                   <td className="border border-gray-300 p-2 text-center">{formatDate(candidate.createdAt)}</td>
-                  <td className="border border-gray-300 p-2 text-center">###</td>
+                  <td className="border border-gray-300 p-2 text-center"><strong>{candidate.score == null ? '###' : candidate.score}</strong> / 40</td>
                   <td className="border border-gray-300 p-2 text-center">#####</td>
                   <td className="flex items-center justify-center gap-2 border border-gray-300 p-2">
                     <Tooltip content='Excluir candidato'>
