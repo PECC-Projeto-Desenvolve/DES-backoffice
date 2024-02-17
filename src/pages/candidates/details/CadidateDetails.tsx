@@ -210,30 +210,50 @@ function CadidateDetails() {
       const response = await fetch(`http://localhost:3000/userexams/${id}/score`, patchOptions);
 
       if (!response.ok) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: 'error',
+          title: 'Falha ao realizar sincronização!',
+          text: 'Erro na atualização do score do candidato',
+        });
+
         throw new Error('Erro na atualização do score do candidato');
+
+      }
+
+      if (response.ok) {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          }
+        });
+        Toast.fire({
+          icon: 'success',
+          title: 'Sincronização realizada com sucesso!',
+          text: `O resultado do candidato ${candidate.name} foram atualizados com sucesso!`,
+        });
       }
 
       console.log('Score do candidato atualizado com sucesso.');
 
     } catch (error) {
       console.error('Erro ao sincronizar o score:', error);
-    } finally {
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        }
-      });
-      Toast.fire({
-        icon: 'success',
-        title: 'Sincronização realizada com sucesso!',
-        text: `O resultado do candidato ${candidate.name} foram atualizados com sucesso!`,
-      });
     }
   };
 
