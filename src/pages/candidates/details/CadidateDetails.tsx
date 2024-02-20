@@ -203,11 +203,12 @@ function CadidateDetails() {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'api-key': `${import.meta.env.VITE_API_KEY}`
         },
         body: JSON.stringify({ newScore: correctAnswersCount })
       };
 
-      const response = await fetch(`http://localhost:3000/userexams/${id}/score`, patchOptions);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams/${id}/score`, patchOptions);
 
       if (!response.ok) {
         const Toast = Swal.mixin({
