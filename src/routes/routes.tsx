@@ -17,6 +17,8 @@ import Login from '../pages/login/Login';
 import RedirectComponent from '../components/RedirectComponent';
 import { Home } from '../pages/home/home';
 import { Exam } from '../pages/exam/Exam';
+import NewCandidates from '../pages/candidates/NewCandidates';
+import Tag from '../pages/tag/Tag';
 
 function AppRoutes(): JSX.Element {
   const location = useLocation();
@@ -72,7 +74,10 @@ function AppRoutes(): JSX.Element {
             <Route path='/exam' element={<PrivateRoute><Exam /></PrivateRoute>} />
             <Route path='/process' element={<PrivateRoute><Process /></PrivateRoute>} />
             <Route path='/candidates' element={<PrivateRoute><Candidates /></PrivateRoute>} />
+            <Route path='/new-candidates' element={<PrivateRoute><NewCandidates /></PrivateRoute>} />
             <Route path='/candidate/:id' element={<PrivateRoute><CadidateDetails /></PrivateRoute>} />
+
+            <Route path='/tag' element={<PrivateRoute><Tag /></PrivateRoute>} />
           </Routes>
         </div>
       )}

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Tooltip, Typography } from '@material-tailwind/react';
-import { AlertTriangle, Eye, FileCheck, FileSpreadsheet, MenuSquare, RotateCw, Trash } from 'lucide-react';
+import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Option, Select, Tooltip, Typography } from '@material-tailwind/react';
+import { AlertTriangle, ArrowUp, Eye, FileCheck, FileSpreadsheet, MenuSquare, RotateCw, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils';
@@ -40,7 +40,6 @@ function Candidates() {
       .catch((error) => console.error('Error:', error));
   };
 
-  //     try {
   //       const response = await fetch(`${import.meta.env.VITE_API_URL}/userexams`);
   //       if (!response.ok) {
   //         throw new Error('Erro ao buscar candidatos');
@@ -213,8 +212,6 @@ function Candidates() {
       <BackButton/>
       <span className='flex w-full items-center justify-between'>
         <Typography variant='h4' className='dark:text-white'>Candidatos</Typography>
-
-
       </span>
 
       <div className='h-[3rem] w-full'>
@@ -246,6 +243,25 @@ function Candidates() {
         </Card>
 
       </div>
+
+      <Card className='flex w-full px-2 py-4'>
+        <div className='flex gap-2'>
+          <Input crossOrigin={undefined} label='Buscar por nome' className='' disabled/>
+          <Select label='Buscar por município' className='' disabled>
+            <Option>Natal</Option>
+          </Select>
+          {/* <span className='w-[10rem]'> */}
+          <Input
+            crossOrigin={undefined}
+            label='Data de prova'
+            className='w-full'
+            type='date'
+            disabled
+          />
+          {/* </span> */}
+          <Button disabled className='flex items-center gap-2 whitespace-nowrap' size='sm' color='orange'>Ordernar pontuação: Crescente <ArrowUp size={18}/> </Button>
+        </div>
+      </Card>
 
       <div className=' flex flex-col items-end'>
         <span className='flex gap-4'>
@@ -300,6 +316,17 @@ function Candidates() {
                   <td className="border border-gray-300 p-2 text-center"><strong>{candidate.score == null ? '###' : candidate.score}</strong> / 40</td>
                   <td className="border border-gray-300 p-2 text-center">#####</td>
                   <td className="flex items-center justify-center gap-2 border border-gray-300 p-2">
+
+                    {/*  */}
+                    <Tooltip content='Ver resultado'>
+                      <IconButton
+                        color='blue'
+                        onClick={() => handlePreview(candidate.id)}
+                      >
+                        <Eye />
+                      </IconButton>
+                    </Tooltip>
+                    {/*  */}
                     <Tooltip content='Excluir candidato'>
                       <IconButton
                         color='red'
@@ -311,15 +338,6 @@ function Candidates() {
                         }}
                       >
                         <Trash />
-                      </IconButton>
-                    </Tooltip>
-                    {/*  */}
-                    <Tooltip content='Ver resultado'>
-                      <IconButton
-                        color='blue'
-                        onClick={() => handlePreview(candidate.id)}
-                      >
-                        <Eye />
                       </IconButton>
                     </Tooltip>
                   </td>

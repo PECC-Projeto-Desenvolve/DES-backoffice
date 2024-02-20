@@ -298,6 +298,14 @@ function CadidateDetails() {
                   </span>
                 }
               />
+
+              {/* <Tooltip content={'Nota do candidato sincronizada'}>
+                <Chip color='light-green'
+                  value={
+                    <BadgeCheck />
+                  }
+                />
+              </Tooltip> */}
             </div>
 
             {candidate.createdAt && <Typography variant='paragraph' className='dark:text-white'>{formatDate(candidate.createdAt)}</Typography>}
