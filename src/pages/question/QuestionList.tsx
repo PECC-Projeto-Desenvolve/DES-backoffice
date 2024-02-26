@@ -312,7 +312,10 @@ function QuestionList() {
             <>
               <div className={`flex items-center rounded border border-l-8 bg-white p-2 dark:bg-white/30 ${difficultyColorMap[question.difficulty]}`} key={index} >
                 <span className='ml-2 flex w-full flex-col'>
-                  <Typography variant='h6' className='dark:text-white'>{question.title}</Typography>
+                  <span className='flex items-center gap-2'>
+                    <Typography variant='h6' className='dark:text-white'>{question.title}</Typography>
+                    <Typography variant='small' className='dark:text-white'>id: {question.id}</Typography>
+                  </span>
 
                   <div  dangerouslySetInnerHTML={{ __html: stringResizer(question.statement, 50) }} className="dark:text-white"/>
 

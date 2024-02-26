@@ -28,6 +28,9 @@ function CadidateDetails() {
   const [questionToPreview, setQuestionToPreview] = React.useState(null);
   const [openQuestionPreview, setOpenQuestionPreview] = React.useState<boolean>(false);
   const [correctAnswersCount, setCorrectAnswersCount] = React.useState<number>(0);
+
+  const questionsToCancel = [32,36,56];
+
   const { id } = useParams();
 
   /**
@@ -93,7 +96,16 @@ function CadidateDetails() {
 
         setUserQuestions(updatedQuestions);
 
-        const correctAnswers = updatedQuestions.reduce((acc, question) => acc + (handleResult(question.position, question.rightAnswer) === '✅' ? 1 : 0), 0);
+        // const correctAnswers = updatedQuestions.reduce((acc, question) => acc + (handleResult(question.position, question.rightAnswer) === '✅' ? 1 : 0), 0);
+        const correctAnswers = updatedQuestions.reduce((acc, question) => {
+          const isCorrect = handleResult(question.position, question.rightAnswer) === '✅';
+          const shouldCancel = questionsToCancel.includes(question.questionId);
+          if (isCorrect || (shouldCancel && !isCorrect)) {
+            return acc + 1;
+          } else {
+            return acc;
+          }
+        }, 0);
 
         setCorrectAnswersCount(correctAnswers);
       } else {
