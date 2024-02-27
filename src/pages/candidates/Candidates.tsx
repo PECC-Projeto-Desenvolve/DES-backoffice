@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Card, Dialog, DialogBody, DialogFooter, DialogHeader, IconButton, Input, Option, Select, Tooltip, Typography } from '@material-tailwind/react';
 import { AlertTriangle, ArrowUp, Eye, FileCheck, FileSpreadsheet, MenuSquare, RotateCw, Trash } from 'lucide-react';
 import { BackButton } from '../../components/BackButton';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils';
 
 /**
@@ -14,7 +14,7 @@ import { formatDate } from '../../utils';
  * a button to go back, and dynamic content showing the total number of exams and candidate details.
  */
 function Candidates() {
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
   const [candidates, setCandidates] = React.useState<any[]>([]);
 
   const [candidateToDelete, setCandidatesToDelete] = React.useState<string>('');
@@ -96,9 +96,9 @@ function Candidates() {
  *
  * @param {string} param - The unique identifier for the candidate.
  */
-  const handlePreview = (param: string) => {
-    navigate(`/candidate/${param}`);
-  };
+  //   const handlePreview = (param: string) => {
+  //     navigate(`/candidate/${param}`);
+  //   };
 
   /**
  * Toggles the visibility of the delete confirmation dialog and resets the deletion token input field.
@@ -319,12 +319,14 @@ function Candidates() {
 
                     {/*  */}
                     <Tooltip content='Ver resultado'>
-                      <IconButton
-                        color='blue'
-                        onClick={() => handlePreview(candidate.id)}
+                      <a
+                        target={'_blank'}
+                        href={`/candidate/${candidate.id}`}
+                        // color='blue'
+                        rel="noreferrer"
                       >
                         <Eye />
-                      </IconButton>
+                      </a>
                     </Tooltip>
                     {/*  */}
                     <Tooltip content='Excluir candidato'>
