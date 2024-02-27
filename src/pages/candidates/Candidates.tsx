@@ -4,6 +4,7 @@ import { AlertTriangle, ArrowUp, Eye, FileCheck, FileSpreadsheet, MenuSquare, Ro
 import { BackButton } from '../../components/BackButton';
 // import { useNavigate } from 'react-router-dom';
 import { formatDate } from '../../utils';
+import { maskNumbers } from '../../utils/maskNumbers';
 
 /**
  * Renders a Candidates component that displays a list of candidates and their exam details.
@@ -26,6 +27,12 @@ function Candidates() {
   const [tokenDelete, setTokenDelete] = React.useState<string>('');
 
   const [reload, setReload] = React.useState<boolean>(false);
+
+  const [sortDirection, setSortDirection] = React.useState<'ascending' | 'descending'>('ascending');
+
+  const toggleSortDirection = () => {
+    setSortDirection(prevDirection => prevDirection === 'ascending' ? 'descending' : 'ascending');
+  };
 
   /**
  * Fetches the list of candidates and their exam details from the server.
@@ -142,13 +149,22 @@ function Candidates() {
     fetchCandidates();
   }, []);
 
-  const sortedCandidates = [...candidates].sort((a, b) => {
+  //   const sortedCandidates = [...candidates].sort((a, b) => {
 
-    const dateA = new Date(a.createdAt).getTime();
-    const dateB = new Date(b.createdAt).getTime();
+  //     const dateA = new Date(a.createdAt).getTime();
+  //     const dateB = new Date(b.createdAt).getTime();
 
-    return dateA - dateB;
-  });
+  //     return dateA - dateB;
+  //   });
+
+  const sortedCandidates = React.useMemo(() => {
+    return [...candidates].sort((a, b) => {
+      // Substitua 'score' por 'createdAt' ou outro campo se 'score' não for direto do candidato
+      const scoreA = a.score ?? 0; // Certifique-se de que 'score' é numérico
+      const scoreB = b.score ?? 0;
+      return sortDirection === 'ascending' ? scoreA - scoreB : scoreB - scoreA;
+    });
+  }, [candidates, sortDirection]);
 
   return (
     <>
@@ -210,6 +226,7 @@ function Candidates() {
       </Dialog>
 
       <BackButton/>
+
       <span className='flex w-full items-center justify-between'>
         <Typography variant='h4' className='dark:text-white'>Candidatos</Typography>
       </span>
@@ -245,7 +262,7 @@ function Candidates() {
       </div>
 
       <Card className='flex w-full px-2 py-4'>
-        <div className='flex gap-2'>
+        <div className='grid grid-cols-4 gap-2'>
           <Input crossOrigin={undefined} label='Buscar por nome' className='' disabled/>
           <Select label='Buscar por município' className='' disabled>
             <Option>Natal</Option>
@@ -259,7 +276,14 @@ function Candidates() {
             disabled
           />
           {/* </span> */}
-          <Button disabled className='flex items-center gap-2 whitespace-nowrap' size='sm' color='orange'>Ordernar pontuação: Crescente <ArrowUp size={18}/> </Button>
+          <Button
+            onClick={toggleSortDirection}
+            className='flex items-center gap-2 whitespace-nowrap'
+            size='sm'
+            color='orange'
+          >
+            Ordenar pontuação: {sortDirection === 'ascending' ? 'Crescente' : 'Decrescente'}
+            <ArrowUp size={18} className={`${sortDirection === 'descending' ? 'rotate-180' : ''} `}/> </Button>
         </div>
       </Card>
 
@@ -311,7 +335,7 @@ function Candidates() {
               {sortedCandidates.map((candidate, index) => (
                 <tr key={index} className="even:bg-blue-gray-50/50">
                   <td className="border border-gray-300 p-2 text-center">{candidate.name}</td>
-                  <td className="border border-gray-300 p-2 text-center">{candidate.document}</td>
+                  <td className="border border-gray-300 p-2 text-center">{maskNumbers(candidate.document)}</td>
                   <td className="border border-gray-300 p-2 text-center">{formatDate(candidate.createdAt)}</td>
                   <td className="border border-gray-300 p-2 text-center"><strong>{candidate.score == null ? '###' : candidate.score}</strong> / 40</td>
                   <td className="border border-gray-300 p-2 text-center">#####</td>
@@ -320,9 +344,8 @@ function Candidates() {
                     {/*  */}
                     <Tooltip content='Ver resultado'>
                       <a
-                        target={'_blank'}
+                        className='rounded-lg bg-blue-600 p-2 text-white'
                         href={`/candidate/${candidate.id}`}
-                        // color='blue'
                         rel="noreferrer"
                       >
                         <Eye />
