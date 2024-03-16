@@ -1,14 +1,17 @@
 import React from 'react';
 import '../../../components/init';
 import { Input, Select, Typography, Button, IconButton, Tooltip, Dialog, Option, Chip, Switch, DialogBody, DialogFooter } from '@material-tailwind/react';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
-import { AlertCircle, EyeIcon, Trash2, UploadCloud } from 'lucide-react';
+import { AlertCircle, EyeIcon, Trash2, UploadCloud, Loader } from 'lucide-react';
 
 import { QuestionContainer, Alert, AlternativeInput } from '../../../components';
 import { BackButton } from '../../../components/BackButton';
 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+
+import storage from '../../../../firebaseConfig';
 
 /**
  * Component for creating and managing a form to create or edit a question.
@@ -22,6 +25,8 @@ function QuestionForm() {
   const [difficulty, setDifficulty] = React.useState<string>('');
   const [imageSrc, setImageSrc] = React.useState(null);
   const [selectedCheckbox, setSelectedCheckbox] = React.useState(null);
+
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const fileInputRef = React.useRef(null);
 
@@ -250,10 +255,54 @@ function QuestionForm() {
     }, 500);
   };
 
+  const uploadImage = async (imageFile) => {
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storage, `images/${imageFile.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {console.log(snapshot);},
+        (error) => {
+          console.error('Upload error: ', error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
+    });
+  };
+
+  /**
+ * Converte um Data URL para um objeto File.
+ *
+ * @param {string} dataUrl - O Data URL a ser convertido.
+ * @param {string} filename - O nome do arquivo a ser criado.
+ * @returns {File} O objeto File criado a partir do Data URL.
+ */
+  function dataUrlToFile(dataUrl, filename) {
+    const arr = dataUrl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    return new File([u8arr], filename, { type: mime });
+  }
+
   /**
  * Validates input fields and submits the question form data to the server.
  */
   const handleSubmit = async () => {
+    setIsSubmitting(true);
+
     if (isSwitchActive) {
       setStatement('');
     }
@@ -267,13 +316,28 @@ function QuestionForm() {
       return;
     }
 
+    let imageUrl: string = '';
+
+    if (imageSrc) {
+      const safeTitle = title.toLowerCase()
+        .replace(/ç/g, 'c')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+
+      const filename = `${safeTitle}.png`;
+      const file = dataUrlToFile(imageSrc, filename);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      imageUrl = await uploadImage(file);
+    }
+
     const questionData = {
       title,
       statement,
       alternatives,
       rightAnswer: selectedCheckbox.toString(),
       difficulty: Number(difficulty),
-      image: imageSrc,
+      image: imageUrl,
     };
 
     try {
@@ -294,20 +358,6 @@ function QuestionForm() {
         throw new Error(`Erro HTTP: ${response.status}`);
       }
 
-      if (response.ok) {
-        setOpenAlert(true);
-        setTimeout(() => {
-          setOpenAlert(false);
-          setAlternatives(Array(5).fill(''));
-          remountComponent();
-          setTitle('');
-          setImageSrc('');
-          setStatement('');
-          setDifficulty('');
-          setSelectedCheckbox(null);
-        }, 1000);
-      }
-
     } catch (error) {
       setOpenErrorAlert(true);
       setCustomAlertMessage('Atualize a página e tente novamente');
@@ -315,6 +365,21 @@ function QuestionForm() {
         setOpenErrorAlert(false);
       }, 3000);
       console.error('Falha ao salvar a questão:', error);
+    } finally {
+      setOpenAlert(true);
+      setAlternatives(Array(5).fill(''));
+      remountComponent();
+      setTitle('');
+      setImageSrc('');
+      setStatement('');
+      setDifficulty('');
+      setSelectedCheckbox(null);
+      setIsSwitchActive(false);
+      setIsSubmitting(false);
+
+      setTimeout(() => {
+        setOpenAlert(false);
+      }, 1000);
     }
   };
 
@@ -381,6 +446,7 @@ function QuestionForm() {
             <div className='flex flex-col gap-4'>
               <Input
                 crossOrigin={''}
+                disabled={isSubmitting}
                 label="Título"
                 size='lg'
                 onChange={event => handleTitleChange(event.target.value)}
@@ -414,6 +480,7 @@ function QuestionForm() {
 
               <Select
                 label="Dificuldade"
+                disabled={isSubmitting}
                 size='lg'
                 value={difficulty}
                 onChange={(value) => setDifficulty(value)}
@@ -478,7 +545,6 @@ function QuestionForm() {
                 <>
                   <div className='flex items-center justify-between rounded border border-gray-500/50 px-6 py-2'>
                     <img src={imageSrc} alt="Uploaded" className="max-h-[8rem] rounded" />
-
                     <Tooltip content="Excluir imagem">
                       <IconButton color="red" onClick={onDeleteImgSrc}>
                         <Trash2 />
@@ -514,6 +580,7 @@ function QuestionForm() {
             <div className='mb-4 flex flex-col gap-4' key={key}>
               {alternatives.map((alternative, index) => (
                 <AlternativeInput
+                  disabled={isSubmitting}
                   isDarkTheme={isDarkTheme}
                   key={`alternative-${index}`}
                   label={index}
@@ -552,12 +619,18 @@ function QuestionForm() {
             </Button>
             <div className='flex h-full gap-4'>
               <Button variant='outlined' onClick={handleBack} className='' color='red'>Cancelar</Button>
-              <Button onClick={handleSubmit} className='' color='green'>Salvar</Button>
+              <Button
+                disabled={isSubmitting}
+                onClick={handleSubmit}
+                className=''
+                color='green'
+              >
+                {isSubmitting ? (<Loader className='animate-spin' />) : 'Salvar'}
+              </Button>
             </div>
           </div>
         </div>
       </div>
-
     </>
   );
 }

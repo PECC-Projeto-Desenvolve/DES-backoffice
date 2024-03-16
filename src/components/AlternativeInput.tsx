@@ -11,6 +11,7 @@ interface IAlternativeInputProps {
         disabled: boolean;
       };
       isDarkTheme: boolean;
+      disabled?: boolean;
 }
 
 
@@ -27,7 +28,7 @@ interface IAlternativeInputProps {
  * @param {boolean} props.checkboxProps.disabled - Whether the checkbox is disabled or not.
  * @returns {JSX.Element} A composite component with a label, text input, and a checkbox.
  */
-function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }: IAlternativeInputProps): JSX.Element {
+function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme, disabled }: IAlternativeInputProps): JSX.Element {
   return (
     <>
       <div className="relative flex h-fit w-full">
@@ -38,6 +39,7 @@ function AlternativeInput({ label, onChange, value, checkboxProps, isDarkTheme }
         </div>
         <Input
           crossOrigin={''}
+          disabled={disabled}
           type="text"
           size='lg'
           color={`${isDarkTheme ? 'white' : 'black'}`}
